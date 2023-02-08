@@ -2,6 +2,10 @@
   "name": "swd392",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
+
   "scripts": {
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
