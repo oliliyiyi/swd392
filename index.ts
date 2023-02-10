@@ -3,6 +3,28 @@ import mysql, { Connection } from "mysql2";
 
 import { router } from "./src/routers/AllRouters";
 const app = express();
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const options = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Nodejs API Documentation',
+            version: '1.0.0',
+            description: 'API documentation for Swagger'
+        },
+        servers:[
+            {
+                url: 'http://localhost:3000/'
+            }
+        ]
+    },apis: ['./routes/*.js']
+}
+
+const swaggerDoc = swaggerJSDoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use(express.json());
 
