@@ -2,7 +2,7 @@ import mysql, { Connection } from "mysql2";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: "us-cdbr-east-06.cleardb.net",
   user: "bd11f6f55a584d",
   password: "f125189f",
