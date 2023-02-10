@@ -1,7 +1,6 @@
-import express from "express";
-import mysql, { Connection } from "mysql2";
-
+// import express from "express";
 import { router } from "./src/routers/AllRouters";
+const express = require("express");
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
