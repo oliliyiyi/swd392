@@ -35,26 +35,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryDB = exports.db = void 0;
+exports.query = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-exports.db = mysql2_1.default.createPool({
+const db = mysql2_1.default.createConnection({
     host: "us-cdbr-east-06.cleardb.net",
     user: "bd11f6f55a584d",
     password: "f125189f",
     database: "heroku_a1e82bf2ce3982a",
-    port: 3306
+    port: 3306,
 });
-function queryDB(query) {
+function query(sql) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield exports.db.query(query);
-        return result;
+        return new Promise((resolve, rejects) => {
+            db.query(sql, function (err, results, fields) {
+                if (err) {
+                    return rejects(err);
+                }
+                return resolve(results);
+            });
+        });
     });
 }
-exports.queryDB = queryDB;
-// export const db = conn.getConnection((err: any) => {
-//   if(err){
-//     console.log(err);
-//   }
-// });
+exports.query = query;
