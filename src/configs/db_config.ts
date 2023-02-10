@@ -1,7 +1,5 @@
 import mysql, { Connection } from "mysql2";
 import * as dotenv from "dotenv";
-import { resolve } from "path";
-import { rejects } from "assert";
 dotenv.config();
 
 const db = mysql.createConnection({
