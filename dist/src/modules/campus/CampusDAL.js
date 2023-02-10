@@ -38,7 +38,12 @@ const db_config_1 = require("../../configs/db_config");
 function getAllCampus() {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = CampusSQL.getAllListCampus();
-        const rows = yield db_config_1.db.query(queryString);
+        const rows = db_config_1.db.query(queryString.text, [queryString.values], (err, data) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
         return rows;
     });
 }
