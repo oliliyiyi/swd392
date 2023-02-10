@@ -39,7 +39,7 @@ exports.query = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const db = mysql2_1.default.createConnection({
+const db = mysql2_1.default.createPool({
     host: "us-cdbr-east-06.cleardb.net",
     user: "bd11f6f55a584d",
     password: "f125189f",
