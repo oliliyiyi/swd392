@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // import express from "express";
-const express = require("express");
 const AllRouters_1 = require("./src/routers/AllRouters");
+const express = require("express");
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
