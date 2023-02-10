@@ -1,6 +1,7 @@
-import express from 'express';
+
 import * as CampusController from '../controller/campus/CampusController';
 
+const express = require('express');
 const router = express.Router();
 
 
