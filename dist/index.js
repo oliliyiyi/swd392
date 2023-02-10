@@ -6,24 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const AllRouters_1 = require("./src/routers/AllRouters");
 const app = (0, express_1.default)();
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const options = {
-    definitions: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Nodejs API Documentation',
-            version: '1.0.0'
-        },
-        servers: [
-            {
-                url: 'https://event-project.herokuapp.com/'
-            }
-        ]
-    }, apis: ['./index.ts']
-};
-const swaggerDoc = swaggerJSDoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
 app.use(express_1.default.json());
 app.use(AllRouters_1.router);
 const PORT = process.env.PORT || 3000;
