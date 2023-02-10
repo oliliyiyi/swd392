@@ -15,7 +15,7 @@ const options = {
         },
         servers:[
             {
-                url: 'http://localhost:3000/'
+                url: 'https://event-project.herokuapp.com/'
             }
         ]
     },apis: ['./dist/src/routers/AllRouters.js']
@@ -23,14 +23,11 @@ const options = {
 
 const swaggerDoc = swaggerJSDoc(options);
 
+
+
 app.use(express.json());
 
-// app.use(function(req, res, next)  {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
-//     res.header("Access-Control-Allow-Methods","GET,POST,PUT,DELETE");
-//     next();
-// });
+
 
 app.use(router,swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
