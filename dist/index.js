@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const AllRouters_1 = require("./src/routers/AllRouters");
 const app = (0, express_1.default)();
-
 app.use(express_1.default.json());
 app.use(AllRouters_1.router);
 const PORT = process.env.PORT || 3000;
