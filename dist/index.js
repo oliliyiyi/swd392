@@ -21,7 +21,7 @@ const options = {
                 url: 'http://localhost:3000/'
             }
         ]
-    }, apis: ['./routes/*.js']
+    }, apis: ['./dist/src/routers/AllRouters.js']
 };
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express_1.default.json());

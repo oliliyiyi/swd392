@@ -19,14 +19,18 @@ const options = {
                 url: 'http://localhost:3000/'
             }
         ]
-    },apis: ['./routes/*.js']
+    },apis: ['./dist/src/routers/AllRouters.js']
 }
 
 const swaggerDoc = swaggerJSDoc(options);
 
 app.use(express.json());
 
+
+
 app.use(router,swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
