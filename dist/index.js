@@ -21,12 +21,11 @@ const options = {
                 url: 'http://localhost:3000/'
             }
         ]
-    }, apis: ['./routes/*.js']
+    }, apis: ['./dist/src/routers/AllRouters.js']
 };
 const swaggerDoc = swaggerJSDoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use(express_1.default.json());
-app.use(AllRouters_1.router);
+app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:3000`);

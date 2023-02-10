@@ -31,4 +31,14 @@ const express_1 = __importDefault(require("express"));
 const CampusController = __importStar(require("../controller/campus/CampusController"));
 const router = express_1.default.Router();
 exports.router = router;
+/**
+ * @swagger
+ *  /api/campus:
+ *    get:
+ *         summary: This api is used to check if get method is available or not.
+ *         description: This api is used to check if get method is available or not.
+ *         responses:
+ *             200:
+ *                description: To test get method is available.
+ */
 router.get('/api/campus', CampusController.getAllListCampus);
