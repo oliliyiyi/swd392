@@ -46,10 +46,10 @@ const db = mysql2_1.default.createPool({
     database: "heroku_a1e82bf2ce3982a",
     port: 3306,
 });
-function query(sql) {
+function query(sql, val) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, rejects) => {
-            db.query(sql, function (err, results, fields) {
+            db.query(sql, val, function (err, results, fields) {
                 if (err) {
                     return rejects(err);
                 }

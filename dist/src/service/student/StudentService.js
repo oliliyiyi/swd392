@@ -32,14 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllCampus = void 0;
-const CampusSQL = __importStar(require("../../modules/campus/campusSQL"));
-const db_config_1 = require("../../configs/db_config");
-function getAllCampus() {
+exports.getAcountStudentLogin = void 0;
+const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
+function getAcountStudentLogin(account, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = CampusSQL.getAllCampus();
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
+        const result = yield StudentDAL.getAcountStudentLogin(account, password);
+        return result;
     });
 }
-exports.getAllCampus = getAllCampus;
+exports.getAcountStudentLogin = getAcountStudentLogin;

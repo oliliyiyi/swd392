@@ -10,9 +10,9 @@ const db = mysql.createPool({
   port: 3306,
 });
 
-export async function query(sql: string) {
+export async function query(sql: string, val: any) {
   return new Promise((resolve, rejects) => {
-    db.query(sql, function (err, results, fields) {
+    db.query(sql, val, function (err, results, fields) {
       if (err) {
         return rejects(err);
       }
