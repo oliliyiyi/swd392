@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllListCampus = void 0;
-function getAllListCampus() {
+exports.getAllCampus = void 0;
+function getAllCampus() {
     const query = `SELECT campus_id,
                     name,
                     address,
                     created_at,
                     updated_at
-                    FROM public.campus`;
+                    FROM campus`;
     const values = [];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
-exports.getAllListCampus = getAllListCampus;
+exports.getAllCampus = getAllCampus;

@@ -1,6 +1,7 @@
 
 import * as CampusController from '../controller/campus/CampusController';
-
+import * as StudentLoginController from '../controller/student/StudentLoginController';
+import { verifyToken } from '../middleware/Auth';
 const express = require('express');
 const router = express.Router();
 
@@ -16,7 +17,8 @@ const router = express.Router();
  *                description: To test get method is available.
  */
 
-router.get('/api/campus', CampusController.getAllListCampus);
+router.get('/api/campus', verifyToken, CampusController.getAllListCampus);
 
+router.post('/api/login', StudentLoginController.loginAcountStudent);
 
 export { router };

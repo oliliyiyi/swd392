@@ -6,6 +6,7 @@ const express = require("express");
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+require('dotenv').config();
 const options = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -23,12 +24,6 @@ const options = {
 };
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express.json());
-// app.use(function(req, res, next)  {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
-//     res.header("Access-Control-Allow-Methods","GET,POST,PUT,DELETE");
-//     next();
-// });
 app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

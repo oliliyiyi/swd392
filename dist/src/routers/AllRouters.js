@@ -25,6 +25,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const CampusController = __importStar(require("../controller/campus/CampusController"));
+const StudentLoginController = __importStar(require("../controller/student/StudentLoginController"));
+const Auth_1 = require("../middleware/Auth");
 const express = require('express');
 const router = express.Router();
 exports.router = router;
@@ -38,4 +40,5 @@ exports.router = router;
  *             200:
  *                description: To test get method is available.
  */
-router.get('/api/campus', CampusController.getAllListCampus);
+router.get('/api/campus', Auth_1.verifyToken, CampusController.getAllListCampus);
+router.post('/api/login', StudentLoginController.loginAcountStudent);
