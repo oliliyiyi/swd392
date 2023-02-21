@@ -1,16 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAcountStudentLogin = void 0;
-function getAcountStudentLogin(account, password) {
-    const query = `SELECT account,
-                    student_id
-                    FROM student_account
-                    WHERE account = $1 AND password = $2`;
-    const values = [account, password];
+exports.getStudentInfoByEmail = void 0;
+function getStudentInfoByEmail(email) {
+    const query = `SELECT student_id, dpm_id, campus_id, name, address, phone, token FROM student WHERE email = ?`;
+    const values = [email];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
-exports.getAcountStudentLogin = getAcountStudentLogin;
+exports.getStudentInfoByEmail = getStudentInfoByEmail;

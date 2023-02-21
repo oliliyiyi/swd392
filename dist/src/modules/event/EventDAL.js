@@ -32,19 +32,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
-const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
-function getAcountStudentLogin(account, password) {
+exports.admInsertEvent = void 0;
+const EventSQL = __importStar(require("../../modules/event/eventSQL"));
+const db_config_1 = require("../../configs/db_config");
+function admInsertEvent(name, email, location, point, img, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getAcountStudentLogin(account, password);
-        return result;
+        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, start_date, end_date);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return;
     });
 }
-exports.getAcountStudentLogin = getAcountStudentLogin;
-function getStudentInfoByEmail(email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudentInfoByEmail(email);
-        return result;
-    });
-}
-exports.getStudentInfoByEmail = getStudentInfoByEmail;
+exports.admInsertEvent = admInsertEvent;

@@ -35,27 +35,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.query = void 0;
-const mysql2_1 = __importDefault(require("mysql2"));
+exports.query = exports.db = void 0;
+const promise_1 = __importDefault(require("mysql2/promise"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const db = mysql2_1.default.createPool({
+exports.db = promise_1.default.createPool({
     host: "us-cdbr-east-06.cleardb.net",
     user: "bd11f6f55a584d",
     password: "f125189f",
     database: "heroku_a1e82bf2ce3982a",
     port: 3306,
 });
-function query(sql, val) {
+function query(sql, values) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, rejects) => {
-            db.query(sql, val, function (err, results, fields) {
-                if (err) {
-                    return rejects(err);
+        let connection;
+        try {
+            connection = yield exports.db.getConnection();
+            const [rows, fields] = yield connection.query(sql, values);
+            return rows;
+        }
+        catch (error) {
+            console.error(error);
+        }
+        finally {
+            if (connection) {
+                if (typeof connection.release === 'function') {
+                    connection.release();
                 }
-                return resolve(results);
-            });
-        });
+            }
+        }
     });
 }
 exports.query = query;
+// export async function query1(sql: string, val: any) {
+//   return new Promise((resolve, rejects) => {
+//     db.query(sql, val, function (err, results, fields) {
+//       if (err) {
+//         return rejects(err);
+//       }
+//       return resolve(results);
+//     });
+//   });
+// }

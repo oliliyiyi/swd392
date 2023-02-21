@@ -32,14 +32,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAcountStudentLogin = void 0;
+exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
 const StudentSQL = __importStar(require("../../modules/student/studentSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getAcountStudentLogin(account, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getAcountStudentLogin(account, password);
+        // const queryString = StudentSQL.getAcountStudentLogin(account, password);
+        // const rows = await query(queryString.text, queryString.values);
+        return;
+    });
+}
+exports.getAcountStudentLogin = getAcountStudentLogin;
+function getStudentInfoByEmail(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.getStudentInfoByEmail(email);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
 }
-exports.getAcountStudentLogin = getAcountStudentLogin;
+exports.getStudentInfoByEmail = getStudentInfoByEmail;
