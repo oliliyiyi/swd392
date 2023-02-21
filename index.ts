@@ -1,10 +1,12 @@
 // import express from "express";
 import { router } from "./src/routers/AllRouters";
-const express = require("express");
+import express from "express";
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
+
 const options = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -29,7 +31,7 @@ app.use(express.json());
 
 
 
-app.use(router,swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use(router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 
 
