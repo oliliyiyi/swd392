@@ -31,37 +31,135 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginAcountStudent = void 0;
-const StudentService = __importStar(require("../../service/student/StudentService"));
-const jwt = require("jsonwebtoken");
-const users = [
-    {
-        id: 1,
-        username: "Henry",
-    },
-    {
-        id: 2,
-        username: "Jim",
-    },
-];
-function loginAcountStudent(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const account = req.body.account;
-            const password = req.body.password;
-            const accountStudent = StudentService.getAcountStudentLogin;
-            if (!accountStudent)
-                return res.sendStatus(401);
-            //create JWT
-            const accessToken = jwt.sign(accountStudent, "mysecret", {
-                expiresIn: '20m'
-            });
-            res.json({ accessToken });
+exports.handleLogin = void 0;
+const fbInit = __importStar(require("../../../src/configs/fbconfigs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const Student = __importStar(require("../../service/student/StudentService"));
+const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL"));
+// const users = [
+//   {
+//     id: 1,
+//     username: "Henry",
+//   },
+//   {
+//     id: 2,
+//     username: "Jim",
+//   },
+// ];
+// export async function loginAcountStudent(req: any, res: any, next: any) {
+//   try {
+//     const account = req.body.account;
+//     const password = req.body.password;
+//     const accountStudent = StudentService.getInfoStudentLogin;
+//     if (!accountStudent) return res.sendStatus(401);
+//     //create JWT
+//     const accessToken = jwt.sign(accountStudent, "mysecret", {
+//         expiresIn: '20m'
+//     });
+//     res.json({ accessToken });
+//   } catch (error) {
+//     return next(error);
+//   }
+// }
+function handleLogin(req, res, next) {
+    const firebaseToken = req.body.token;
+    console.log(req.body.token);
+    if (!firebaseToken) {
+        return res.status(404).json({ message: "Token not found!" });
+    }
+    // const roleGet = req.body.role;
+    // if (!roleGet) {
+    //   return res.status(404).json({ message: "Role not found!" });
+    // }
+    fbInit.firebaseConnect
+        .auth()
+        .verifyIdToken(firebaseToken)
+        .then((decodedToken) => __awaiter(this, void 0, void 0, function* () {
+        console.log(decodedToken);
+        let email = decodedToken.email;
+        let arr = email.split("@");
+        let domain = arr.pop();
+        if (domain !== "fpt.edu.vn")
+            return res
+                .status(403)
+                .json({ message: "Email is not acceptable in system!" });
+        else {
+            const studentInfo = yield Student.getInfoStudentLogin(decodedToken.email);
+            if (studentInfo.length > 0) {
+                console.log(studentInfo);
+                const access_token = jsonwebtoken_1.default.sign({
+                    studentInfoInfo: {
+                        studentInfoID: studentInfo[0].student_id,
+                        name: studentInfo[0].name,
+                    },
+                }, "accesstokensecret", {
+                    expiresIn: "15m",
+                });
+                const refresh_token = jsonwebtoken_1.default.sign({
+                    studentInfo: {
+                        studentId: studentInfo[0].student_id,
+                        name: studentInfo[0].name,
+                    },
+                }, "refreshtokensecret", {
+                    expiresIn: "1d",
+                });
+                yield Student.updateStudentToken(studentInfo[0].student_id, refresh_token);
+                var student_data = {
+                    id: studentInfo[0].student_id,
+                    name: studentInfo[0].name,
+                    email: studentInfo[0].email,
+                    phone: studentInfo[0].phone,
+                };
+                res.status(200).json({
+                    access_token: access_token,
+                    refresh_token: refresh_token,
+                    data: student_data,
+                    message: "Login successful",
+                });
+            }
+            else {
+                const dpmId = 1;
+                const campusId = 2;
+                const active = 1;
+                const address = "abc";
+                const phone = "123456789";
+                yield Student.createStudent(dpmId, campusId, decodedToken.name, address, phone, decodedToken.email, active);
+                const studentCreated = yield StudentDAL.getStudentInfoByEmail(decodedToken.email);
+                const access_token = jsonwebtoken_1.default.sign({
+                    studentInfo: {
+                        student_id: studentCreated[0].student_id,
+                        name: studentCreated[0].name,
+                    },
+                }, "accesstokensecret", {
+                    expiresIn: "15m",
+                });
+                const refresh_token = jsonwebtoken_1.default.sign({
+                    studentInfo: {
+                        student_id: studentCreated[0].student_id,
+                        name: studentCreated[0].name,
+                    },
+                }, "refreshtokensecret", {
+                    expiresIn: "1d",
+                });
+                yield Student.updateStudentToken(studentCreated[0].student_id, refresh_token);
+                var student_data = {
+                    id: studentCreated[0].student_id,
+                    name: studentCreated[0].name,
+                    email: studentCreated[0].email,
+                    phone: studentCreated[0].phone,
+                };
+                res.status(200).json({
+                    access_token: access_token,
+                    refresh_token: refresh_token,
+                    data: student_data,
+                    message: "Login successful",
+                });
+            }
         }
-        catch (error) {
-            return next(error);
-        }
-    });
+    }));
 }
-exports.loginAcountStudent = loginAcountStudent;
+exports.handleLogin = handleLogin;

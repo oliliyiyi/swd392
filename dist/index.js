@@ -1,11 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // import express from "express";
 const AllRouters_1 = require("./src/routers/AllRouters");
-const express = require("express");
-const app = express();
+const express_1 = __importDefault(require("express"));
+const app = (0, express_1.default)();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 const options = {
     swaggerDefinition: {
@@ -17,13 +21,13 @@ const options = {
         },
         servers: [
             {
-                url: 'https://event-project.herokuapp.com/'
+                url: 'http://localhost:3000/'
             }
         ]
     }, apis: ['./dist/src/routers/AllRouters.js']
 };
 const swaggerDoc = swaggerJSDoc(options);
-app.use(express.json());
+app.use(express_1.default.json());
 app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

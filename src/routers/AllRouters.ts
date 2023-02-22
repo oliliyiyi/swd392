@@ -3,8 +3,8 @@ import * as CampusController from '../controller/campus/CampusController';
 import * as StudentLoginController from '../controller/student/StudentLoginController';
 import * as StudentController from '../controller/student/StudentController';
 import * as EventController from '../controller/event/EventController';
-import { verifyToken } from '../middleware/Auth';
-const express = require('express');
+import { isAuth } from '../middleware/Auth';
+import express from 'express';
 const router = express.Router();
  
 
@@ -61,6 +61,49 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *         description: Bad Request
  */
 router.post('/api/eventInsert', EventController.admInsertEvent);
-router.post('/api/login', StudentLoginController.loginAcountStudent);
+
+
+
+/**
+ * @swagger
+ * /api/login:
+ *    post:
+ *      tags:
+ *          - Authorization
+ *      summary: Log in to the system
+ *      requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *      responses:
+ *        200:
+ *          description: OK
+ *          schema:
+ *            type: object
+ *            properties:
+ *                access_token:
+ *                  type: string
+ *                refresh_token:
+ *                  type: string
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                          type: string
+ *                      name:
+ *                          type: string
+ *                      email:
+ *                          type: string
+ *                          example: "customer@fpt.edu.vn"
+ *                      phone:
+ *                          type: string
+ *                          example: "0382212012"
+ */
+router.post('/api/login', StudentLoginController.handleLogin);
 
 export { router };

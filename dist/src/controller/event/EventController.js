@@ -32,40 +32,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = void 0;
-const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
-function getInfoStudentLogin(email) {
+exports.admInsertEvent = void 0;
+const EventService = __importStar(require("../../service/event/EventSevice"));
+const db_config_1 = require("../../configs/db_config");
+function admInsertEvent(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getInfoStudentLogin(email);
-        return result;
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const name = req.body.name;
+            const email = req.body.email;
+            const location = req.body.location;
+            const point = req.body.point;
+            const img = req.body.img;
+            const start_date = req.body.start_date;
+            const end_date = req.body.end_date;
+            yield EventService.admInsertEvent(name, email, location, point, img, start_date, end_date);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
     });
 }
-exports.getInfoStudentLogin = getInfoStudentLogin;
-function updateStudentToken(studentId, refresh_token) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.updateStudentToken(studentId, refresh_token);
-        return result;
-    });
-}
-exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, active) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, active);
-        return result;
-    });
-}
-exports.createStudent = createStudent;
-function getStudent(studentId, name) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudent(studentId, name);
-        return result;
-    });
-}
-exports.getStudent = getStudent;
-function getStudentInfoByEmail(email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudentInfoByEmail(email);
-        return result;
-    });
-}
-exports.getStudentInfoByEmail = getStudentInfoByEmail;
+exports.admInsertEvent = admInsertEvent;

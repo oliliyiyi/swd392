@@ -32,40 +32,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = void 0;
-const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
-function getInfoStudentLogin(email) {
+exports.admInsertEvent = void 0;
+const EventSQL = __importStar(require("../../modules/event/eventSQL"));
+const db_config_1 = require("../../configs/db_config");
+function admInsertEvent(name, email, location, point, img, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getInfoStudentLogin(email);
-        return result;
+        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, start_date, end_date);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return;
     });
 }
-exports.getInfoStudentLogin = getInfoStudentLogin;
-function updateStudentToken(studentId, refresh_token) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.updateStudentToken(studentId, refresh_token);
-        return result;
-    });
-}
-exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, active) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, active);
-        return result;
-    });
-}
-exports.createStudent = createStudent;
-function getStudent(studentId, name) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudent(studentId, name);
-        return result;
-    });
-}
-exports.getStudent = getStudent;
-function getStudentInfoByEmail(email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudentInfoByEmail(email);
-        return result;
-    });
-}
-exports.getStudentInfoByEmail = getStudentInfoByEmail;
+exports.admInsertEvent = admInsertEvent;

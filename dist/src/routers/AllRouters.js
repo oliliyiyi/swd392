@@ -22,13 +22,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const CampusController = __importStar(require("../controller/campus/CampusController"));
 const StudentLoginController = __importStar(require("../controller/student/StudentLoginController"));
-const Auth_1 = require("../middleware/Auth");
-const express = require('express');
-const router = express.Router();
+const StudentController = __importStar(require("../controller/student/StudentController"));
+const EventController = __importStar(require("../controller/event/EventController"));
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
 exports.router = router;
 /**
  * @swagger
@@ -40,5 +44,86 @@ exports.router = router;
  *             200:
  *                description: To test get method is available.
  */
-router.get('/api/campus', Auth_1.verifyToken, CampusController.getAllListCampus);
-router.post('/api/login', StudentLoginController.loginAcountStudent);
+router.get('/api/campus', CampusController.getAllListCampus);
+router.get('/api/student/info', StudentController.getStudentInfoByEmail);
+/**
+ * @swagger
+ * /api/eventInsert:
+ *   post:
+ *     summary: Create a new event
+ *     description: Create a new event with the specified parameters
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               point:
+ *                 type: number
+ *               img:
+ *                 type: string
+ *               start_date:
+ *                 type: string
+ *               end_date:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - email
+ *               - point
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.post('/api/eventInsert', EventController.admInsertEvent);
+/**
+ * @swagger
+ * /api/login:
+ *    post:
+ *      tags:
+ *          - Authorization
+ *      summary: Log in to the system
+ *      requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *      responses:
+ *        200:
+ *          description: OK
+ *          schema:
+ *            type: object
+ *            properties:
+ *                access_token:
+ *                  type: string
+ *                refresh_token:
+ *                  type: string
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                          type: string
+ *                      name:
+ *                          type: string
+ *                      email:
+ *                          type: string
+ *                          example: "customer@fpt.edu.vn"
+ *                      phone:
+ *                          type: string
+ *                          example: "0382212012"
+ */
+router.post('/api/login', StudentLoginController.handleLogin);
