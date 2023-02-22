@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
+exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
 const StudentSQL = __importStar(require("../../modules/student/studentSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getAcountStudentLogin(account, password) {
@@ -51,3 +51,35 @@ function getStudentInfoByEmail(email) {
     });
 }
 exports.getStudentInfoByEmail = getStudentInfoByEmail;
+function getInfoStudentLogin(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.getStudentInfoByEmail(email);
+        const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
+        return rows;
+    });
+}
+exports.getInfoStudentLogin = getInfoStudentLogin;
+function updateStudentToken(studentId, refresh_token) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.updateStudentToken(studentId, refresh_token);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.updateStudentToken = updateStudentToken;
+function createStudent(dpmId, campusId, name, address, phone, email, active) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, active);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.createStudent = createStudent;
+function getStudent(studentId, name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.getStudent(studentId, name);
+        const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
+        return rows;
+    });
+}
+exports.getStudent = getStudent;

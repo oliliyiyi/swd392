@@ -22,14 +22,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const CampusController = __importStar(require("../controller/campus/CampusController"));
 const StudentLoginController = __importStar(require("../controller/student/StudentLoginController"));
 const StudentController = __importStar(require("../controller/student/StudentController"));
 const EventController = __importStar(require("../controller/event/EventController"));
-const express = require('express');
-const router = express.Router();
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
 exports.router = router;
 /**
  * @swagger
@@ -83,4 +86,46 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *         description: Bad Request
  */
 router.post('/api/eventInsert', EventController.admInsertEvent);
-router.post('/api/login', StudentLoginController.loginAcountStudent);
+
+/**
+ * @swagger
+ * /api/login:
+ *    post:
+ *      tags:
+ *          - Authorization
+ *      summary: Log in to the system
+ *      requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *      responses:
+ *        200:
+ *          description: OK
+ *          schema:
+ *            type: object
+ *            properties:
+ *                access_token:
+ *                  type: string
+ *                refresh_token:
+ *                  type: string
+ *                data:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                          type: string
+ *                      name:
+ *                          type: string
+ *                      email:
+ *                          type: string
+ *                          example: "customer@fpt.edu.vn"
+ *                      phone:
+ *                          type: string
+ *                          example: "0382212012"
+ */
+router.post('/api/login', StudentLoginController.handleLogin);
+

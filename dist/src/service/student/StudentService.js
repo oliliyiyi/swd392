@@ -32,15 +32,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
+exports.getStudentInfoByEmail = exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = void 0;
 const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
-function getAcountStudentLogin(account, password) {
+function getInfoStudentLogin(email) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getAcountStudentLogin(account, password);
+        const result = yield StudentDAL.getInfoStudentLogin(email);
         return result;
     });
 }
-exports.getAcountStudentLogin = getAcountStudentLogin;
+exports.getInfoStudentLogin = getInfoStudentLogin;
+function updateStudentToken(studentId, refresh_token) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield StudentDAL.updateStudentToken(studentId, refresh_token);
+        return result;
+    });
+}
+exports.updateStudentToken = updateStudentToken;
+function createStudent(dpmId, campusId, name, address, phone, email, active) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, active);
+        return result;
+    });
+}
+exports.createStudent = createStudent;
+function getStudent(studentId, name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield StudentDAL.getStudent(studentId, name);
+        return result;
+    });
+}
+exports.getStudent = getStudent;
+
 function getStudentInfoByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.getStudentInfoByEmail(email);
