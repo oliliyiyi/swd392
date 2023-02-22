@@ -35,10 +35,15 @@ exports.createStudent = createStudent;
 function getStudent(studentId, name) {
     const query = `SELECT * FROM student where student_id = ? and name = ?`;
     const values = [studentId, name];
+exports.getStudentInfoByEmail = void 0;
+function getStudentInfoByEmail(email) {
+    const query = `SELECT student_id, dpm_id, campus_id, name, address, phone, token FROM student WHERE email = ?`;
+    const values = [email];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.getStudent = getStudent;
+

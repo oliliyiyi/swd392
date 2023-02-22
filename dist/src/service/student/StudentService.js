@@ -62,6 +62,7 @@ function getStudent(studentId, name) {
     });
 }
 exports.getStudent = getStudent;
+
 function getStudentInfoByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.getStudentInfoByEmail(email);
