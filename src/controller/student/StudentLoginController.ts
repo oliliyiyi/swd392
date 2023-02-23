@@ -1,4 +1,4 @@
-import * as fbInit from "../../../src/configs/fbconfigs"
+import * as fbInit from "../../../src/configs/fbconfigs";
 
 import jwt from "jsonwebtoken";
 import * as Student from "../../service/student/StudentService";
@@ -31,7 +31,6 @@ import * as StudentDAL from "../../../src/modules/student/StudentDAL";
 //   }
 // }
 
-
 export function handleLogin(req: any, res: any, next: any) {
   const firebaseToken = req.body.token;
   console.log(req.body.token);
@@ -55,12 +54,14 @@ export function handleLogin(req: any, res: any, next: any) {
           .status(403)
           .json({ message: "Email is not acceptable in system!" });
       else {
-        const studentInfo: any = await Student.getInfoStudentLogin(decodedToken.email);
+        const studentInfo: any = await Student.getInfoStudentLogin(
+          decodedToken.email
+        );
         if (studentInfo.length > 0) {
           console.log(studentInfo);
           const access_token = jwt.sign(
             {
-              studentInfoInfo: {
+              studentInfo: {
                 studentInfoID: studentInfo[0].student_id,
                 name: studentInfo[0].name,
               },
@@ -103,55 +104,61 @@ export function handleLogin(req: any, res: any, next: any) {
           const campusId = 2;
           const active = 1;
           const address = "abc";
-          const phone = "123456789"
-          await Student.createStudent(dpmId, campusId, decodedToken.name, address, phone, decodedToken.email, active);
-          const studentCreated = await StudentDAL.getStudentInfoByEmail(decodedToken.email);
-            const access_token = jwt.sign(
-              {
-                studentInfo: {
-                  student_id: studentCreated[0].student_id,
-                  name: studentCreated[0].name,
-                },
+          const phone = "123456789";
+          await Student.createStudent(
+            dpmId,
+            campusId,
+            decodedToken.name,
+            address,
+            phone,
+            decodedToken.email,
+            active
+          );
+          const studentCreated = await StudentDAL.getStudentInfoByEmail(
+            decodedToken.email
+          );
+          const access_token = jwt.sign(
+            {
+              studentInfo: {
+                student_id: studentCreated[0].student_id,
+                name: studentCreated[0].name,
               },
-              "accesstokensecret",
-              {
-                expiresIn: "15m",
-              }
-            );
-            const refresh_token = jwt.sign(
-              {
-                studentInfo: {
-                  student_id: studentCreated[0].student_id,
-                  name: studentCreated[0].name,
-                },
+            },
+            "accesstokensecret",
+            {
+              expiresIn: "15m",
+            }
+          );
+          const refresh_token = jwt.sign(
+            {
+              studentInfo: {
+                student_id: studentCreated[0].student_id,
+                name: studentCreated[0].name,
               },
-              "refreshtokensecret",
-              {
-                expiresIn: "1d",
-              }
-            );
-            
-            await Student.updateStudentToken(
-              studentCreated[0].student_id,
-              refresh_token
-            );
-            var student_data = {
-              id: studentCreated[0].student_id,
-              name: studentCreated[0].name,
-              email: studentCreated[0].email,
-              phone: studentCreated[0].phone,
-            };
-            res.status(200).json({
-              access_token: access_token,
-              refresh_token: refresh_token,
-              data: student_data,
-              message: "Login successful",
-            });
+            },
+            "refreshtokensecret",
+            {
+              expiresIn: "1d",
+            }
+          );
+
+          await Student.updateStudentToken(
+            studentCreated[0].student_id,
+            refresh_token
+          );
+          var student_data = {
+            id: studentCreated[0].student_id,
+            name: studentCreated[0].name,
+            email: studentCreated[0].email,
+            phone: studentCreated[0].phone,
+          };
+          res.status(200).json({
+            access_token: access_token,
+            refresh_token: refresh_token,
+            data: student_data,
+            message: "Login successful",
+          });
         }
       }
-    })
+    });
 }
-
-
-
-

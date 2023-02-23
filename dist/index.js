@@ -10,6 +10,7 @@ const app = (0, express_1.default)();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
+const Auth_1 = require("./src/middleware/Auth");
 require('dotenv').config();
 const options = {
     swaggerDefinition: {
@@ -28,7 +29,7 @@ const options = {
 };
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express_1.default.json());
-app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use(AllRouters_1.router, Auth_1.isAuth, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:3000`);

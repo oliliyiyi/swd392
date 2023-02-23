@@ -5,6 +5,7 @@ const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
+import { isAuth } from './src/middleware/Auth';
 require('dotenv').config();
 
 const options = {
@@ -31,7 +32,7 @@ app.use(express.json());
 
 
 
-app.use(router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use(router, isAuth, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 
 

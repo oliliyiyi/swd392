@@ -92,7 +92,7 @@ function handleLogin(req, res, next) {
             if (studentInfo.length > 0) {
                 console.log(studentInfo);
                 const access_token = jsonwebtoken_1.default.sign({
-                    studentInfoInfo: {
+                    studentInfo: {
                         studentInfoID: studentInfo[0].student_id,
                         name: studentInfo[0].name,
                     },
