@@ -86,7 +86,6 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *         description: Bad Request
  */
 router.post('/api/eventInsert', EventController.admInsertEvent);
-
 /**
  * @swagger
  * /api/login:
@@ -128,4 +127,3 @@ router.post('/api/eventInsert', EventController.admInsertEvent);
  *                          example: "0382212012"
  */
 router.post('/api/login', StudentLoginController.handleLogin);
-

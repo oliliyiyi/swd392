@@ -21,7 +21,7 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000/'
+                url: 'https://event-project.herokuapp.com/'
             }
         ]
     }, apis: ['./dist/src/routers/AllRouters.js']
