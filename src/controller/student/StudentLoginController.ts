@@ -37,10 +37,10 @@ export function handleLogin(req: any, res: any, next: any) {
   if (!firebaseToken) {
     return res.status(404).json({ message: "Token not found!" });
   }
-  // const roleGet = req.body.role;
-  // if (!roleGet) {
-  //   return res.status(404).json({ message: "Role not found!" });
-  // }
+  const roleGet = req.body.role;
+  if (!roleGet) {
+    return res.status(404).json({ message: "Role not found!" });
+  }
   fbInit.firebaseConnect
     .auth()
     .verifyIdToken(firebaseToken)
@@ -57,13 +57,14 @@ export function handleLogin(req: any, res: any, next: any) {
         const studentInfo: any = await Student.getInfoStudentLogin(
           decodedToken.email
         );
-        if (studentInfo.length > 0) {
+        if (studentInfo.length > 0 && roleGet == "admin") {
           console.log(studentInfo);
           const access_token = jwt.sign(
             {
               studentInfo: {
                 studentInfoID: studentInfo[0].student_id,
                 name: studentInfo[0].name,
+                role: studentInfo[0].role,
               },
             },
             "accesstokensecret",
@@ -76,6 +77,7 @@ export function handleLogin(req: any, res: any, next: any) {
               studentInfo: {
                 studentId: studentInfo[0].student_id,
                 name: studentInfo[0].name,
+                role: studentInfo[0].role,
               },
             },
             "refreshtokensecret",
@@ -89,6 +91,7 @@ export function handleLogin(req: any, res: any, next: any) {
           );
           var student_data = {
             id: studentInfo[0].student_id,
+            role: studentInfo[0].role,
             name: studentInfo[0].name,
             email: studentInfo[0].email,
             phone: studentInfo[0].phone,
@@ -99,7 +102,52 @@ export function handleLogin(req: any, res: any, next: any) {
             data: student_data,
             message: "Login successful",
           });
-        } else {
+        }  else if(studentInfo.length > 0 && roleGet == "members"){
+          console.log(studentInfo);
+          const access_token = jwt.sign(
+            {
+              studentInfo: {
+                studentInfoID: studentInfo[0].student_id,
+                name: studentInfo[0].name,
+                role: studentInfo[0].role,
+              },
+            },
+            "accesstokensecret",
+            {
+              expiresIn: "15m",
+            }
+          );
+          const refresh_token = jwt.sign(
+            {
+              studentInfo: {
+                studentId: studentInfo[0].student_id,
+                name: studentInfo[0].name,
+                role: studentInfo[0].role,
+              },
+            },
+            "refreshtokensecret",
+            {
+              expiresIn: "1d",
+            }
+          );
+          await Student.updateStudentToken(
+            studentInfo[0].student_id,
+            refresh_token
+          );
+          var student_data = {
+            id: studentInfo[0].student_id,
+            role: studentInfo[0].role,
+            name: studentInfo[0].name,
+            email: studentInfo[0].email,
+            phone: studentInfo[0].phone,
+          };
+          res.status(200).json({
+            access_token: access_token,
+            refresh_token: refresh_token,
+            data: student_data,
+            message: "Login successful",
+          });
+        }  else{
           const dpmId = 1;
           const campusId = 2;
           const active = 1;
@@ -112,6 +160,7 @@ export function handleLogin(req: any, res: any, next: any) {
             address,
             phone,
             decodedToken.email,
+            roleGet,
             active
           );
           const studentCreated = await StudentDAL.getStudentInfoByEmail(
@@ -122,6 +171,7 @@ export function handleLogin(req: any, res: any, next: any) {
               studentInfo: {
                 student_id: studentCreated[0].student_id,
                 name: studentCreated[0].name,
+                role: studentCreated[0].role
               },
             },
             "accesstokensecret",
@@ -134,6 +184,7 @@ export function handleLogin(req: any, res: any, next: any) {
               studentInfo: {
                 student_id: studentCreated[0].student_id,
                 name: studentCreated[0].name,
+                role: studentCreated[0].role
               },
             },
             "refreshtokensecret",
@@ -148,6 +199,7 @@ export function handleLogin(req: any, res: any, next: any) {
           );
           var student_data = {
             id: studentCreated[0].student_id,
+            role: studentCreated[0].role,
             name: studentCreated[0].name,
             email: studentCreated[0].email,
             phone: studentCreated[0].phone,

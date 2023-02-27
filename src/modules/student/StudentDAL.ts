@@ -25,14 +25,14 @@ export async function updateStudentToken(studentId: any, refresh_token: string) 
   return rows;
 }
 
-export async function createStudent(dpmId: any, campusId: any, name: string, address: string, phone: any, email: string, active: any) {
-  const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, active);
+export async function createStudent(dpmId: any, campusId: any, name: string, address: string, phone: any, email: string,role: string, active: any) {
+  const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
 
-export async function getStudent(studentId: any, name: string) {
-  const queryString =  StudentSQL.getStudent(studentId, name);
+export async function getStudent(studentId: any) {
+  const queryString =  StudentSQL.getStudent(studentId);
   const rows = await query(queryString.text, [queryString.values]);
   return rows;
 }

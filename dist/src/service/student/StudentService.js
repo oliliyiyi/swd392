@@ -48,16 +48,16 @@ function updateStudentToken(studentId, refresh_token) {
     });
 }
 exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, active) {
+function createStudent(dpmId, campusId, name, address, phone, email, role, active) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, active);
+        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
         return result;
     });
 }
 exports.createStudent = createStudent;
-function getStudent(studentId, name) {
+function getStudent(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudent(studentId, name);
+        const result = yield StudentDAL.getStudent(studentId);
         return result;
     });
 }

@@ -26,12 +26,13 @@ export async function isAuth(req: any, res: any, next: any) {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, decoded: any) => {
     if (err) return res.status(401).json({ message: err.message }); //invalid token
-    const studentCreated: any = await  Student.getStudent(decoded.studentInfo.studentId,decoded.studentInfo.name);
-        if (studentCreated[0].token === "") {
+    const studentInfo: any = await  Student.getStudent(decoded.studentInfo.studentInfoID);
+    console.log(studentInfo);
+        if (studentInfo[0].token === "") {
           return res.status(401).json({ message: "Access token expires !" });
         } else {
-          req.studentId = decoded.studentInfo.studentId;
-          req.name = decoded.studentInfo.name;
+          req.studentId = decoded.studentInfo.studentInfoID;
+          req.studentId = decoded.studentInfo.role
           next();
         }
       }

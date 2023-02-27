@@ -71,10 +71,10 @@ function handleLogin(req, res, next) {
     if (!firebaseToken) {
         return res.status(404).json({ message: "Token not found!" });
     }
-    // const roleGet = req.body.role;
-    // if (!roleGet) {
-    //   return res.status(404).json({ message: "Role not found!" });
-    // }
+    const roleGet = req.body.role;
+    if (!roleGet) {
+        return res.status(404).json({ message: "Role not found!" });
+    }
     fbInit.firebaseConnect
         .auth()
         .verifyIdToken(firebaseToken)
@@ -89,12 +89,13 @@ function handleLogin(req, res, next) {
                 .json({ message: "Email is not acceptable in system!" });
         else {
             const studentInfo = yield Student.getInfoStudentLogin(decodedToken.email);
-            if (studentInfo.length > 0) {
+            if (studentInfo.length > 0 && roleGet == "admin") {
                 console.log(studentInfo);
                 const access_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
                         studentInfoID: studentInfo[0].student_id,
                         name: studentInfo[0].name,
+                        role: studentInfo[0].role,
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
@@ -103,6 +104,7 @@ function handleLogin(req, res, next) {
                     studentInfo: {
                         studentId: studentInfo[0].student_id,
                         name: studentInfo[0].name,
+                        role: studentInfo[0].role,
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
@@ -110,6 +112,42 @@ function handleLogin(req, res, next) {
                 yield Student.updateStudentToken(studentInfo[0].student_id, refresh_token);
                 var student_data = {
                     id: studentInfo[0].student_id,
+                    role: studentInfo[0].role,
+                    name: studentInfo[0].name,
+                    email: studentInfo[0].email,
+                    phone: studentInfo[0].phone,
+                };
+                res.status(200).json({
+                    access_token: access_token,
+                    refresh_token: refresh_token,
+                    data: student_data,
+                    message: "Login successful",
+                });
+            }
+            else if (studentInfo.length > 0 && roleGet == "members") {
+                console.log(studentInfo);
+                const access_token = jsonwebtoken_1.default.sign({
+                    studentInfo: {
+                        studentInfoID: studentInfo[0].student_id,
+                        name: studentInfo[0].name,
+                        role: studentInfo[0].role,
+                    },
+                }, "accesstokensecret", {
+                    expiresIn: "15m",
+                });
+                const refresh_token = jsonwebtoken_1.default.sign({
+                    studentInfo: {
+                        studentId: studentInfo[0].student_id,
+                        name: studentInfo[0].name,
+                        role: studentInfo[0].role,
+                    },
+                }, "refreshtokensecret", {
+                    expiresIn: "1d",
+                });
+                yield Student.updateStudentToken(studentInfo[0].student_id, refresh_token);
+                var student_data = {
+                    id: studentInfo[0].student_id,
+                    role: studentInfo[0].role,
                     name: studentInfo[0].name,
                     email: studentInfo[0].email,
                     phone: studentInfo[0].phone,
@@ -127,12 +165,13 @@ function handleLogin(req, res, next) {
                 const active = 1;
                 const address = "abc";
                 const phone = "123456789";
-                yield Student.createStudent(dpmId, campusId, decodedToken.name, address, phone, decodedToken.email, active);
+                yield Student.createStudent(dpmId, campusId, decodedToken.name, address, phone, decodedToken.email, roleGet, active);
                 const studentCreated = yield StudentDAL.getStudentInfoByEmail(decodedToken.email);
                 const access_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
                         student_id: studentCreated[0].student_id,
                         name: studentCreated[0].name,
+                        role: studentCreated[0].role
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
@@ -141,6 +180,7 @@ function handleLogin(req, res, next) {
                     studentInfo: {
                         student_id: studentCreated[0].student_id,
                         name: studentCreated[0].name,
+                        role: studentCreated[0].role
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
@@ -148,6 +188,7 @@ function handleLogin(req, res, next) {
                 yield Student.updateStudentToken(studentCreated[0].student_id, refresh_token);
                 var student_data = {
                     id: studentCreated[0].student_id,
+                    role: studentCreated[0].role,
                     name: studentCreated[0].name,
                     email: studentCreated[0].email,
                     phone: studentCreated[0].phone,
