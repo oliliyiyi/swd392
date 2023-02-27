@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from 'path';
-import * as fbInit from "../../configs/fbconfigs";
+import * as fbInit from "../configs/fbconfigs";
 export function handlepushNotification(req: any, res: any, next: any) {
     const pushOption = req.body.send_option
   if(!pushOption || (pushOption !== "topic" && pushOption !== "device")) 
