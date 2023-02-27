@@ -10,13 +10,13 @@ export async function updateStudentToken(studentId: any, refresh_token: string) 
   return result;
 }
 
-export async function createStudent(dpmId: any, campusId: any, name: string, address: string, phone: any, email: string, active: any) {
-  const result = await StudentDAL.createStudent(dpmId,campusId,name,address,phone,email,active);
+export async function createStudent(dpmId: any, campusId: any, name: string, address: string, phone: any, email: string,role: string, active: any) {
+  const result = await StudentDAL.createStudent(dpmId,campusId,name,address,phone,email,role,active);
   return result;
 }
 
-export async function getStudent(studentId: any, name: string) {
-  const result = await StudentDAL.getStudent(studentId,name);
+export async function getStudent(studentId: any) {
+  const result = await StudentDAL.getStudent(studentId);
   return result;
 }
 

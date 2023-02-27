@@ -67,17 +67,17 @@ function updateStudentToken(studentId, refresh_token) {
     });
 }
 exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, active) {
+function createStudent(dpmId, campusId, name, address, phone, email, role, active) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, active);
+        const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
 }
 exports.createStudent = createStudent;
-function getStudent(studentId, name) {
+function getStudent(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getStudent(studentId, name);
+        const queryString = StudentSQL.getStudent(studentId);
         const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
         return rows;
     });

@@ -16,9 +16,26 @@ const options = {
             version: '1.0.0',
             description: 'API documentation for Swagger'
         },
+        components: {
+            securitySchemes: {
+              bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+              },
+            },
+          },
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
         servers:[
             {
                 url: 'https://event-project.herokuapp.com/'
+            },
+            {
+                url: 'http://localhost:3000/'
             }
         ]
     },apis: ['./dist/src/routers/AllRouters.js']
@@ -32,7 +49,7 @@ app.use(express.json());
 
 
 
-app.use(router, isAuth, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use(router,swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 
 
