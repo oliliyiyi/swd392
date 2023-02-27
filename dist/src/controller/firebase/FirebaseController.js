@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlepushNotification = void 0;
-const fbInit = __importStar(require("../../../src/configs/fbconfigs"));
+const fbInit = __importStar(require("../../configs/fbconfigs"));
 function handlepushNotification(req, res, next) {
     const pushOption = req.body.send_option;
     if (!pushOption || (pushOption !== "topic" && pushOption !== "device"))
