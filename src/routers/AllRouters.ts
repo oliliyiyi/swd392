@@ -3,7 +3,7 @@ import * as CampusController from '../controller/campus/CampusController';
 import * as StudentLoginController from '../controller/student/StudentLoginController';
 import * as StudentController from '../controller/student/StudentController';
 import * as EventController from '../controller/event/EventController';
-import * as FirebaseController from '../controller/firebase/firebaseController';
+import * as FirebaseController from '../controller/firebaseController';
 import { isAuth } from '../middleware/Auth';
 import express from 'express';
 const router = express.Router();
