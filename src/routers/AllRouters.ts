@@ -7,7 +7,6 @@ import * as FirebaseController from '../controller/firebaseController';
 import { isAuth } from '../middleware/Auth';
 import express from 'express';
 const router = express.Router();
- 
 
 /**
  * @swagger
@@ -21,12 +20,12 @@ const router = express.Router();
  *             200:
  *                description: To test get method is available.
  */
-router.get('/api/campus',isAuth, CampusController.getAllListCampus);
+router.get("/api/campus", isAuth, CampusController.getAllListCampus);
 
-router.get('/api/student/info', StudentController.getStudentInfoByEmail);
+router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 /**
  * @swagger
- * /api/eventInsert:
+ * /api/event/insert:
  *   post:
  *     summary: Create a new event
  *     description: Create a new event with the specified parameters
@@ -45,14 +44,14 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *                 type: string
  *               point:
  *                 type: number
- *               img: 
+ *               img:
  *                 type: string
  *               start_date:
  *                 type: string
  *               end_date:
  *                 type: string
  *               date:
- *                 type: string      
+ *                 type: string
  *             required:
  *               - name
  *               - email
@@ -63,9 +62,32 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: Bad Request
  */
-router.post('/api/eventInsert', EventController.admInsertEvent);
+router.post("/api/event/insert", isAuth, EventController.admInsertEvent);
 
-
+/**
+ * @swagger
+ * /api/event:
+ *    get:
+ *       summary: Get events
+ *       description: Get events in a specified campus
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 campus_id:
+ *                      type: number
+ *               required:
+ *               - campus_id
+ *         responses:
+ *            '200':
+ *               description: OK
+ *            '400':
+ *               description: Bad Request
+ */
+router.get("/api/event", EventController.getAllEventsInCampus);
 
 /**
  * @swagger
@@ -115,7 +137,7 @@ router.post('/api/eventInsert', EventController.admInsertEvent);
  *                        type: string
  *                        example: "0382212012"
  */
-router.post('/api/login', StudentLoginController.handleLogin);
+router.post("/api/login", StudentLoginController.handleLogin);
 
 
 /**

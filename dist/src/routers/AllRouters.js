@@ -48,11 +48,11 @@ exports.router = router;
  *             200:
  *                description: To test get method is available.
  */
-router.get('/api/campus', Auth_1.isAuth, CampusController.getAllListCampus);
-router.get('/api/student/info', StudentController.getStudentInfoByEmail);
+router.get("/api/campus", Auth_1.isAuth, CampusController.getAllListCampus);
+router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 /**
  * @swagger
- * /api/eventInsert:
+ * /api/event/insert:
  *   post:
  *     summary: Create a new event
  *     description: Create a new event with the specified parameters
@@ -89,7 +89,31 @@ router.get('/api/student/info', StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: Bad Request
  */
-router.post('/api/eventInsert', EventController.admInsertEvent);
+router.post("/api/event/insert", Auth_1.isAuth, EventController.admInsertEvent);
+/**
+ * @swagger
+ * /api/event:
+ *    get:
+ *       summary: Get events
+ *       description: Get events in a specified campus
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 campus_id:
+ *                      type: number
+ *               required:
+ *               - campus_id
+ *         responses:
+ *            '200':
+ *               description: OK
+ *            '400':
+ *               description: Bad Request
+ */
+router.get("/api/event", EventController.getAllEventsInCampus);
 /**
  * @swagger
  * /api/login:
@@ -138,7 +162,7 @@ router.post('/api/eventInsert', EventController.admInsertEvent);
  *                        type: string
  *                        example: "0382212012"
  */
-router.post('/api/login', StudentLoginController.handleLogin);
+router.post("/api/login", StudentLoginController.handleLogin);
 /**
  * @swagger
  * /notifications:

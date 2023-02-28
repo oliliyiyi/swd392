@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEvent = void 0;
+exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 function admInsertEvent(req, res, next) {
@@ -57,3 +57,16 @@ function admInsertEvent(req, res, next) {
     });
 }
 exports.admInsertEvent = admInsertEvent;
+function getAllEventsInCampus(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const campus_id = req.body.campus_id;
+            const response = yield EventService.getAllEventsInCampus(campus_id);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getAllEventsInCampus = getAllEventsInCampus;

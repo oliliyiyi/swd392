@@ -20,3 +20,11 @@ export async function admInsertEvent(
   );
   return result;
 }
+
+export async function getAllEventsInCampus(
+  campus_id: number
+) {
+  const result = await EventDAL.getAllEventsInCampus(campus_id);
+  return result;
+}
+
