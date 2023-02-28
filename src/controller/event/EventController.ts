@@ -27,3 +27,13 @@ export async function admInsertEvent(req: any, res: any, next: any) {
     return next(error);
   }
 }
+
+export async function getAllEventsInCampus(req: any, res: any, next: any){
+  try{
+      const campus_id = req.body.campus_id as number;
+      const response = await EventService.getAllEventsInCampus(campus_id);
+      res.json(response);
+  } catch (error) {
+      return next(error);
+  }
+}

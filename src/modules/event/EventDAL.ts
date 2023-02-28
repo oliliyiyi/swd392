@@ -14,3 +14,9 @@ export async function admInsertEvent(
   const rows = await query(queryString.text, queryString.values);
   return;
 }
+
+export async function getAllEventsInCampus(campus_id: number){
+  const queryString = EventSQL.getAllEventsInCampus(campus_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}

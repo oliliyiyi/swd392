@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEvent = void 0;
+exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
 function admInsertEvent(name, email, location, point, img, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -41,3 +41,10 @@ function admInsertEvent(name, email, location, point, img, start_date, end_date)
     });
 }
 exports.admInsertEvent = admInsertEvent;
+function getAllEventsInCampus(campus_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield EventDAL.getAllEventsInCampus(campus_id);
+        return result;
+    });
+}
+exports.getAllEventsInCampus = getAllEventsInCampus;
