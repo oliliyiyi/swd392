@@ -22,8 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlepushNotification = void 0;
+exports.handlePostFile = exports.handlepushNotification = void 0;
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const fbInit = __importStar(require("../configs/fbconfigs"));
 function handlepushNotification(req, res, next) {
     const pushOption = req.body.send_option;
@@ -90,51 +95,56 @@ function handlepushNotification(req, res, next) {
     }
 }
 exports.handlepushNotification = handlepushNotification;
-// const handlePostFile = function (req, res) {
-//   var fileGet = req.files.file;
-//   if(!fileGet) return res.status(404).json({ message: "File not found" });
-//   const parentDirectory = path.dirname(__dirname);
-//   console.log(parentDirectory);
-//   let pathSave = parentDirectory +"/image_folder/" + fileGet.name;
-//   console.log(pathSave);
-//   const bucket = fbInit.storage().bucket();
-//   const file = bucket.file(fileGet.name);
-//   const stream = file.createWriteStream({
-//     resumable: false,
-//   });
-//   fileGet.mv(pathSave, function (err) {
-//     if (err) {
-//       console.log(err);
-//       return res.status(500).json({ message: "Server error!" });
-//     } else {
-//       console.log("file ok");
-//       var pathImg = parentDirectory +"/image_folder/"+ fileGet.name;
-//       fs.createReadStream(pathImg)
-//         .pipe(stream)
-//         .on("error", (error) => {
-//           console.error("Error uploading image:", error);
-//           return res.status(500).json({ message: "Upload file to firebase error!" });
-//         })
-//         .on("finish", () => {
-//           console.log("Successfully uploaded image.");
-//         });
-//       file
-//         .getSignedUrl({
-//           action: "read",
-//           expires: "01-01-2030",
-//         })
-//         .then((signedUrls) => {
-//           console.log(signedUrls);
-//           fs.unlink(pathImg, (err) => {
-//             if (err) throw err;
-//             console.log(`${pathImg} was deleted`);
-//           });
-//           res.status(200).json({data: signedUrls[0], message: "Successfully uploaded image"});
-//         })
-//         .catch((error) => {
-//           console.error("Error getting image URL:", error);
-//           res.status(500).json({ message: "Error get link image from firebase!" });
-//         });
-//     }
-//   });
-// };
+function handlePostFile(req, res) {
+    var fileGet = req.files.file;
+    if (!fileGet)
+        return res.status(404).json({ message: "File not found" });
+    const parentDirectory = path_1.default.dirname(__dirname);
+    console.log(parentDirectory);
+    let pathSave = parentDirectory + "/image_folder/" + fileGet.name;
+    console.log(pathSave);
+    const bucket = fbInit.firebaseConnect.storage().bucket();
+    const file = bucket.file(fileGet.name);
+    const stream = file.createWriteStream({
+        resumable: false,
+    });
+    fileGet.mv(pathSave, function (err) {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Server error!" });
+        }
+        else {
+            console.log("file ok");
+            var pathImg = parentDirectory + "/image/" + fileGet.name;
+            fs_1.default.createReadStream(pathImg)
+                .pipe(stream)
+                .on("error", (error) => {
+                console.error("Error uploading image:", error);
+                return res.status(500).json({ message: "Upload file to firebase error!" });
+            })
+                .on("finish", () => {
+                console.log("Successfully uploaded image.");
+            });
+            file
+                .getSignedUrl({
+                action: "read",
+                expires: "01-01-2030",
+            })
+                .then((signedUrls) => {
+                console.log(signedUrls);
+                fs_1.default.unlink(pathImg, (err) => {
+                    if (err)
+                        throw err;
+                    console.log(`${pathImg} was deleted`);
+                });
+                res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
+            })
+                .catch((error) => {
+                console.error("Error getting image URL:", error);
+                res.status(500).json({ message: "Error get link image from firebase!" });
+            });
+        }
+    });
+}
+exports.handlePostFile = handlePostFile;
+;
