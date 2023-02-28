@@ -161,4 +161,47 @@ router.post('/api/login', StudentLoginController.handleLogin);
  */
 router.post('/notifications', FirebaseController.handlepushNotification);
 
+
+/**
+ * @swagger
+ * /images:
+ *   post:
+ *     summary: Save files
+ *     tags: [Services]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The file to upload.
+ *               note:
+ *                 type: string
+ *                 description: Description of file contents.
+ *           required:
+ *             - file
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: string
+ *                   example: "https://storage.googleapis.com/wallet-fpt.appspot.com/avatar.png?GoogleAccessId=firebase-adminsdk..."
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully uploaded image"
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/images', FirebaseController.handlePostFile);
+
 export { router };
