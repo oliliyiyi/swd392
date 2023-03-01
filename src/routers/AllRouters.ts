@@ -5,8 +5,21 @@ import * as StudentController from '../controller/student/StudentController';
 import * as EventController from '../controller/event/EventController';
 import * as FirebaseController from '../controller/firebaseController';
 import { isAuth } from '../middleware/Auth';
+import dotenv from 'dotenv';
 import express from 'express';
+import multer from 'multer';
+dotenv.config();
 const router = express.Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, process.env.IMAGE_UPLOAD_PATH as string);
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+  
+  const upload = multer({ storage: storage });
 
 /**
  * @swagger
@@ -203,8 +216,7 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *               note:
  *                 type: string
  *                 description: Description of file contents.
- *           required:
- *             - file
+ * 
  *     responses:
  *       200:
  *         description: OK
@@ -224,6 +236,6 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *       500:
  *         description: Internal server error
  */
-router.post('/images', FirebaseController.handlePostFile);
+router.post('/images',upload.single('file'), FirebaseController.handlePostFile);
 
 export { router };

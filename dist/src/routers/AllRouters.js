@@ -33,9 +33,21 @@ const StudentController = __importStar(require("../controller/student/StudentCon
 const EventController = __importStar(require("../controller/event/EventController"));
 const FirebaseController = __importStar(require("../controller/firebaseController"));
 const Auth_1 = require("../middleware/Auth");
+const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("multer"));
+dotenv_1.default.config();
 const router = express_1.default.Router();
 exports.router = router;
+const storage = multer_1.default.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, process.env.IMAGE_UPLOAD_PATH);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const upload = (0, multer_1.default)({ storage: storage });
 /**
  * @swagger
  *  /api/campus:
@@ -224,8 +236,7 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *               note:
  *                 type: string
  *                 description: Description of file contents.
- *           required:
- *             - file
+ *
  *     responses:
  *       200:
  *         description: OK
@@ -245,4 +256,4 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *       500:
  *         description: Internal server error
  */
-router.post('/images', FirebaseController.handlePostFile);
+router.post('/images', upload.single('file'), FirebaseController.handlePostFile);
