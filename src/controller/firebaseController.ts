@@ -62,24 +62,18 @@ export function handlepushNotification(req: any, res: any, next: any) {
 }
 
 export function handlePostFile(req: any, res: any) {
-  var fileGet = req.files.file;
+  var fileGet = req.file;
   if(!fileGet) return res.status(404).json({ message: "File not found" });
-  const parentDirectory = path.dirname(__dirname);
-  console.log(parentDirectory);
-  let pathSave = parentDirectory +"/image_folder/" + fileGet.name;
+  let pathSave = "./src/image/" + fileGet.originalname;
   console.log(pathSave);
   const bucket = fbInit.firebaseConnect.storage().bucket();
-  const file = bucket.file(fileGet.name);
+  const file = bucket.file(fileGet.originalname);
   const stream = file.createWriteStream({
     resumable: false,
   });
-  fileGet.mv(pathSave, function (err:any) {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({ message: "Server error!" });
-    } else {
+
       console.log("file ok");
-      var pathImg = parentDirectory +"/image/"+ fileGet.name;
+      var pathImg = "./src/image/" + fileGet.originalname;
       fs.createReadStream(pathImg)
         .pipe(stream)
         .on("error", (error) => {
@@ -106,7 +100,7 @@ export function handlePostFile(req: any, res: any) {
           console.error("Error getting image URL:", error);
           res.status(500).json({ message: "Error get link image from firebase!" });
         });
-    }
-  });
+    
+  
 };
 
