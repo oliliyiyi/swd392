@@ -21,10 +21,17 @@ export async function admInsertEvent(
   return result;
 }
 
-export async function getAllEventsInCampus(
-  campus_id: number
-) {
+export async function getAllEventsInCampus(campus_id: number) {
   const result = await EventDAL.getAllEventsInCampus(campus_id);
   return result;
 }
 
+export async function getEventsByName(name: string) {
+  const result = await EventDAL.getEventsByName(name);
+  return result;
+}
+
+export async function admInsertEventOrganizer(event_id: number, club_id: number, student_id: number) {
+  const result = await EventDAL.admInsertEventOrganizer(event_id, club_id, student_id);
+  return result;
+}

@@ -56,6 +56,7 @@ function query(sql, values) {
         }
         catch (error) {
             console.error(error);
+            throw new Error(error);
         }
         finally {
             if (connection) {

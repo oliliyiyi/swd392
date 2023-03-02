@@ -31,6 +31,7 @@ const CampusController = __importStar(require("../controller/campus/CampusContro
 const StudentLoginController = __importStar(require("../controller/student/StudentLoginController"));
 const StudentController = __importStar(require("../controller/student/StudentController"));
 const EventController = __importStar(require("../controller/event/EventController"));
+const ClubController = __importStar(require("../controller/club/ClubController"));
 const FirebaseController = __importStar(require("../controller/firebaseController"));
 const Auth_1 = require("../middleware/Auth");
 const express_1 = __importDefault(require("express"));
@@ -40,6 +41,8 @@ exports.router = router;
  * @swagger
  *  /api/campus:
  *    get:
+ *         tags:
+ *          - Campus
  *         security:
  *          - bearerAuth: []
  *         summary: This api is used to check if get method is available or not.
@@ -54,6 +57,8 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  * @swagger
  * /api/event/insert:
  *   post:
+ *     tags:
+ *      - Event
  *     summary: Create a new event
  *     description: Create a new event with the specified parameters
  *     requestBody:
@@ -89,31 +94,145 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: Bad Request
  */
-router.post("/api/event/insert", Auth_1.isAuth, EventController.admInsertEvent);
+/**
+ * @swagger
+ * /api/event/{campus_id}:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get events by campus_id
+ *     description: Get events for a specific campus
+ *     parameters:
+ *       - name: campus_id
+ *         in: path
+ *         description: ID of the campus to get events for
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Returns the events for the specified campus
+ *       404:
+ *         description: Campus not found
+ *       500:
+ *         description: Internal server error
+ */
 /**
  * @swagger
  * /api/event:
- *    get:
- *       summary: Get events
- *       description: Get events in a specified campus
- *       requestBody:
- *         required: true
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 campus_id:
- *                      type: number
- *               required:
- *               - campus_id
- *         responses:
- *            '200':
- *               description: OK
- *            '400':
- *               description: Bad Request
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get events by name
+ *     description: Get all event list whose event name contains keyword
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *             required:
+ *               - name
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
  */
-router.get("/api/event", EventController.getAllEventsInCampus);
+/**
+ * @swagger
+ * /api/event/organizer:
+ *   post:
+ *     tags:
+ *      - Event
+ *     summary: Set organizer for event
+ *     description: Set organizer for event
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               event_id:
+ *                 type: number
+ *               club_id:
+ *                 type: number
+ *               student_id:
+ *                 type: number
+ *             required:
+ *               - event_id
+ *               - club_id
+ *               - student_id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: This student is not a club member
+ */
+router.post("/api/event/insert", EventController.admInsertEvent);
+router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
+router.get("/api/event", EventController.getEventsByName);
+router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
+/**
+ * @swagger
+ * /api/club/{campus_id}:
+ *   get:
+ *     tags:
+ *      - Club
+ *     summary: Get clubs by campus_id
+ *     description: Get all clubs in specific campus
+ *     parameters:
+ *       - name: campus_id
+ *         in: path
+ *         description: ID of the campus to get clubs in
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+/**
+ * @swagger
+ * /api/club/member:
+ *   post:
+ *     tags:
+ *      - Club
+ *     summary: Add student into Club
+ *     description: Add student into Club
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               student_id:
+ *                 type: number
+ *               club_id:
+ *                 type: number
+ *               role:
+ *                 type: string
+ *               join_date:
+ *                 type: string
+ *             required:
+ *               - student_id
+ *               - club_id
+ *               - role
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/club/:campus_id", ClubController.getAllClubsInCampus);
+router.post("/api/club/member", ClubController.insertClubMember);
 /**
  * @swagger
  * /api/login:

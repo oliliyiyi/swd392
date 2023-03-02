@@ -32,48 +32,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
-const EventSQL = __importStar(require("../../modules/event/eventSQL"));
+exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+const ClubService = __importStar(require("../../service/club/ClubService"));
 const db_config_1 = require("../../configs/db_config");
-const ClubDAL = __importStar(require("../club/ClubDAL"));
-function admInsertEvent(name, email, location, point, img, start_date, end_date) {
+function getAllClubsInCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, start_date, end_date);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        console.log(rows);
-        return;
-    });
-}
-exports.admInsertEvent = admInsertEvent;
-function getAllEventsInCampus(campus_id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.getAllEventsInCampus(campus_id);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
-    });
-}
-exports.getAllEventsInCampus = getAllEventsInCampus;
-function getEventsByName(name) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.getEventsByName(name);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
-    });
-}
-exports.getEventsByName = getEventsByName;
-function admInsertEventOrganizer(event_id, club_id, student_id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        var status = false;
-        const clubMem = yield ClubDAL.getClubMemberInfo(club_id, student_id);
-        if (clubMem.length > 0) {
-            const queryString = EventSQL.admInsertEventOrganizer(event_id, club_id, student_id);
-            yield (0, db_config_1.query)(queryString.text, queryString.values);
+        try {
+            const campus_id = req.query.campus_id;
+            const response = yield ClubService.getAllClubsInCampus(campus_id);
+            res.json(response);
         }
-        else {
-            var error = {};
-            throw new Error("NotClubMember");
+        catch (error) {
+            return next(error);
         }
-        return;
     });
 }
-exports.admInsertEventOrganizer = admInsertEventOrganizer;
+exports.getAllClubsInCampus = getAllClubsInCampus;
+function insertClubMember(req, res, next) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = req.body.student_id;
+            const club_id = req.body.club_id;
+            const role = req.body.role;
+            const join_date = ((_a = req.body) === null || _a === void 0 ? void 0 : _a.join_date) || '';
+            const response = yield ClubService.insertClubMember(student_id, club_id, role, join_date);
+            yield db_config_1.db.query("COMMIT");
+            res.json(response);
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            res.status(400).json({ message: "Action Fail" });
+        }
+    });
+}
+exports.insertClubMember = insertClubMember;
