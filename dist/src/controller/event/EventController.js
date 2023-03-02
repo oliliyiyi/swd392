@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 function admInsertEvent(req, res, next) {
@@ -60,7 +60,7 @@ exports.admInsertEvent = admInsertEvent;
 function getAllEventsInCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const campus_id = req.body.campus_id;
+            const campus_id = req.query.campus_id;
             const response = yield EventService.getAllEventsInCampus(campus_id);
             res.json(response);
         }
@@ -70,3 +70,39 @@ function getAllEventsInCampus(req, res, next) {
     });
 }
 exports.getAllEventsInCampus = getAllEventsInCampus;
+function getEventsByName(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const name = req.body.name;
+            const response = yield EventService.getEventsByName(name);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getEventsByName = getEventsByName;
+function admInsertEventOrganizer(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const event_id = req.body.event_id;
+            const club_id = req.body.club_id;
+            const student_id = req.body.student_id;
+            yield EventService.admInsertEventOrganizer(event_id, club_id, student_id);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "NotClubMember") {
+                res.status(400).json({ message: "This student is not a club member" });
+            }
+            else {
+                return next(error);
+            }
+        }
+    });
+}
+exports.admInsertEventOrganizer = admInsertEventOrganizer;

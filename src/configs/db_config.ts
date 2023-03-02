@@ -17,8 +17,9 @@ export async function query(sql: string, values: any) {
     connection = await db.getConnection();
     const [rows, fields] = await connection.query(sql, values);
     return rows;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
+    throw new Error(error);
   } finally {
     if (connection) {
       if (typeof connection.release === 'function') {
