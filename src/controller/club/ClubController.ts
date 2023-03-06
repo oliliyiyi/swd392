@@ -3,7 +3,7 @@ import { db } from "../../configs/db_config";
 
 export async function getAllClubsInCampus(req: any, res: any, next: any){
     try{
-        const campus_id = req.query.campus_id;
+        const campus_id = req.params.campus_id as number;
         const response = await ClubService.getAllClubsInCampus(campus_id);
         res.json(response);
     } catch (error) {
@@ -23,6 +23,16 @@ export async function insertClubMember(req: any, res: any, next: any){
         res.json(response);
       } catch (error: any) {
         await db.query("ROLLBACK");
+        res.status(400).json({message: "Action Fail"});
+      }
+}
+
+export async function getAllClubMembers(req: any, res: any, next: any){
+    try {
+        const club_id = req.body.club_id;
+        const response = await ClubService.getAllClubMembers(club_id);
+        res.json(response);
+    } catch (error: any) {
         res.status(400).json({message: "Action Fail"});
       }
 }

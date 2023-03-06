@@ -32,11 +32,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
-function admInsertEvent(name, email, location, point, img, start_date, end_date) {
+function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.admInsertEvent(name, email, location, point, img, start_date, end_date);
+        const result = yield EventDAL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
         return result;
     });
 }
@@ -62,3 +62,22 @@ function admInsertEventOrganizer(event_id, club_id, student_id) {
     });
 }
 exports.admInsertEventOrganizer = admInsertEventOrganizer;
+function registerEvent(student_id, event_id, registration_date) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event_id);
+        studentsJoinEvent.forEach((student) => {
+            if (student.student_id === student_id) {
+                throw new Error("StudentAlreadyJoinEvent");
+            }
+        });
+        const result = yield EventDAL.registerEvent(student_id, event_id, registration_date);
+    });
+}
+exports.registerEvent = registerEvent;
+function getStudentsJoinEvent(event_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield EventDAL.getStudentsJoinEvent(event_id);
+        return result;
+    });
+}
+exports.getStudentsJoinEvent = getStudentsJoinEvent;

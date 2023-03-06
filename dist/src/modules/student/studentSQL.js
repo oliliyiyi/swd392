@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
+exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
 function getStudentInfoByEmail(email) {
     const query = `SELECT * FROM student WHERE email = ?`;
     const values = [email];
@@ -16,7 +16,7 @@ function updateStudentToken(studentId, refresh_token) {
     const values = [refresh_token, studentId];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
@@ -24,21 +24,30 @@ exports.updateStudentToken = updateStudentToken;
 function createStudent(dpmId, campusId, name, address, phone, email, role, active) {
     const query = `INSERT INTO student (dpm_id, campus_id, name, address, phone, email, role, active)
     VALUES (?,?,?,?,?,?,?,?)`;
-    const values = [dpmId, campusId, name, address, phone, email, role, active];
+    const values = [
+        dpmId,
+        campusId,
+        name,
+        address,
+        phone,
+        email,
+        role,
+        active,
+    ];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.createStudent = createStudent;
-function getStudent(studentId) {
-    const query = "SELECT * FROM student WHERE student_id = ?";
+function getStudentByStudentId(studentId) {
+    const query = `SELECT * FROM student WHERE student_id = ?`;
     const values = [studentId];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
-exports.getStudent = getStudent;
+exports.getStudentByStudentId = getStudentByStudentId;

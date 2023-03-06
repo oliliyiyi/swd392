@@ -19,20 +19,41 @@ export async function getInfoStudentLogin(email: string) {
   return rows;
 }
 
-export async function updateStudentToken(studentId: any, refresh_token: string) {
+export async function updateStudentToken(
+  studentId: any,
+  refresh_token: string
+) {
   const queryString = StudentSQL.updateStudentToken(studentId, refresh_token);
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
 
-export async function createStudent(dpmId: any, campusId: any, name: string, address: string, phone: any, email: string,role: string, active: any) {
-  const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
+export async function createStudent(
+  dpmId: any,
+  campusId: any,
+  name: string,
+  address: string,
+  phone: any,
+  email: string,
+  role: string,
+  active: any
+) {
+  const queryString = StudentSQL.createStudent(
+    dpmId,
+    campusId,
+    name,
+    address,
+    phone,
+    email,
+    role,
+    active
+  );
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
 
-export async function getStudent(studentId: any) {
-  const queryString =  StudentSQL.getStudent(studentId);
-  const rows = await query(queryString.text, [queryString.values]);
+export async function getStudentByStudentId(studentId: any) {
+  const queryString = StudentSQL.getStudentByStudentId(studentId);
+  const rows = await query(queryString.text, queryString.values);
   return rows;
 }
