@@ -42,7 +42,7 @@ export async function getAllEventsInCampus(req: any, res: any, next: any) {
 
 export async function getEventsByName(req: any, res: any, next: any) {
   try {
-    const name = req.body.name;
+    const name = req.query.name;
     const response = await EventService.getEventsByName(name);
     res.json(response);
   } catch (error) {

@@ -46,17 +46,13 @@ router.get("/api/campus", isAuth, CampusController.getAllListCampus);
  *      - Student
  *     summary: Get Student info by email
  *     description:  Get Student info by email
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *             required:
- *               - email
+ *     parameters:
+ *       - name: email
+ *         in: query
+ *         description: The email to get student
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: OK
@@ -164,17 +160,13 @@ router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
  *      - Event
  *     summary: Get events by name
  *     description: Get all event list whose event name contains keyword 
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *             required:
- *               - name
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         description: The name to find event
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: OK
