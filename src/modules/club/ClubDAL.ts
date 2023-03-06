@@ -27,3 +27,7 @@ export async function insertClubMember(
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
+
+export async function getAllClubMembers(club_id: number){
+  return;
+}

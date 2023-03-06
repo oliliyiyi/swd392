@@ -38,7 +38,56 @@ const storage = multer.diskStorage({
  */
 router.get("/api/campus", isAuth, CampusController.getAllListCampus);
 
+/**
+ * @swagger
+ * /api/student/info:
+ *   get:
+ *     tags:
+ *      - Student
+ *     summary: Get Student info by email
+ *     description:  Get Student info by email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *             required:
+ *               - email
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
 router.get("/api/student/info", StudentController.getStudentInfoByEmail);
+
+/**
+ * @swagger
+ * /api/student/{student_id}:
+ *   get:
+ *     tags:
+ *      - Student
+ *     summary: Get student by student_id
+ *     description: Get student by student_id
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student 
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Returns student
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
+
 /**
  * @swagger
  * /api/event/insert:
@@ -80,6 +129,7 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: Bad Request
  */
+router.post("/api/event/insert", EventController.admInsertEvent);
 
 /**
  * @swagger
@@ -95,7 +145,7 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *         description: ID of the campus to get events for
  *         required: true
  *         schema:
- *           type: string
+ *           type: number
  *     responses:
  *       200:
  *         description: Returns the events for the specified campus
@@ -104,6 +154,7 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *       500:
  *         description: Internal server error
  */
+router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
 
 /**
  * @swagger
@@ -130,6 +181,7 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: Bad Request
  */
+router.get("/api/event", EventController.getEventsByName);
 
 /**
  * @swagger
@@ -162,10 +214,65 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  *       '400':
  *         description: This student is not a club member
  */
-router.post("/api/event/insert", EventController.admInsertEvent);
-router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
-router.get("/api/event", EventController.getEventsByName);
 router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
+
+/**
+ * @swagger
+ * /api/event/join:
+ *   post:
+ *     tags:
+ *      - Event
+ *     summary: Students register for the event
+ *     description: Students register for the event
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               event_id:
+ *                 type: number
+ *               student_id:
+ *                 type: number
+ *               registration_date:
+ *                 type: string
+ *                 example: yyyy-dd-mm HH-MM-SS
+ *             required:
+ *               - event_id
+ *               - registration_date
+ *               - student_id
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: This student is not a club member
+ */
+router.post("/api/event/join", EventController.registerEvent);
+
+/**
+ * @swagger
+ * /api/event/join/{event_id}:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get students join event
+ *     description: Get all students join event by event_id
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to get student join
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/event/join/:event_id", EventController.getStudentsJoinEvent);
+
 /**
  * @swagger
  * /api/club/{campus_id}:
@@ -180,13 +287,16 @@ router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
  *         description: ID of the campus to get clubs in
  *         required: true
  *         schema:
- *           type: string
+ *           type: number
  *     responses:
  *       '200':
  *         description: OK
  *       '400':
  *         description: Bad Request
  */
+router.get("/api/club/:campus_id", ClubController.getAllClubsInCampus);
+
+router.get("/api/club/member", ClubController.getAllClubMembers);
 
 /**
  * @swagger
@@ -221,8 +331,8 @@ router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
  *       '400':
  *         description: Bad Request
  */
-router.get("/api/club/:campus_id", ClubController.getAllClubsInCampus);
 router.post("/api/club/member", ClubController.insertClubMember)
+
 /**
  * @swagger
  * /api/login:
@@ -273,7 +383,6 @@ router.post("/api/club/member", ClubController.insertClubMember)
  */
 router.post("/api/login", StudentLoginController.handleLogin);
 
-
 /**
  * @swagger
  * /notifications:
@@ -316,7 +425,6 @@ router.post("/api/login", StudentLoginController.handleLogin);
  *       - application/json
  */
 router.post('/notifications', FirebaseController.handlepushNotification);
-
 
 /**
  * @swagger

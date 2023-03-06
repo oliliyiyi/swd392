@@ -7,6 +7,7 @@ export async function admInsertEvent(
   location: string,
   point: number,
   img: string,
+  description: string,
   start_date: string,
   end_date: string
 ) {
@@ -16,6 +17,7 @@ export async function admInsertEvent(
     location,
     point,
     img,
+    description,
     start_date,
     end_date
   );
@@ -43,8 +45,19 @@ export async function admInsertEventOrganizer(event_id: number, club_id: number,
     const queryString = EventSQL.admInsertEventOrganizer(event_id, club_id, student_id);
     await query(queryString.text, queryString.values);
   } else {
-    var error = {};
     throw new Error("NotClubMember");
   }
   return;
+}
+
+export async function registerEvent(student_id: number, event_id: number, registration_date: string) {
+  const queryString = EventSQL.registerEvent(student_id, event_id, registration_date);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
+export async function getStudentsJoinEvent(event_id: number) {
+  const queryString = EventSQL.getStudentsJoinEvent(event_id);
+  const studentsJoinEvent = await query(queryString.text, queryString.values);
+  return studentsJoinEvent;
 }

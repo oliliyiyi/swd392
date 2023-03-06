@@ -32,13 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
-function admInsertEvent(name, email, location, point, img, start_date, end_date) {
+function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, start_date, end_date);
+        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         console.log(rows);
         return;
@@ -70,10 +70,25 @@ function admInsertEventOrganizer(event_id, club_id, student_id) {
             yield (0, db_config_1.query)(queryString.text, queryString.values);
         }
         else {
-            var error = {};
             throw new Error("NotClubMember");
         }
         return;
     });
 }
 exports.admInsertEventOrganizer = admInsertEventOrganizer;
+function registerEvent(student_id, event_id, registration_date) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.registerEvent(student_id, event_id, registration_date);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.registerEvent = registerEvent;
+function getStudentsJoinEvent(event_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.getStudentsJoinEvent(event_id);
+        const studentsJoinEvent = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return studentsJoinEvent;
+    });
+}
+exports.getStudentsJoinEvent = getStudentsJoinEvent;

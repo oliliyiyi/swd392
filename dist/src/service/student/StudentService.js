@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentInfoByEmail = exports.getStudent = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = void 0;
+exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = void 0;
 const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
 function getInfoStudentLogin(email) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -55,13 +55,13 @@ function createStudent(dpmId, campusId, name, address, phone, email, role, activ
     });
 }
 exports.createStudent = createStudent;
-function getStudent(studentId) {
+function getStudentByStudentId(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudent(studentId);
+        const result = yield StudentDAL.getStudentByStudentId(studentId);
         return result;
     });
 }
-exports.getStudent = getStudent;
+exports.getStudentByStudentId = getStudentByStudentId;
 function getStudentInfoByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.getStudentInfoByEmail(email);

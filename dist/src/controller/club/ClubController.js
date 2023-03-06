@@ -32,13 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubService = __importStar(require("../../service/club/ClubService"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const campus_id = req.query.campus_id;
+            const campus_id = req.params.campus_id;
             const response = yield ClubService.getAllClubsInCampus(campus_id);
             res.json(response);
         }
@@ -68,3 +68,16 @@ function insertClubMember(req, res, next) {
     });
 }
 exports.insertClubMember = insertClubMember;
+function getAllClubMembers(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const club_id = req.body.club_id;
+            const response = yield ClubService.getAllClubMembers(club_id);
+            res.json(response);
+        }
+        catch (error) {
+            res.status(400).json({ message: "Action Fail" });
+        }
+    });
+}
+exports.getAllClubMembers = getAllClubMembers;

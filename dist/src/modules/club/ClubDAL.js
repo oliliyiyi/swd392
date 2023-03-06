@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 const ClubSQL = __importStar(require("../../modules/club/clubSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(campus_id) {
@@ -63,3 +63,9 @@ function insertClubMember(student_id, club_id, role, join_date) {
     });
 }
 exports.insertClubMember = insertClubMember;
+function getAllClubMembers(club_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return;
+    });
+}
+exports.getAllClubMembers = getAllClubMembers;

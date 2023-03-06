@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubDAL = __importStar(require("../../modules/club/ClubDAL"));
 function getAllClubsInCampus(campus_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -48,3 +48,10 @@ function insertClubMember(student_id, club_id, role, join_date) {
     });
 }
 exports.insertClubMember = insertClubMember;
+function getAllClubMembers(club_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield ClubDAL.getAllClubMembers(club_id);
+        return result;
+    });
+}
+exports.getAllClubMembers = getAllClubMembers;

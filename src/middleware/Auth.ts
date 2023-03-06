@@ -24,19 +24,22 @@ export async function isAuth(req: any, res: any, next: any) {
       .status(401)
       .json({ message: "Access Denied. No token provided!" });
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err: any, decoded: any) => {
-    if (err) return res.status(401).json({ message: err.message }); //invalid token
-    const studentInfo: any = await  Student.getStudent(decoded.studentInfo.studentInfoID);
-    console.log(studentInfo);
-        if (studentInfo[0].token === "") {
-          return res.status(401).json({ message: "Access token expires !" });
-        } else {
-          req.studentId = decoded.studentInfo.studentInfoID;
-          req.studentId = decoded.studentInfo.role
-          next();
-        }
+  jwt.verify(
+    token,
+    process.env.ACCESS_TOKEN_SECRET,
+    async (err: any, decoded: any) => {
+      if (err) return res.status(401).json({ message: err.message }); //invalid token
+      const studentInfo: any = await Student.getStudentByStudentId(
+        decoded.studentInfo.studentInfoID
+      );
+      console.log(studentInfo);
+      if (studentInfo[0].token === "") {
+        return res.status(401).json({ message: "Access token expires !" });
+      } else {
+        req.studentId = decoded.studentInfo.studentInfoID;
+        req.studentId = decoded.studentInfo.role;
+        next();
       }
-    );
-};
-
-
+    }
+  );
+}

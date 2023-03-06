@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 function admInsertEvent(req, res, next) {
@@ -44,9 +44,10 @@ function admInsertEvent(req, res, next) {
             const location = req.body.location;
             const point = req.body.point;
             const img = req.body.img;
+            const description = req.body.description;
             const start_date = req.body.start_date;
             const end_date = req.body.end_date;
-            yield EventService.admInsertEvent(name, email, location, point, img, start_date, end_date);
+            yield EventService.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
             yield db_config_1.db.query("COMMIT");
             res.json();
         }
@@ -60,7 +61,7 @@ exports.admInsertEvent = admInsertEvent;
 function getAllEventsInCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const campus_id = req.query.campus_id;
+            const campus_id = req.params.campus_id;
             const response = yield EventService.getAllEventsInCampus(campus_id);
             res.json(response);
         }
@@ -106,3 +107,37 @@ function admInsertEventOrganizer(req, res, next) {
     });
 }
 exports.admInsertEventOrganizer = admInsertEventOrganizer;
+function registerEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = req.body.student_id;
+            const event_id = req.body.event_id;
+            const registration_date = req.body.registration_date;
+            yield EventService.registerEvent(student_id, event_id, registration_date);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "StudentAlreadyJoinEvent") {
+                res.status(400).json({ message: "This student is already join event" });
+            }
+            return next(error);
+        }
+    });
+}
+exports.registerEvent = registerEvent;
+function getStudentsJoinEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const event_id = req.params.event_id;
+            const response = yield EventService.getStudentsJoinEvent(event_id);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getStudentsJoinEvent = getStudentsJoinEvent;

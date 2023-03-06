@@ -60,7 +60,7 @@ function isAuth(req, res, next) {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => __awaiter(this, void 0, void 0, function* () {
             if (err)
                 return res.status(401).json({ message: err.message }); //invalid token
-            const studentInfo = yield Student.getStudent(decoded.studentInfo.studentInfoID);
+            const studentInfo = yield Student.getStudentByStudentId(decoded.studentInfo.studentInfoID);
             console.log(studentInfo);
             if (studentInfo[0].token === "") {
                 return res.status(401).json({ message: "Access token expires !" });
@@ -74,4 +74,3 @@ function isAuth(req, res, next) {
     });
 }
 exports.isAuth = isAuth;
-;

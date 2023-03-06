@@ -1,6 +1,9 @@
 export function getAllClubsInCampus(campus_id: number) {
-    const query = `SELECT club_id, campus_id, name, abbreviation, established_date FROM clubs
-    WHERE campus_id = ?;`;
+    const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, COUNT(tb.student_id) as totalMembers FROM 
+    (SELECT * FROM clubs WHERE campus_id = ?) tl
+    LEFT JOIN club_member tb
+    ON tl.club_id = tb.club_id
+    GROUP BY tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date;`;
     const values: any = [campus_id];
     const queryObject = {
       text: query,
