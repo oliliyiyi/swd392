@@ -74,7 +74,7 @@ exports.getAllEventsInCampus = getAllEventsInCampus;
 function getEventsByName(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const name = req.body.name;
+            const name = req.query.name;
             const response = yield EventService.getEventsByName(name);
             res.json(response);
         }

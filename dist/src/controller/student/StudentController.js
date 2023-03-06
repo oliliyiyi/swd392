@@ -37,7 +37,7 @@ const StudentService = __importStar(require("../../service/student/StudentServic
 function getStudentInfoByEmail(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const email = req.body.email;
+            const email = req.query.email;
             const response = yield StudentService.getStudentInfoByEmail(email);
             res.json(response);
         }
