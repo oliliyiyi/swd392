@@ -42,7 +42,7 @@ const options = {
 }
 
 const swaggerDoc = swaggerJSDoc(options);
-
+app.use(express.json());
 app.use(function (req: any, res: any, next: any) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -54,7 +54,7 @@ app.use(function (req: any, res: any, next: any) {
 });
 
 
-app.use(express.json());
+
 
 
 
