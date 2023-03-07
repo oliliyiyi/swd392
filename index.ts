@@ -43,13 +43,13 @@ const options = {
 
 const swaggerDoc = swaggerJSDoc(options);
 
-app.use(function (req: any, res: any, next: any) {
-  res.header('Access-Control-Allow-Origin','https://event-project.herokuapp.com');
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   next();
 });
 app.use(router,swaggerUi.serve, swaggerUi.setup(swaggerDoc));
