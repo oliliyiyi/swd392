@@ -44,6 +44,7 @@ const options = {
 
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express.json());
+app.use(bodyParser.json());
 const allowedOrigins = ['http://localhost:3000', 'https://event-project.herokuapp.com'];
 const OriginOptions:CorsOptions = {
   origin: allowedOrigins,
