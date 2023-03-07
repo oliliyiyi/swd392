@@ -50,7 +50,6 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     next();
 });
-app.use(express_1.default.json());
 app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
