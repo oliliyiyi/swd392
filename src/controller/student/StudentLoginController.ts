@@ -31,7 +31,7 @@ import * as StudentDAL from "../../../src/modules/student/StudentDAL";
 //   }
 // }
 
-export function handleLogin(req: any, res: any, next: any) {
+export async function handleLogin(req: any, res: any) {
   const firebaseToken = req.body.token;
   console.log(req.body.token);
   if (!firebaseToken) {
@@ -41,10 +41,22 @@ export function handleLogin(req: any, res: any, next: any) {
   if (!roleGet) {
     return res.status(404).json({ message: "Role not found!" });
   }
-  fbInit.firebaseConnect
-    .auth()
-    .verifyIdToken(firebaseToken)
-    .then(async (decodedToken: any) => {
+  const decodedToken : any = jwt.decode(firebaseToken);
+  const now = Date.now() / 1000;
+  if (decodedToken.exp && decodedToken.exp < now) {
+    console.log("Access token has expired");
+    return res.status(401).json({ message: "Access token has expired" });
+  } else {
+    console.log("Access token is still valid");
+  }
+  if (decodedToken === null) {
+    return res.status(401).json({ message: "Access token invalid!" });
+  }
+
+  // fbInit.firebaseConnect
+  //   .auth()
+  //   .verifyIdToken(firebaseToken)
+  //   .then(async (decodedToken: any) => {
       console.log(decodedToken);
       let email = decodedToken.email;
       let arr = email.split("@");
@@ -212,5 +224,5 @@ export function handleLogin(req: any, res: any, next: any) {
           });
         }
       }
-    });
+    // });
 }

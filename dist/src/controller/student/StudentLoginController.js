@@ -36,7 +36,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleLogin = void 0;
-const fbInit = __importStar(require("../../../src/configs/fbconfigs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Student = __importStar(require("../../service/student/StudentService"));
 const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL"));
@@ -65,20 +64,33 @@ const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL
 //     return next(error);
 //   }
 // }
-function handleLogin(req, res, next) {
-    const firebaseToken = req.body.token;
-    console.log(req.body.token);
-    if (!firebaseToken) {
-        return res.status(404).json({ message: "Token not found!" });
-    }
-    const roleGet = req.body.role;
-    if (!roleGet) {
-        return res.status(404).json({ message: "Role not found!" });
-    }
-    fbInit.firebaseConnect
-        .auth()
-        .verifyIdToken(firebaseToken)
-        .then((decodedToken) => __awaiter(this, void 0, void 0, function* () {
+function handleLogin(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const firebaseToken = req.body.token;
+        console.log(req.body.token);
+        if (!firebaseToken) {
+            return res.status(404).json({ message: "Token not found!" });
+        }
+        const roleGet = req.body.role;
+        if (!roleGet) {
+            return res.status(404).json({ message: "Role not found!" });
+        }
+        const decodedToken = jsonwebtoken_1.default.decode(firebaseToken);
+        const now = Date.now() / 1000;
+        if (decodedToken.exp && decodedToken.exp < now) {
+            console.log("Access token has expired");
+            return res.status(401).json({ message: "Access token has expired" });
+        }
+        else {
+            console.log("Access token is still valid");
+        }
+        if (decodedToken === null) {
+            return res.status(401).json({ message: "Access token invalid!" });
+        }
+        // fbInit.firebaseConnect
+        //   .auth()
+        //   .verifyIdToken(firebaseToken)
+        //   .then(async (decodedToken: any) => {
         console.log(decodedToken);
         let email = decodedToken.email;
         let arr = email.split("@");
@@ -201,6 +213,7 @@ function handleLogin(req, res, next) {
                 });
             }
         }
-    }));
+        // });
+    });
 }
 exports.handleLogin = handleLogin;
