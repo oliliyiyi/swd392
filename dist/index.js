@@ -47,7 +47,7 @@ const options = {
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express_1.default.json());
 app.use(bodyParser.json());
-const allowedOrigins = ['http://localhost:3000', 'https://event-project.herokuapp.com'];
+const allowedOrigins = ['http://localhost:3000', 'https://f-clubs-event-management.vercel.app'];
 const OriginOptions = {
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
