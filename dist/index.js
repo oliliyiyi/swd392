@@ -50,7 +50,7 @@ const allowedOrigins = ['*'];
 const OriginOptions = {
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
 };
 app.use((0, cors_1.default)(OriginOptions));
 app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
