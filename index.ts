@@ -1,6 +1,7 @@
 // import express from "express";
 import { router } from "./src/routers/AllRouters";
 import express from "express";
+import cors, { CorsOptions } from 'cors';
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -43,15 +44,13 @@ const options = {
 
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express.json());
-app.use(function (req: any, res: any, next: any) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-});
+const allowedOrigins = ['*'];
+const OriginOptions:CorsOptions = {
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
+};
+app.use(cors(OriginOptions));
 
 
 
