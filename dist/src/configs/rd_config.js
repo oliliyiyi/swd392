@@ -1,19 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const redis_1 = __importDefault(require("redis"));
-const client = redis_1.default.createClient({
-    socket: {
-        host: 'redis-13014.c292.ap-southeast-1-1.ec2.cloud.redislabs.com',
-        port: 13014
-    },
-    password: 'Sf2LzoaynIusi8EMEVE1Vk4y3L0wlf2K'
-});
-client.on('connect', () => {
+exports.client = void 0;
+// import redis from 'redis';
+const redis = require('async-redis');
+exports.client = redis.createClient({ url: `redis://default:Sf2LzoaynIusi8EMEVE1Vk4y3L0wlf2K@redis-13014.c292.ap-southeast-1-1.ec2.cloud.redislabs.com:13014` });
+// Kiểm tra kết nối
+exports.client.on('connect', () => {
     console.log('Connected to Redis');
 });
-client.on('error', err => {
-    console.log('Error ' + err);
+// Xử lý lỗi kết nối
+exports.client.on('error', (error) => {
+    console.error('Error connecting to Redis:', error);
 });
