@@ -10,13 +10,13 @@ export async function getAcountStudentLogin(account: string, password: string) {
 export async function getStudentInfoByEmail(email: string) {
   const queryString = StudentSQL.getStudentInfoByEmail(email);
   const rows = await query(queryString.text, queryString.values);
-  return rows;
+  return rows[0];
 }
 
 export async function getInfoStudentLogin(email: string) {
   const queryString = StudentSQL.getStudentInfoByEmail(email);
   const rows = await query(queryString.text, [queryString.values]);
-  return rows;
+  return rows[0];
 }
 
 export async function updateStudentToken(
@@ -55,5 +55,5 @@ export async function createStudent(
 export async function getStudentByStudentId(studentId: any) {
   const queryString = StudentSQL.getStudentByStudentId(studentId);
   const rows = await query(queryString.text, queryString.values);
-  return rows;
+  return rows[0];
 }

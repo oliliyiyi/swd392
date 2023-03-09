@@ -24,13 +24,13 @@ export async function admInsertEvent(
   return result;
 }
 
-export async function getAllEventsInCampus(campus_id: number) {
-  const result = await EventDAL.getAllEventsInCampus(campus_id);
+export async function getAllEventsInCampus(campus_id: number, status: number) {
+  const result = await EventDAL.getAllEventsInCampus(campus_id, status);
   return result;
 }
 
-export async function getEventsByName(name: string) {
-  const result = await EventDAL.getEventsByName(name);
+export async function getEventsByName(name: string, status: number) {
+  const result = await EventDAL.getEventsByName(name, status);
   return result;
 }
 
@@ -67,5 +67,10 @@ export async function registerEvent(
 
 export async function getStudentsJoinEvent(event_id: number){
   const result = await EventDAL.getStudentsJoinEvent(event_id);
+  return result;
+}
+
+export async function getAllEvents(status: number){
+  const result = await EventDAL.getAllEvents(status);
   return result;
 }

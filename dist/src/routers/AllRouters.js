@@ -140,6 +140,34 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
 router.post("/api/event/insert", EventController.admInsertEvent);
 /**
  * @swagger
+ * /api/event/search:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get events by name
+ *     description: Get all event list whose event name contains keyword
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         description: The name to find event
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: status
+ *         in: query
+ *         description: 1 for active, 0 for all
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/event/search", EventController.getEventsByName);
+/**
+ * @swagger
  * /api/event/{campus_id}:
  *   get:
  *     tags:
@@ -150,6 +178,12 @@ router.post("/api/event/insert", EventController.admInsertEvent);
  *       - name: campus_id
  *         in: path
  *         description: ID of the campus to get events for
+ *         required: true
+ *         schema:
+ *           type: number
+ *       - name: status
+ *         in: query
+ *         description: 1 for active, 0 for all
  *         required: true
  *         schema:
  *           type: number
@@ -164,26 +198,26 @@ router.post("/api/event/insert", EventController.admInsertEvent);
 router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
 /**
  * @swagger
- * /api/event:
+ * /api/event/:
  *   get:
  *     tags:
  *      - Event
- *     summary: Get events by name
- *     description: Get all event list whose event name contains keyword
+ *     summary: Get all events
+ *     description: Get all event
  *     parameters:
- *       - name: name
+ *       - name: status
  *         in: query
- *         description: The name to find event
+ *         description: 1 for active, 0 for all
  *         required: true
  *         schema:
- *           type: string
+ *           type: number
  *     responses:
  *       '200':
  *         description: OK
  *       '400':
  *         description: Bad Request
  */
-router.get("/api/event", EventController.getEventsByName);
+router.get("/api/event", EventController.getAllEvents);
 /**
  * @swagger
  * /api/event/organizer:

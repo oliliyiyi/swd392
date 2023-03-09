@@ -18,8 +18,9 @@ export function admInsertEvent(
 }
 
 export function getAllEventsInCampus(campus_id: number){
-    const query = `SELECT  tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
-    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name FROM (SELECT * FROM clubs WHERE campus_id = ?) tk
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
+    FROM (SELECT * FROM clubs WHERE campus_id = ?) tk
 	LEFT JOIN event_organizer tl
     ON tk.club_id = tl.club_id
     INNER JOIN event tb
@@ -36,7 +37,7 @@ export function getAllEventsInCampus(campus_id: number){
 
 export function getEventsByName(name: string){
     const query = `SELECT event_id, name, email, location, point, img, description, start_date, end_date
-    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1;`;
+    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1`;
     const values : any = [name];
     const queryObject = {
         text: query,
@@ -71,6 +72,24 @@ export function getStudentsJoinEvent(event_id: number) {
     LEFT JOIN student td
     ON tl.student_id = td.student_id`
     const values : any = [event_id];
+    const queryObject = {
+        text: query,
+        values
+    };
+    return queryObject;
+}
+
+export function getAllEvents(){
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
+    FROM event tb
+	LEFT JOIN event_organizer tl
+    ON tb.event_id = tl.event_id
+    LEFT JOIN clubs tk
+    ON tk.club_id = tl.club_id
+    LEFT JOIN student td
+    ON td.student_id = tl.student_id`
+    const values : any = [];
     const queryObject = {
         text: query,
         values
