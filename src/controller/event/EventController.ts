@@ -32,7 +32,7 @@ export async function admInsertEvent(req: any, res: any, next: any) {
 
 export async function getAllEventsInCampus(req: any, res: any, next: any) {
   try {
-    const campus_id = req.params.campus_id as number;
+    const campus_id : number= req.params.campus_id as number;
     const response = await EventService.getAllEventsInCampus(campus_id);
     res.json(response);
   } catch (error) {
