@@ -77,7 +77,7 @@ export async function handleLogin(req: any, res: any) {
                 studentInfoID: studentInfo.student_id,
                 name: studentInfo.student_name,
                 role: studentInfo.role,
-                campus: studentInfo.campus_name,
+                campus: studentInfo.campus_id,
                 
               },
             },
@@ -92,7 +92,7 @@ export async function handleLogin(req: any, res: any) {
                 studentId: studentInfo.student_id,
                 name: studentInfo.student_name,
                 role: studentInfo.role,
-                campus: studentInfo.campus_name
+                campus: studentInfo.campus_id
               },
             },
             "refreshtokensecret",
@@ -110,7 +110,7 @@ export async function handleLogin(req: any, res: any) {
             name: studentInfo.student_name,
             email: studentInfo.email,
             phone: studentInfo.phone,
-            campus: studentInfo.campus_name
+            campus: studentInfo.campus_id
           };
           res.status(200).json({
             access_token: access_token,
@@ -126,7 +126,7 @@ export async function handleLogin(req: any, res: any) {
                 studentInfoID: studentInfo.student_id,
                 name: studentInfo.name,
                 role: studentInfo.role,
-                campus: studentInfo.campus_name
+                campus: studentInfo.campus_id
               },
             },
             "accesstokensecret",
@@ -140,7 +140,7 @@ export async function handleLogin(req: any, res: any) {
                 studentId: studentInfo.student_id,
                 name: studentInfo.student_name,
                 role: studentInfo.role,
-                campus: studentInfo.campus_name
+                campus: studentInfo.campus_id
               },
             },
             "refreshtokensecret",
@@ -158,7 +158,7 @@ export async function handleLogin(req: any, res: any) {
             name: studentInfo.name,
             email: studentInfo.email,
             phone: studentInfo.phone,
-            campus: studentInfo.campus_name
+            campus: studentInfo.campus_id
           };
           res.status(200).json({
             access_token: access_token,
@@ -191,7 +191,7 @@ export async function handleLogin(req: any, res: any) {
                 student_id: studentCreated.student_id,
                 name: studentCreated.student_name,
                 role: studentCreated.role,
-                campus: studentCreated.campus_name
+                campus: studentCreated.campus_id
               },
             },
             "accesstokensecret",
@@ -205,7 +205,7 @@ export async function handleLogin(req: any, res: any) {
                 student_id: studentCreated.student_id,
                 name: studentCreated.student_name,
                 role: studentCreated.role,
-                campus: studentCreated.campus_name
+                campus: studentCreated.campus_id
               },
             },
             "refreshtokensecret",
@@ -224,7 +224,7 @@ export async function handleLogin(req: any, res: any) {
             name: studentCreated.student_name,
             email: studentCreated.email,
             phone: studentCreated.phone,
-            campus: studentCreated.campus_name
+            campus: studentCreated.campus_id
           };
           res.status(200).json({
             access_token: access_token,

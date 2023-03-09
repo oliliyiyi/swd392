@@ -38,7 +38,7 @@ export async function isAuth(req: any, res: any, next: any) {
       } else {
         req.studentId = decoded.studentInfo.studentInfoID;
         req.studentId = decoded.studentInfo.role;
-        req.studentId = decoded.studentInfo.studentInfoID;
+        req.studentId = decoded.studentInfo.campus;
         next();
       }
     }

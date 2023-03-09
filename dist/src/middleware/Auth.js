@@ -68,7 +68,7 @@ function isAuth(req, res, next) {
             else {
                 req.studentId = decoded.studentInfo.studentInfoID;
                 req.studentId = decoded.studentInfo.role;
-                req.studentId = decoded.studentInfo.studentInfoID;
+                req.studentId = decoded.studentInfo.campus;
                 next();
             }
         }));
