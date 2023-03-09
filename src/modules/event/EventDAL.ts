@@ -26,20 +26,25 @@ export async function admInsertEvent(
   return;
 }
 
-export async function getAllEventsInCampus(campus_id: number) {
+export async function getAllEventsInCampus(campus_id: number, status: number) {
   const queryString = EventSQL.getAllEventsInCampus(campus_id);
+  if(status === 1){
+    queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+  }
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
 
-export async function getEventsByName(name: string) {
+export async function getEventsByName(name: string, status: number) {
   const queryString = EventSQL.getEventsByName(name);
+  if(status === 1){
+    queryString.text = queryString.text + ` AND end_date >= current_timestamp()`;
+  }
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
 
 export async function admInsertEventOrganizer(event_id: number, club_id: number, student_id: number) {
-  var status = false; 
   const clubMem = await ClubDAL.getClubMemberInfo(club_id, student_id);
   if(clubMem.length > 0){
     const queryString = EventSQL.admInsertEventOrganizer(event_id, club_id, student_id);
@@ -58,6 +63,15 @@ export async function registerEvent(student_id: number, event_id: number, regist
 
 export async function getStudentsJoinEvent(event_id: number) {
   const queryString = EventSQL.getStudentsJoinEvent(event_id);
+  const studentsJoinEvent = await query(queryString.text, queryString.values);
+  return studentsJoinEvent;
+}
+
+export async function getAllEvents(status: number) {
+  const queryString = EventSQL.getAllEvents();
+  if(status === 1){
+    queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+  }
   const studentsJoinEvent = await query(queryString.text, queryString.values);
   return studentsJoinEvent;
 }

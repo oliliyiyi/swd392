@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 function admInsertEvent(req, res, next) {
@@ -62,7 +62,8 @@ function getAllEventsInCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const campus_id = req.params.campus_id;
-            const response = yield EventService.getAllEventsInCampus(campus_id);
+            const status = Number(req.query.status || 0);
+            const response = yield EventService.getAllEventsInCampus(campus_id, status);
             res.json(response);
         }
         catch (error) {
@@ -75,7 +76,8 @@ function getEventsByName(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const name = req.query.name;
-            const response = yield EventService.getEventsByName(name);
+            const status = Number(req.query.status || 0);
+            const response = yield EventService.getEventsByName(name, status);
             res.json(response);
         }
         catch (error) {
@@ -141,3 +143,16 @@ function getStudentsJoinEvent(req, res, next) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getAllEvents(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const status = Number(req.query.status || 0);
+            const response = yield EventService.getAllEvents(status);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getAllEvents = getAllEvents;

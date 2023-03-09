@@ -47,7 +47,7 @@ function getStudentInfoByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = StudentSQL.getStudentInfoByEmail(email);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
+        return rows[0];
     });
 }
 exports.getStudentInfoByEmail = getStudentInfoByEmail;
@@ -55,7 +55,7 @@ function getInfoStudentLogin(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = StudentSQL.getStudentInfoByEmail(email);
         const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
-        return rows;
+        return rows[0];
     });
 }
 exports.getInfoStudentLogin = getInfoStudentLogin;
@@ -79,7 +79,7 @@ function getStudentByStudentId(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = StudentSQL.getStudentByStudentId(studentId);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
+        return rows[0];
     });
 }
 exports.getStudentByStudentId = getStudentByStudentId;

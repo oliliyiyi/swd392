@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
@@ -45,17 +45,23 @@ function admInsertEvent(name, email, location, point, img, description, start_da
     });
 }
 exports.admInsertEvent = admInsertEvent;
-function getAllEventsInCampus(campus_id) {
+function getAllEventsInCampus(campus_id, status) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getAllEventsInCampus(campus_id);
+        if (status === 1) {
+            queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+        }
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
 }
 exports.getAllEventsInCampus = getAllEventsInCampus;
-function getEventsByName(name) {
+function getEventsByName(name, status) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getEventsByName(name);
+        if (status === 1) {
+            queryString.text = queryString.text + ` AND end_date >= current_timestamp()`;
+        }
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
@@ -63,7 +69,6 @@ function getEventsByName(name) {
 exports.getEventsByName = getEventsByName;
 function admInsertEventOrganizer(event_id, club_id, student_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        var status = false;
         const clubMem = yield ClubDAL.getClubMemberInfo(club_id, student_id);
         if (clubMem.length > 0) {
             const queryString = EventSQL.admInsertEventOrganizer(event_id, club_id, student_id);
@@ -92,3 +97,14 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getAllEvents(status) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.getAllEvents();
+        if (status === 1) {
+            queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+        }
+        const studentsJoinEvent = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return studentsJoinEvent;
+    });
+}
+exports.getAllEvents = getAllEvents;

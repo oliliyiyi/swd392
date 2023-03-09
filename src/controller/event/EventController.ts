@@ -33,7 +33,8 @@ export async function admInsertEvent(req: any, res: any, next: any) {
 export async function getAllEventsInCampus(req: any, res: any, next: any) {
   try {
     const campus_id : number= req.params.campus_id as number;
-    const response = await EventService.getAllEventsInCampus(campus_id);
+    const status = Number(req.query.status || 0);
+    const response = await EventService.getAllEventsInCampus(campus_id, status);
     res.json(response);
   } catch (error) {
     return next(error);
@@ -43,7 +44,8 @@ export async function getAllEventsInCampus(req: any, res: any, next: any) {
 export async function getEventsByName(req: any, res: any, next: any) {
   try {
     const name = req.query.name;
-    const response = await EventService.getEventsByName(name);
+    const status = Number(req.query.status || 0);
+    const response = await EventService.getEventsByName(name, status);
     res.json(response);
   } catch (error) {
     return next(error);
@@ -91,6 +93,16 @@ export async function getStudentsJoinEvent(req: any, res: any, next: any) {
   try {
     const event_id = req.params.event_id as number;
     const response = await EventService.getStudentsJoinEvent(event_id);
+    res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function getAllEvents(req: any, res: any, next: any) {
+  try {
+    const status : number = Number(req.query.status || 0);
+    const response = await EventService.getAllEvents(status);
     res.json(response);
   } catch (error) {
     return next(error);

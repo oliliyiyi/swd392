@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -41,16 +41,16 @@ function admInsertEvent(name, email, location, point, img, description, start_da
     });
 }
 exports.admInsertEvent = admInsertEvent;
-function getAllEventsInCampus(campus_id) {
+function getAllEventsInCampus(campus_id, status) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.getAllEventsInCampus(campus_id);
+        const result = yield EventDAL.getAllEventsInCampus(campus_id, status);
         return result;
     });
 }
 exports.getAllEventsInCampus = getAllEventsInCampus;
-function getEventsByName(name) {
+function getEventsByName(name, status) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.getEventsByName(name);
+        const result = yield EventDAL.getEventsByName(name, status);
         return result;
     });
 }
@@ -81,3 +81,10 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getAllEvents(status) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield EventDAL.getAllEvents(status);
+        return result;
+    });
+}
+exports.getAllEvents = getAllEvents;
