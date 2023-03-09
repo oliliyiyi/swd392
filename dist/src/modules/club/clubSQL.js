@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 function getAllClubsInCampus(campus_id) {
     const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, COUNT(tb.student_id) as totalMembers FROM 
     (SELECT * FROM clubs WHERE campus_id = ?) tl
@@ -36,3 +36,36 @@ function insertClubMember(student_id, club_id, role, join_date) {
     return queryObject;
 }
 exports.insertClubMember = insertClubMember;
+function getAllClubMembers(club_id) {
+    const query = `SELECT td.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
+  td.address, td.phone, td.email, td.role 
+  FROM (SELECT * FROM club_member WHERE club_id = ?) tb
+  LEFT JOIN clubs tl
+  ON tb.club_id = tl.club_id
+  LEFT JOIN student td
+  ON tb.student_id = td.student_id
+  LEFT JOIN department tk
+  ON tk.dpm_id = td.dpm_id
+  LEFT JOIN campus tf
+  ON tf.campus_id = td.campus_id`;
+    const values = [club_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getAllClubMembers = getAllClubMembers;
+function getAllClubsStudentJoin(student_id) {
+    const query = `SELECT  tl.club_id, tl.name as club_name, tl.abbreviation, tl.established_date 
+  FROM (SELECT * FROM club_member WHERE student_id = ?) tb
+  LEFT JOIN clubs tl
+  ON tb.club_id = tl.club_id`;
+    const values = [student_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getAllClubsStudentJoin = getAllClubsStudentJoin;

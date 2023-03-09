@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 const ClubSQL = __importStar(require("../../modules/club/clubSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(campus_id) {
@@ -65,7 +65,17 @@ function insertClubMember(student_id, club_id, role, join_date) {
 exports.insertClubMember = insertClubMember;
 function getAllClubMembers(club_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return;
+        const queryString = ClubSQL.getAllClubMembers(club_id);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
     });
 }
 exports.getAllClubMembers = getAllClubMembers;
+function getAllClubsStudentJoin(student_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = ClubSQL.getAllClubsStudentJoin(student_id);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.getAllClubsStudentJoin = getAllClubsStudentJoin;

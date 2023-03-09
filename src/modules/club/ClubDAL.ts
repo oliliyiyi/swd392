@@ -29,5 +29,13 @@ export async function insertClubMember(
 }
 
 export async function getAllClubMembers(club_id: number){
-  return;
+  const queryString = ClubSQL.getAllClubMembers(club_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
+export async function getAllClubsStudentJoin(student_id: number) {
+  const queryString = ClubSQL.getAllClubsStudentJoin(student_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
 }
