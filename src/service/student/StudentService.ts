@@ -1,10 +1,4 @@
 import * as StudentDAL from "../../modules/student/StudentDAL";
-
-export async function getInfoStudentLogin(email: string) {
-  const result = await StudentDAL.getInfoStudentLogin(email);
-  return result;
-}
-
 export async function updateStudentToken(
   studentId: any,
   refresh_token: string

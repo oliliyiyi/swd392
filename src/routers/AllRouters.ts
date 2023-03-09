@@ -406,6 +406,8 @@ router.post("/api/club/member", ClubController.insertClubMember)
  *                      phone:
  *                        type: string
  *                        example: "0382212012"
+ *                      campus:
+ *                        type: string
  */
 router.post("/api/login", StudentLoginController.handleLogin);
 
