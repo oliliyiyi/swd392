@@ -32,17 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getInfoStudentLogin = exports.getStudentInfoByEmail = exports.getAcountStudentLogin = void 0;
+exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
 const StudentSQL = __importStar(require("../../modules/student/studentSQL"));
 const db_config_1 = require("../../configs/db_config");
-function getAcountStudentLogin(account, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // const queryString = StudentSQL.getAcountStudentLogin(account, password);
-        // const rows = await query(queryString.text, queryString.values);
-        return;
-    });
-}
-exports.getAcountStudentLogin = getAcountStudentLogin;
 function getStudentInfoByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = StudentSQL.getStudentInfoByEmail(email);
@@ -51,14 +43,6 @@ function getStudentInfoByEmail(email) {
     });
 }
 exports.getStudentInfoByEmail = getStudentInfoByEmail;
-function getInfoStudentLogin(email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getStudentInfoByEmail(email);
-        const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
-        return rows[0];
-    });
-}
-exports.getInfoStudentLogin = getInfoStudentLogin;
 function updateStudentToken(studentId, refresh_token) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = StudentSQL.updateStudentToken(studentId, refresh_token);

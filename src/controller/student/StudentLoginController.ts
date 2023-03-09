@@ -66,17 +66,19 @@ export async function handleLogin(req: any, res: any) {
           .status(403)
           .json({ message: "Email is not acceptable in system!" });
       else {
-        const studentInfo: any = await Student.getInfoStudentLogin(
+        const studentInfo: any = await Student.getStudentInfoByEmail(
           decodedToken.email
         );
-        if (studentInfo.length > 0 && roleGet == "admin") {
+        if (studentInfo && roleGet == "admin") {
           console.log(studentInfo);
           const access_token = jwt.sign(
             {
               studentInfo: {
-                studentInfoID: studentInfo[0].student_id,
-                name: studentInfo[0].name,
-                role: studentInfo[0].role,
+                studentInfoID: studentInfo.student_id,
+                name: studentInfo.student_name,
+                role: studentInfo.role,
+                campus: studentInfo.campus_name,
+                
               },
             },
             "accesstokensecret",
@@ -87,9 +89,10 @@ export async function handleLogin(req: any, res: any) {
           const refresh_token = jwt.sign(
             {
               studentInfo: {
-                studentId: studentInfo[0].student_id,
-                name: studentInfo[0].name,
-                role: studentInfo[0].role,
+                studentId: studentInfo.student_id,
+                name: studentInfo.student_name,
+                role: studentInfo.role,
+                campus: studentInfo.campus_name
               },
             },
             "refreshtokensecret",
@@ -98,15 +101,16 @@ export async function handleLogin(req: any, res: any) {
             }
           );
           await Student.updateStudentToken(
-            studentInfo[0].student_id,
+            studentInfo.student_id,
             refresh_token
           );
           var student_data = {
-            id: studentInfo[0].student_id,
-            role: studentInfo[0].role,
-            name: studentInfo[0].name,
-            email: studentInfo[0].email,
-            phone: studentInfo[0].phone,
+            id: studentInfo.student_id,
+            role: studentInfo.role,
+            name: studentInfo.student_name,
+            email: studentInfo.email,
+            phone: studentInfo.phone,
+            campus: studentInfo.campus_name
           };
           res.status(200).json({
             access_token: access_token,
@@ -114,14 +118,15 @@ export async function handleLogin(req: any, res: any) {
             data: student_data,
             message: "Login successful",
           });
-        }  else if(studentInfo.length > 0 && roleGet == "members"){
+        }  else if(studentInfo && roleGet == "members"){
           console.log(studentInfo);
           const access_token = jwt.sign(
             {
               studentInfo: {
-                studentInfoID: studentInfo[0].student_id,
-                name: studentInfo[0].name,
-                role: studentInfo[0].role,
+                studentInfoID: studentInfo.student_id,
+                name: studentInfo.name,
+                role: studentInfo.role,
+                campus: studentInfo.campus_name
               },
             },
             "accesstokensecret",
@@ -132,9 +137,10 @@ export async function handleLogin(req: any, res: any) {
           const refresh_token = jwt.sign(
             {
               studentInfo: {
-                studentId: studentInfo[0].student_id,
-                name: studentInfo[0].name,
-                role: studentInfo[0].role,
+                studentId: studentInfo.student_id,
+                name: studentInfo.student_name,
+                role: studentInfo.role,
+                campus: studentInfo.campus_name
               },
             },
             "refreshtokensecret",
@@ -143,15 +149,16 @@ export async function handleLogin(req: any, res: any) {
             }
           );
           await Student.updateStudentToken(
-            studentInfo[0].student_id,
+            studentInfo.student_id,
             refresh_token
           );
           var student_data = {
-            id: studentInfo[0].student_id,
-            role: studentInfo[0].role,
-            name: studentInfo[0].name,
-            email: studentInfo[0].email,
-            phone: studentInfo[0].phone,
+            id: studentInfo.student_id,
+            role: studentInfo.role,
+            name: studentInfo.name,
+            email: studentInfo.email,
+            phone: studentInfo.phone,
+            campus: studentInfo.campus_name
           };
           res.status(200).json({
             access_token: access_token,
@@ -161,7 +168,7 @@ export async function handleLogin(req: any, res: any) {
           });
         }  else{
           const dpmId = 1;
-          const campusId = 2;
+          const campusId = 1;
           const active = 1;
           const address = "abc";
           const phone = "123456789";
@@ -181,9 +188,10 @@ export async function handleLogin(req: any, res: any) {
           const access_token = jwt.sign(
             {
               studentInfo: {
-                student_id: studentCreated[0].student_id,
-                name: studentCreated[0].name,
-                role: studentCreated[0].role
+                student_id: studentCreated.student_id,
+                name: studentCreated.student_name,
+                role: studentCreated.role,
+                campus: studentCreated.campus_name
               },
             },
             "accesstokensecret",
@@ -194,9 +202,10 @@ export async function handleLogin(req: any, res: any) {
           const refresh_token = jwt.sign(
             {
               studentInfo: {
-                student_id: studentCreated[0].student_id,
-                name: studentCreated[0].name,
-                role: studentCreated[0].role
+                student_id: studentCreated.student_id,
+                name: studentCreated.student_name,
+                role: studentCreated.role,
+                campus: studentCreated.campus_name
               },
             },
             "refreshtokensecret",
@@ -206,15 +215,16 @@ export async function handleLogin(req: any, res: any) {
           );
 
           await Student.updateStudentToken(
-            studentCreated[0].student_id,
+            studentCreated.student_id,
             refresh_token
           );
           var student_data = {
-            id: studentCreated[0].student_id,
-            role: studentCreated[0].role,
-            name: studentCreated[0].name,
-            email: studentCreated[0].email,
-            phone: studentCreated[0].phone,
+            id: studentCreated.student_id,
+            role: studentCreated.role,
+            name: studentCreated.student_name,
+            email: studentCreated.email,
+            phone: studentCreated.phone,
+            campus: studentCreated.campus_name
           };
           res.status(200).json({
             access_token: access_token,
