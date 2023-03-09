@@ -29,8 +29,18 @@ export async function insertClubMember(req: any, res: any, next: any){
 
 export async function getAllClubMembers(req: any, res: any, next: any){
     try {
-        const club_id = req.body.club_id;
+        const club_id = req.query.club_id;
         const response = await ClubService.getAllClubMembers(club_id);
+        res.json(response);
+    } catch (error: any) {
+        res.status(400).json({message: "Action Fail"});
+      }
+}
+
+export async function getAllClubsStudentJoin(req: any, res: any, next: any){
+    try {
+        const student_id = req.params.student_id;
+        const response = await ClubService.getAllClubsStudentJoin(student_id);
         res.json(response);
     } catch (error: any) {
         res.status(400).json({message: "Action Fail"});
