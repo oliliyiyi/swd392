@@ -108,7 +108,7 @@ function handleLogin(req, res) {
                         studentInfoID: studentInfo.student_id,
                         name: studentInfo.student_name,
                         role: studentInfo.role,
-                        campus: studentInfo.campus_name,
+                        campus: studentInfo.campus_id,
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
@@ -118,7 +118,7 @@ function handleLogin(req, res) {
                         studentId: studentInfo.student_id,
                         name: studentInfo.student_name,
                         role: studentInfo.role,
-                        campus: studentInfo.campus_name
+                        campus: studentInfo.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
@@ -130,7 +130,7 @@ function handleLogin(req, res) {
                     name: studentInfo.student_name,
                     email: studentInfo.email,
                     phone: studentInfo.phone,
-                    campus: studentInfo.campus_name
+                    campus: studentInfo.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
@@ -146,7 +146,7 @@ function handleLogin(req, res) {
                         studentInfoID: studentInfo.student_id,
                         name: studentInfo.name,
                         role: studentInfo.role,
-                        campus: studentInfo.campus_name
+                        campus: studentInfo.campus_id
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
@@ -156,7 +156,7 @@ function handleLogin(req, res) {
                         studentId: studentInfo.student_id,
                         name: studentInfo.student_name,
                         role: studentInfo.role,
-                        campus: studentInfo.campus_name
+                        campus: studentInfo.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
@@ -168,7 +168,7 @@ function handleLogin(req, res) {
                     name: studentInfo.name,
                     email: studentInfo.email,
                     phone: studentInfo.phone,
-                    campus: studentInfo.campus_name
+                    campus: studentInfo.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
@@ -190,7 +190,7 @@ function handleLogin(req, res) {
                         student_id: studentCreated.student_id,
                         name: studentCreated.student_name,
                         role: studentCreated.role,
-                        campus: studentCreated.campus_name
+                        campus: studentCreated.campus_id
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
@@ -200,7 +200,7 @@ function handleLogin(req, res) {
                         student_id: studentCreated.student_id,
                         name: studentCreated.student_name,
                         role: studentCreated.role,
-                        campus: studentCreated.campus_name
+                        campus: studentCreated.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
@@ -212,7 +212,7 @@ function handleLogin(req, res) {
                     name: studentCreated.student_name,
                     email: studentCreated.email,
                     phone: studentCreated.phone,
-                    campus: studentCreated.campus_name
+                    campus: studentCreated.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
