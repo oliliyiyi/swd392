@@ -149,6 +149,29 @@ router.post("/api/event/insert",upload.single('file'), EventController.admInsert
 
 /**
  * @swagger
+ * /api/event/detail/{event_id}:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get event by event_id
+ *     description: Get event by event_id
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event 
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Returns event by event_id
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/api/event/detail/:event_id", EventController.getEventById);
+
+/**
+ * @swagger
  * /api/event/search:
  *   get:
  *     tags:

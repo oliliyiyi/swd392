@@ -74,3 +74,8 @@ export async function getAllEvents(status: number){
   const result = await EventDAL.getAllEvents(status);
   return result;
 }
+
+export async function getEventById(event_id: number){
+  const result = await EventDAL.getEventById(event_id);
+  return result;
+}

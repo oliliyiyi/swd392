@@ -96,6 +96,16 @@ export async function getEventsByName(req: any, res: any, next: any) {
   }
 }
 
+export async function getEventById(req: any, res: any, next: any) {
+  try {
+    const id = req.params.event_id;
+    const response = await EventService.getEventById(id);
+    res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function admInsertEventOrganizer(req: any, res: any, next: any) {
   try {
     await db.query("START TRANSACTION");

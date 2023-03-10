@@ -67,6 +67,12 @@ export async function getStudentsJoinEvent(event_id: number) {
   return studentsJoinEvent;
 }
 
+export async function getEventById(event_id: number) {
+  const queryString = EventSQL.getEventById(event_id);
+  const eventById = await query(queryString.text, queryString.values);
+  return eventById;
+}
+
 export async function getAllEvents(status: number) {
   const queryString = EventSQL.getAllEvents();
   if(status === 1){

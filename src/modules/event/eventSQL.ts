@@ -96,3 +96,13 @@ export function getAllEvents(){
     };
     return queryObject;
 }
+
+export function getEventById(event_id: number) {
+    const query = `SELECT * FROM event WHERE event_id = ?`
+    const values : any = [event_id];
+    const queryObject = {
+        text: query,
+        values
+    };
+    return queryObject;
+}

@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -130,6 +130,19 @@ function getEventsByName(req, res, next) {
     });
 }
 exports.getEventsByName = getEventsByName;
+function getEventById(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const id = req.params.event_id;
+            const response = yield EventService.getEventById(id);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getEventById = getEventById;
 function admInsertEventOrganizer(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
