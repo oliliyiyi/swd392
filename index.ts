@@ -1,6 +1,7 @@
 // import express from "express";
 import { router } from "./src/routers/AllRouters";
 import express from "express";
+import cors, { CorsOptions } from 'cors';
 const app = express();
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -42,10 +43,18 @@ const options = {
 }
 
 const swaggerDoc = swaggerJSDoc(options);
-
-
-
 app.use(express.json());
+app.use(bodyParser.json());
+const allowedOrigins = ['http://localhost:3000', 'https://f-clubs-event-management.vercel.app'];
+const OriginOptions:CorsOptions = {
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'authorization']
+};
+app.use(cors(OriginOptions));
+
+
+
 
 
 

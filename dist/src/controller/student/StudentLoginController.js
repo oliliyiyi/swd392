@@ -36,7 +36,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleLogin = void 0;
-const fbInit = __importStar(require("../../../src/configs/fbconfigs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Student = __importStar(require("../../service/student/StudentService"));
 const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL"));
@@ -65,20 +64,33 @@ const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL
 //     return next(error);
 //   }
 // }
-function handleLogin(req, res, next) {
-    const firebaseToken = req.body.token;
-    console.log(req.body.token);
-    if (!firebaseToken) {
-        return res.status(404).json({ message: "Token not found!" });
-    }
-    const roleGet = req.body.role;
-    if (!roleGet) {
-        return res.status(404).json({ message: "Role not found!" });
-    }
-    fbInit.firebaseConnect
-        .auth()
-        .verifyIdToken(firebaseToken)
-        .then((decodedToken) => __awaiter(this, void 0, void 0, function* () {
+function handleLogin(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const firebaseToken = req.body.token;
+        console.log(req.body.token);
+        if (!firebaseToken) {
+            return res.status(404).json({ message: "Token not found!" });
+        }
+        const roleGet = req.body.role;
+        if (!roleGet) {
+            return res.status(404).json({ message: "Role not found!" });
+        }
+        const decodedToken = jsonwebtoken_1.default.decode(firebaseToken);
+        const now = Date.now() / 1000;
+        if (decodedToken.exp && decodedToken.exp < now) {
+            console.log("Access token has expired");
+            return res.status(401).json({ message: "Access token has expired" });
+        }
+        else {
+            console.log("Access token is still valid");
+        }
+        if (decodedToken === null) {
+            return res.status(401).json({ message: "Access token invalid!" });
+        }
+        // fbInit.firebaseConnect
+        //   .auth()
+        //   .verifyIdToken(firebaseToken)
+        //   .then(async (decodedToken: any) => {
         console.log(decodedToken);
         let email = decodedToken.email;
         let arr = email.split("@");
@@ -88,34 +100,37 @@ function handleLogin(req, res, next) {
                 .status(403)
                 .json({ message: "Email is not acceptable in system!" });
         else {
-            const studentInfo = yield Student.getInfoStudentLogin(decodedToken.email);
-            if (studentInfo.length > 0 && roleGet == "admin") {
+            const studentInfo = yield Student.getStudentInfoByEmail(decodedToken.email);
+            if (studentInfo && roleGet == "admin") {
                 console.log(studentInfo);
                 const access_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        studentInfoID: studentInfo[0].student_id,
-                        name: studentInfo[0].name,
-                        role: studentInfo[0].role,
+                        studentInfoID: studentInfo.student_id,
+                        name: studentInfo.student_name,
+                        role: studentInfo.role,
+                        campus: studentInfo.campus_id,
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
                 });
                 const refresh_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        studentId: studentInfo[0].student_id,
-                        name: studentInfo[0].name,
-                        role: studentInfo[0].role,
+                        studentId: studentInfo.student_id,
+                        name: studentInfo.student_name,
+                        role: studentInfo.role,
+                        campus: studentInfo.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentInfo[0].student_id, refresh_token);
+                yield Student.updateStudentToken(studentInfo.student_id, refresh_token);
                 var student_data = {
-                    id: studentInfo[0].student_id,
-                    role: studentInfo[0].role,
-                    name: studentInfo[0].name,
-                    email: studentInfo[0].email,
-                    phone: studentInfo[0].phone,
+                    id: studentInfo.student_id,
+                    role: studentInfo.role,
+                    name: studentInfo.student_name,
+                    email: studentInfo.email,
+                    phone: studentInfo.phone,
+                    campus: studentInfo.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
@@ -124,33 +139,36 @@ function handleLogin(req, res, next) {
                     message: "Login successful",
                 });
             }
-            else if (studentInfo.length > 0 && roleGet == "members") {
+            else if (studentInfo && roleGet == "members") {
                 console.log(studentInfo);
                 const access_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        studentInfoID: studentInfo[0].student_id,
-                        name: studentInfo[0].name,
-                        role: studentInfo[0].role,
+                        studentInfoID: studentInfo.student_id,
+                        name: studentInfo.name,
+                        role: studentInfo.role,
+                        campus: studentInfo.campus_id
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
                 });
                 const refresh_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        studentId: studentInfo[0].student_id,
-                        name: studentInfo[0].name,
-                        role: studentInfo[0].role,
+                        studentId: studentInfo.student_id,
+                        name: studentInfo.student_name,
+                        role: studentInfo.role,
+                        campus: studentInfo.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentInfo[0].student_id, refresh_token);
+                yield Student.updateStudentToken(studentInfo.student_id, refresh_token);
                 var student_data = {
-                    id: studentInfo[0].student_id,
-                    role: studentInfo[0].role,
-                    name: studentInfo[0].name,
-                    email: studentInfo[0].email,
-                    phone: studentInfo[0].phone,
+                    id: studentInfo.student_id,
+                    role: studentInfo.role,
+                    name: studentInfo.name,
+                    email: studentInfo.email,
+                    phone: studentInfo.phone,
+                    campus: studentInfo.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
@@ -161,7 +179,7 @@ function handleLogin(req, res, next) {
             }
             else {
                 const dpmId = 1;
-                const campusId = 2;
+                const campusId = 1;
                 const active = 1;
                 const address = "abc";
                 const phone = "123456789";
@@ -169,29 +187,32 @@ function handleLogin(req, res, next) {
                 const studentCreated = yield StudentDAL.getStudentInfoByEmail(decodedToken.email);
                 const access_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        student_id: studentCreated[0].student_id,
-                        name: studentCreated[0].name,
-                        role: studentCreated[0].role
+                        student_id: studentCreated.student_id,
+                        name: studentCreated.student_name,
+                        role: studentCreated.role,
+                        campus: studentCreated.campus_id
                     },
                 }, "accesstokensecret", {
                     expiresIn: "15m",
                 });
                 const refresh_token = jsonwebtoken_1.default.sign({
                     studentInfo: {
-                        student_id: studentCreated[0].student_id,
-                        name: studentCreated[0].name,
-                        role: studentCreated[0].role
+                        student_id: studentCreated.student_id,
+                        name: studentCreated.student_name,
+                        role: studentCreated.role,
+                        campus: studentCreated.campus_id
                     },
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentCreated[0].student_id, refresh_token);
+                yield Student.updateStudentToken(studentCreated.student_id, refresh_token);
                 var student_data = {
-                    id: studentCreated[0].student_id,
-                    role: studentCreated[0].role,
-                    name: studentCreated[0].name,
-                    email: studentCreated[0].email,
-                    phone: studentCreated[0].phone,
+                    id: studentCreated.student_id,
+                    role: studentCreated.role,
+                    name: studentCreated.student_name,
+                    email: studentCreated.email,
+                    phone: studentCreated.phone,
+                    campus: studentCreated.campus_id
                 };
                 res.status(200).json({
                     access_token: access_token,
@@ -201,6 +222,7 @@ function handleLogin(req, res, next) {
                 });
             }
         }
-    }));
+        // });
+    });
 }
 exports.handleLogin = handleLogin;

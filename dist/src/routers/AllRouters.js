@@ -34,9 +34,21 @@ const EventController = __importStar(require("../controller/event/EventControlle
 const ClubController = __importStar(require("../controller/club/ClubController"));
 const FirebaseController = __importStar(require("../controller/firebaseController"));
 const Auth_1 = require("../middleware/Auth");
+const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("multer"));
+dotenv_1.default.config();
 const router = express_1.default.Router();
 exports.router = router;
+const storage = multer_1.default.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, process.env.IMAGE_UPLOAD_PATH);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const upload = (0, multer_1.default)({ storage: storage });
 /**
  * @swagger
  *  /api/campus:
@@ -98,6 +110,21 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
 /**
  * @swagger
+ *  /api/students:
+ *    get:
+ *         tags:
+ *          - Student
+ *         security:
+ *          - bearerAuth: []
+ *         summary: This api is used to get all student.
+ *         description: This api is used to get all student.
+ *         responses:
+ *             200:
+ *                description: To test get method is available.
+ */
+router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
+/**
+ * @swagger
  * /api/event/insert:
  *   post:
  *     tags:
@@ -107,7 +134,7 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -119,10 +146,12 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *                 type: string
  *               point:
  *                 type: number
- *               img:
- *                 type: string
  *               description:
  *                  type: string
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The file to upload.
  *               start_date:
  *                 type: string
  *               end_date:
@@ -137,7 +166,29 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *       '400':
  *         description: Bad Request
  */
-router.post("/api/event/insert", EventController.admInsertEvent);
+router.post("/api/event/insert", upload.single('file'), EventController.admInsertEvent);
+/**
+ * @swagger
+ * /api/event/detail/{event_id}:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get event by event_id
+ *     description: Get event by event_id
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Returns event by event_id
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/api/event/detail/:event_id", EventController.getEventById);
 /**
  * @swagger
  * /api/event/search:
@@ -452,6 +503,8 @@ router.post("/api/club/member", ClubController.insertClubMember);
  *                      phone:
  *                        type: string
  *                        example: "0382212012"
+ *                      campus:
+ *                        type: string
  */
 router.post("/api/login", StudentLoginController.handleLogin);
 /**
@@ -515,8 +568,7 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *               note:
  *                 type: string
  *                 description: Description of file contents.
- *           required:
- *             - file
+ *
  *     responses:
  *       200:
  *         description: OK
@@ -536,4 +588,4 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *       500:
  *         description: Internal server error
  */
-router.post('/images', FirebaseController.handlePostFile);
+router.post('/images', upload.single('file'), FirebaseController.handlePostFile);

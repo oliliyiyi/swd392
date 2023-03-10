@@ -33,11 +33,12 @@ export async function isAuth(req: any, res: any, next: any) {
         decoded.studentInfo.studentInfoID
       );
       console.log(studentInfo);
-      if (studentInfo[0].token === "") {
+      if (studentInfo.token === "") {
         return res.status(401).json({ message: "Access token expires !" });
       } else {
         req.studentId = decoded.studentInfo.studentInfoID;
         req.studentId = decoded.studentInfo.role;
+        req.studentId = decoded.studentInfo.campus;
         next();
       }
     }

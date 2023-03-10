@@ -34,11 +34,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllListCampus = void 0;
 const CampusService = __importStar(require("../../service/campus/CampusService"));
+const redis = __importStar(require("../../configs/rd_config"));
 function getAllListCampus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield CampusService.getAllCampus();
-            res.json(response);
+            const Redisclient = redis.client;
+            const cachedProducts = yield Redisclient.get("myAllCampus");
+            console.log(cachedProducts);
+            if (cachedProducts) {
+                console.log("zô cache");
+                return res.send(cachedProducts);
+            }
+            else {
+                console.log("chưa zô cache");
+                const response = yield CampusService.getAllCampus();
+                console.log(response);
+                Redisclient.set("myAllCampus", JSON.stringify(response), "EX", 60);
+                return res.json(response);
+            }
         }
         catch (error) {
             return next(error);

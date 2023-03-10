@@ -1,10 +1,4 @@
 import * as StudentDAL from "../../modules/student/StudentDAL";
-
-export async function getInfoStudentLogin(email: string) {
-  const result = await StudentDAL.getInfoStudentLogin(email);
-  return result;
-}
-
 export async function updateStudentToken(
   studentId: any,
   refresh_token: string
@@ -43,5 +37,10 @@ export async function getStudentByStudentId(studentId: any) {
 
 export async function getStudentInfoByEmail(email: string) {
   const result = await StudentDAL.getStudentInfoByEmail(email);
+  return result;
+}
+
+export async function getAllStudentInfo() {
+  const result = await StudentDAL.getAllStudentInfo();
   return result;
 }

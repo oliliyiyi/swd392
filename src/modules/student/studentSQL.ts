@@ -1,6 +1,22 @@
 export function getStudentInfoByEmail(email: string) {
-  const query = `SELECT * FROM student WHERE email = ?`;
+  const query = `SELECT st.student_id, st.name as student_name, st.address, st.phone, st.role, st.email, st.birthday, cp.campus_id, cp.name as campus_name
+  FROM student st
+  inner JOIN campus cp
+  ON st.campus_id = cp.campus_id
+  WHERE st.email = ?`;
   const values: any = [email];
+  const queryObject = {
+    text: query,
+    values,
+  };
+  return queryObject;
+}
+
+export function getAllStudentInfo() {
+  const query = `SELECT st.student_id, st.name, st.address, st.phone, st.role, st.email, st.birthday
+  FROM student st
+  Where st.active = 1`;
+  const values: any = [];
   const queryObject = {
     text: query,
     values,
