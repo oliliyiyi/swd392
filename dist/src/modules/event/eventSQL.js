@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -91,3 +91,13 @@ function getAllEvents() {
     return queryObject;
 }
 exports.getAllEvents = getAllEvents;
+function getEventById(event_id) {
+    const query = `SELECT * FROM event WHERE event_id = ?`;
+    const values = [event_id];
+    const queryObject = {
+        text: query,
+        values
+    };
+    return queryObject;
+}
+exports.getEventById = getEventById;

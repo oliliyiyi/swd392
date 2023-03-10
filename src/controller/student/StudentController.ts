@@ -20,13 +20,13 @@ export async function getStudentByStudentId(req: any, res: any, next: any) {
   }
 }
 
-export async function getAllStudentInfo(req: any, res: any, next: any){
-  try{
-          
-          const response = await StudentService.getAllStudentInfo();
-         
-          return res.json(response);
-      } catch (error) {
-      return next(error);
+export async function getAllStudentInfo(req: any, res: any, next: any) {
+  try {
+
+    const response = await StudentService.getAllStudentInfo();
+
+    return res.json(response);
+  } catch (error) {
+    return next(error);
   }
 }
