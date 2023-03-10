@@ -45,3 +45,9 @@ export async function getStudentByStudentId(studentId: any) {
   const rows = await query(queryString.text, queryString.values);
   return rows[0];
 }
+
+export async function getAllStudentInfo() {
+  const queryString = StudentSQL.getAllStudentInfo();
+  const rows = await query(queryString.text, [queryString.values]);
+  return rows;
+}
