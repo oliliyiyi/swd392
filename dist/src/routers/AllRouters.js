@@ -146,6 +146,8 @@ router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
  *                 type: string
  *               point:
  *                 type: number
+ *               description:
+ *                  type: string
  *               file:
  *                 type: string
  *                 format: binary
@@ -153,8 +155,6 @@ router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
  *               start_date:
  *                 type: string
  *               end_date:
- *                 type: string
- *               date:
  *                 type: string
  *             required:
  *               - name
