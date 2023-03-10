@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 function getAllClubsInCampus(campus_id) {
-    const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, COUNT(tb.student_id) as totalMembers FROM 
+    const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, tl.img, COUNT(tb.student_id) as totalMembers FROM 
     (SELECT * FROM clubs WHERE campus_id = ?) tl
     LEFT JOIN club_member tb
     ON tl.club_id = tb.club_id
-    GROUP BY tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date;`;
+    GROUP BY tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, tl.img;`;
     const values = [campus_id];
     const queryObject = {
         text: query,
@@ -57,7 +57,7 @@ function getAllClubMembers(club_id) {
 }
 exports.getAllClubMembers = getAllClubMembers;
 function getAllClubsStudentJoin(student_id) {
-    const query = `SELECT  tl.club_id, tl.name as club_name, tl.abbreviation, tl.established_date 
+    const query = `SELECT  tl.club_id, tl.name as club_name, tl.abbreviation, tl.established_date, tl.img 
   FROM (SELECT * FROM club_member WHERE student_id = ?) tb
   LEFT JOIN clubs tl
   ON tb.club_id = tl.club_id`;
