@@ -38,6 +38,8 @@ const storage = multer.diskStorage({
  */
 router.get("/api/campus", isAuth, CampusController.getAllListCampus);
 
+
+
 /**
  * @swagger
  * /api/student/info:
@@ -84,19 +86,21 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  */
 router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
 
-// *     requestBody:
-//  *       content:
-//  *         multipart/form-data:
-//  *           schema:
-//  *             type: object
-//  *             properties:
-//  *               file:
-//  *                 type: string
-//  *                 format: binary
-//  *                 description: The file to upload.
-//  *               note:
-//  *                 type: string
-//  *                 description: Description of file contents.
+/**
+ * @swagger
+ *  /api/students:
+ *    get:
+ *         tags:
+ *          - Student
+ *         security:
+ *          - bearerAuth: []
+ *         summary: This api is used to get all student.
+ *         description: This api is used to get all student.
+ *         responses:
+ *             200:
+ *                description: To test get method is available.
+ */
+router.get("/api/students",isAuth, StudentController.getAllStudentInfo);
 
 /**
  * @swagger

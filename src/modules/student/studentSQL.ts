@@ -12,6 +12,17 @@ export function getStudentInfoByEmail(email: string) {
   return queryObject;
 }
 
+export function getAllStudentInfo() {
+  const query = `SELECT st.student_id, st.name, st.address, st.phone, st.role, st.email, st.birthday
+  FROM student st`;
+  const values: any = [];
+  const queryObject = {
+    text: query,
+    values,
+  };
+  return queryObject;
+}
+
 export function updateStudentToken(studentId: any, refresh_token: string) {
   const query = `UPDATE student SET token = ? WHERE student_id = ?`;
   const values: any = [refresh_token, studentId];

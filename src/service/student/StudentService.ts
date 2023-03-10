@@ -39,3 +39,8 @@ export async function getStudentInfoByEmail(email: string) {
   const result = await StudentDAL.getStudentInfoByEmail(email);
   return result;
 }
+
+export async function getAllStudentInfo() {
+  const result = await StudentDAL.getAllStudentInfo();
+  return result;
+}
