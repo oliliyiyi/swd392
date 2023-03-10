@@ -121,11 +121,11 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *                 type: number
  *               img:
  *                 type: string
+ *               description:
+ *                  type: string
  *               start_date:
  *                 type: string
  *               end_date:
- *                 type: string
- *               date:
  *                 type: string
  *             required:
  *               - name
