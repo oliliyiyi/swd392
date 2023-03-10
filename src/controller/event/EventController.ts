@@ -1,29 +1,73 @@
 import * as EventService from "../../service/event/EventSevice";
 import { db } from "../../configs/db_config";
+import * as fbInit from "../../configs/fbconfigs";
+import fs from "fs";
 
 export async function admInsertEvent(req: any, res: any, next: any) {
+  
   try {
-    await db.query("START TRANSACTION");
     const name = req.body.name;
     const email = req.body.email;
     const location = req.body.location;
     const point = req.body.point;
-    const img = req.body.img;
+    const fileGet = req.file;
+    let img:any = "";
     const description = req.body.description;
     const start_date = req.body.start_date;
     const end_date = req.body.end_date;
-    await EventService.admInsertEvent(
-      name,
-      email,
-      location,
-      point,
-      img,
-      description,
-      start_date,
-      end_date
-    );
-    await db.query("COMMIT");
-    res.json();
+    await db.query("START TRANSACTION");
+    if (!fileGet) return res.status(404).json({ message: "File not found" });
+    let pathSave = "./src/image/" + fileGet.originalname;
+    console.log(pathSave);
+    const bucket = fbInit.firebaseConnect.storage().bucket();
+    const file = bucket.file(fileGet.originalname);
+    const stream = file.createWriteStream({
+      resumable: false,
+    });
+
+    console.log("file ok");
+    var pathImg = "./src/image/" + fileGet.originalname;
+    fs.createReadStream(pathImg)
+      .pipe(stream)
+      .on("error", (error) => {
+        console.error("Error uploading image:", error);
+        return res.status(500).json({ message: "Upload file to firebase error!" });
+      })
+      .on("finish", () => {
+        console.log("Successfully uploaded image.");
+      });
+    file
+      .getSignedUrl({
+        action: "read",
+        expires: "01-01-2030",
+      })
+      .then(async (signedUrls) => {
+        console.log(signedUrls);
+        img = signedUrls[0];
+        // fs.unlink(pathImg, (err) => {
+        //   if (err) throw err;
+        //   console.log(`${pathImg} was deleted`);
+        // });
+        await EventService.admInsertEvent(
+          name,
+          email,
+          location,
+          point,
+          img,
+          description,
+          start_date,
+          end_date
+        );
+        await db.query("COMMIT");
+        res.json();
+        //res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
+      })
+      .catch((error) => {
+        console.error("Error getting image URL:", error);
+        //res.status(500).json({ message: "Error get link image from firebase!" });
+      });
+   
+
   } catch (error) {
     await db.query("ROLLBACK");
     return next(error);
@@ -32,7 +76,7 @@ export async function admInsertEvent(req: any, res: any, next: any) {
 
 export async function getAllEventsInCampus(req: any, res: any, next: any) {
   try {
-    const campus_id : number= req.params.campus_id as number;
+    const campus_id: number = req.params.campus_id as number;
     const status = Number(req.query.status || 0);
     const response = await EventService.getAllEventsInCampus(campus_id, status);
     res.json(response);
@@ -63,16 +107,16 @@ export async function admInsertEventOrganizer(req: any, res: any, next: any) {
     res.json();
   } catch (error: any) {
     await db.query("ROLLBACK");
-    if (error.message === "NotClubMember"){
-      res.status(400).json({message: "This student is not a club member"})
+    if (error.message === "NotClubMember") {
+      res.status(400).json({ message: "This student is not a club member" })
     } else {
       return next(error);
-    }    
+    }
   }
 }
 
-export async function registerEvent(req: any, res: any, next: any) { 
-  try{
+export async function registerEvent(req: any, res: any, next: any) {
+  try {
     await db.query("START TRANSACTION");
     const student_id = req.body.student_id;
     const event_id = req.body.event_id;
@@ -82,9 +126,9 @@ export async function registerEvent(req: any, res: any, next: any) {
     res.json();
   } catch (error: any) {
     await db.query("ROLLBACK");
-    if (error.message === "StudentAlreadyJoinEvent"){
-      res.status(400).json({message: "This student is already join event"})
-    }  
+    if (error.message === "StudentAlreadyJoinEvent") {
+      res.status(400).json({ message: "This student is already join event" })
+    }
     return next(error);
   }
 }
@@ -101,7 +145,7 @@ export async function getStudentsJoinEvent(req: any, res: any, next: any) {
 
 export async function getAllEvents(req: any, res: any, next: any) {
   try {
-    const status : number = Number(req.query.status || 0);
+    const status: number = Number(req.query.status || 0);
     const response = await EventService.getAllEvents(status);
     res.json(response);
   } catch (error) {
