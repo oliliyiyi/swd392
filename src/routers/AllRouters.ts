@@ -84,6 +84,20 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
  */
 router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
 
+// *     requestBody:
+//  *       content:
+//  *         multipart/form-data:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               file:
+//  *                 type: string
+//  *                 format: binary
+//  *                 description: The file to upload.
+//  *               note:
+//  *                 type: string
+//  *                 description: Description of file contents.
+
 /**
  * @swagger
  * /api/event/insert:
@@ -95,7 +109,7 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -107,8 +121,10 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *                 type: string
  *               point:
  *                 type: number
- *               img:
+ *               file:
  *                 type: string
+ *                 format: binary
+ *                 description: The file to upload.
  *               start_date:
  *                 type: string
  *               end_date:
@@ -125,7 +141,7 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *       '400':
  *         description: Bad Request
  */
-router.post("/api/event/insert", EventController.admInsertEvent);
+router.post("/api/event/insert",upload.single('file'), EventController.admInsertEvent);
 
 /**
  * @swagger
