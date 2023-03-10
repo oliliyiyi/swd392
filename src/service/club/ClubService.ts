@@ -19,3 +19,8 @@ export async function getAllClubsStudentJoin(student_id: number){
     const result = await ClubDAL.getAllClubsStudentJoin(student_id);
     return result;
 }
+
+export async function getClubInfoByClubId(club_id: number){
+    const result = await ClubDAL.getClubInfoByClubId(club_id);
+    return result;
+}

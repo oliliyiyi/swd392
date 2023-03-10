@@ -46,3 +46,13 @@ export async function getAllClubsStudentJoin(req: any, res: any, next: any){
         res.status(400).json({message: "Action Fail"});
       }
 }
+
+export async function getClubInfoByClubId(req: any, res: any, next: any){
+    try {
+        const club_id = req.params.club_id;
+        const response = await ClubService.getClubInfoByClubId(club_id);
+        res.json(response);
+    } catch (error: any) {
+        res.status(400).json({message: "Action Fail"});
+      }
+}

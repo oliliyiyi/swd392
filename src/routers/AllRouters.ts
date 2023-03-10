@@ -449,6 +449,29 @@ router.post("/api/club/member", ClubController.insertClubMember)
 
 /**
  * @swagger
+ * /api/club/detail/{club_id}:
+ *   get:
+ *     tags:
+ *      - Club
+ *     summary: Get club by club_id
+ *     description: Get club by club_id
+ *     parameters:
+ *       - name: club_id
+ *         in: path
+ *         description: ID of the club 
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
+
+/**
+ * @swagger
  * /api/login:
  *    post:
  *      tags:
