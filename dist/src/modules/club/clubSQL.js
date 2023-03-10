@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 function getAllClubsInCampus(campus_id) {
     const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, tl.img, COUNT(tb.student_id) as totalMembers FROM 
     (SELECT * FROM clubs WHERE campus_id = ?) tl
@@ -69,3 +69,14 @@ function getAllClubsStudentJoin(student_id) {
     return queryObject;
 }
 exports.getAllClubsStudentJoin = getAllClubsStudentJoin;
+function getClubInfoByClubId(club_id) {
+    const query = `SELECT club_id, name as club_name, abbreviation, established_date, img 
+  FROM clubs WHERE club_id = ?`;
+    const values = [club_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getClubInfoByClubId = getClubInfoByClubId;

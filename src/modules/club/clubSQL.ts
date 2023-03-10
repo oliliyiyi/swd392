@@ -65,3 +65,14 @@ export function getAllClubsStudentJoin(student_id: number) {
     };
     return queryObject;
 }
+
+export function getClubInfoByClubId(club_id: number) {
+  const query = `SELECT club_id, name as club_name, abbreviation, established_date, img 
+  FROM clubs WHERE club_id = ?`;
+  const values: any = [club_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+}

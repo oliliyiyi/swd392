@@ -39,3 +39,9 @@ export async function getAllClubsStudentJoin(student_id: number) {
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
+
+export async function getClubInfoByClubId(club_id: number) {
+  const queryString = ClubSQL.getClubInfoByClubId(club_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows[0];
+}
