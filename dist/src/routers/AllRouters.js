@@ -334,7 +334,7 @@ router.post("/api/event/join", EventController.registerEvent);
 router.get("/api/event/join/:event_id", EventController.getStudentsJoinEvent);
 /**
  * @swagger
- * /api/club/{campus_id}:
+ * /api/club/campus/{campus_id}:
  *   get:
  *     tags:
  *      - Club
@@ -353,7 +353,50 @@ router.get("/api/event/join/:event_id", EventController.getStudentsJoinEvent);
  *       '400':
  *         description: Bad Request
  */
-router.get("/api/club/:campus_id", ClubController.getAllClubsInCampus);
+router.get("/api/club/campus/:campus_id", ClubController.getAllClubsInCampus);
+/**
+ * @swagger
+ * /api/club/student/{student_id}:
+ *   get:
+ *     tags:
+ *      - Club
+ *     summary: Get clubs that student joined
+ *     description: Get clubs that student joined
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/club/student/:student_id", ClubController.getAllClubsStudentJoin);
+/**
+ * @swagger
+ * /api/club/member:
+ *   get:
+ *     tags:
+ *      - Club
+ *     summary: Get all members of club
+ *     description: Get all members of club
+ *     parameters:
+ *       - name: club_id
+ *         in: query
+ *         description: ID of the club
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
 router.get("/api/club/member", ClubController.getAllClubMembers);
 /**
  * @swagger

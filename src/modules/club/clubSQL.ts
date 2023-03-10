@@ -32,3 +32,36 @@ export function insertClubMember(student_id: number, club_id: number, role: stri
     };
     return queryObject;
 }
+
+export function getAllClubMembers(club_id: number) {
+  const query = `SELECT td.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
+  td.address, td.phone, td.email, td.role 
+  FROM (SELECT * FROM club_member WHERE club_id = ?) tb
+  LEFT JOIN clubs tl
+  ON tb.club_id = tl.club_id
+  LEFT JOIN student td
+  ON tb.student_id = td.student_id
+  LEFT JOIN department tk
+  ON tk.dpm_id = td.dpm_id
+  LEFT JOIN campus tf
+  ON tf.campus_id = td.campus_id`;
+  const values: any = [club_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+}
+
+export function getAllClubsStudentJoin(student_id: number) {
+  const query = `SELECT  tl.club_id, tl.name as club_name, tl.abbreviation, tl.established_date 
+  FROM (SELECT * FROM club_member WHERE student_id = ?) tb
+  LEFT JOIN clubs tl
+  ON tb.club_id = tl.club_id`;
+  const values: any = [student_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+}
