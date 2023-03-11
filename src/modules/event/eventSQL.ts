@@ -68,7 +68,7 @@ export function registerEvent(student_id: number, event_id: number, registration
 
 export function getStudentsJoinEvent(event_id: number) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
-    td.campus_id, tf.name as campus_name, td.email 
+    td.campus_id, tf.name as campus_name, td.email, tl.registration_date 
     FROM (SELECT * FROM join_events WHERE event_id = ?) tl
     LEFT JOIN student td
     ON tl.student_id = td.student_id
@@ -103,7 +103,15 @@ export function getAllEvents(){
 }
 
 export function getEventById(event_id: number) {
-    const query = `SELECT * FROM event WHERE event_id = ?`
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
+    FROM (SELECT * FROM event WHERE event_id = ?) tb
+	LEFT JOIN event_organizer tl
+    ON tb.event_id = tl.event_id
+    LEFT JOIN clubs tk
+    ON tk.club_id = tl.club_id
+    LEFT JOIN student td
+    ON td.student_id = tl.student_id`
     const values : any = [event_id];
     const queryObject = {
         text: query,

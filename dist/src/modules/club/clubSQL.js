@@ -38,7 +38,7 @@ function insertClubMember(student_id, club_id, role, join_date) {
 exports.insertClubMember = insertClubMember;
 function getAllClubMembers(club_id) {
     const query = `SELECT td.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
-  td.address, td.phone, td.email, td.role 
+  td.address, td.phone, td.email, td.role, tb.join_date 
   FROM (SELECT * FROM club_member WHERE club_id = ?) tb
   LEFT JOIN clubs tl
   ON tb.club_id = tl.club_id
