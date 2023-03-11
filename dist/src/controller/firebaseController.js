@@ -30,6 +30,7 @@ exports.handlePostFile = exports.handlepushNotification = void 0;
 const fs_1 = __importDefault(require("fs"));
 const fbInit = __importStar(require("../configs/fbconfigs"));
 function handlepushNotification(req, res, next) {
+    const token_device = req.cookies.device_token;
     const pushOption = req.body.send_option;
     if (!pushOption || (pushOption !== "topic" && pushOption !== "device"))
         return res.status(400).json({ message: `Please select true option (\"topic\" or \"device\" - one of them)!` });
@@ -63,7 +64,7 @@ function handlepushNotification(req, res, next) {
         });
     }
     else if (pushOption === "device") {
-        const fcmToken = req.body.device_token;
+        const fcmToken = token_device;
         if (!fcmToken) {
             return res.status(404).json({ message: "Token device not found!" });
         }
