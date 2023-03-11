@@ -3,6 +3,7 @@ import * as fbInit from "../../../src/configs/fbconfigs";
 import jwt from "jsonwebtoken";
 import * as Student from "../../service/student/StudentService";
 import * as StudentDAL from "../../../src/modules/student/StudentDAL";
+import * as redis from '../../configs/rd_config';
 // const users = [
 //   {
 //     id: 1,
@@ -35,6 +36,15 @@ export async function handleLogin(req: any, res: any) {
   const firebaseToken = req.body.token;
   console.log(req.body.token);
   const device_token = req.body.deviceToken;
+  const Redisclient = redis.client;
+  let cachedProducts ;
+  let tokenDevice;
+  if(!cachedProducts){
+    Redisclient.set("myTokenDevice",JSON.stringify(device_token),"EX",60);
+  }else{
+     cachedProducts = await Redisclient.get("myTokenDevice");
+     tokenDevice = JSON.parse(cachedProducts);
+  }
   if (!firebaseToken) {
     return res.status(404).json({ message: "Token not found!" });
   }
@@ -113,16 +123,17 @@ export async function handleLogin(req: any, res: any) {
             phone: studentInfo.phone,
             campus: studentInfo.campus_id
           };
-          if(device_token){
-          res.cookie("device_token", device_token, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 24 * 60 * 60 * 1000,
-          });}
+          // if(device_token){
+          // res.cookie("device_token", device_token, {
+          //   httpOnly: true,
+          //   secure: true,
+          //   maxAge: 24 * 60 * 60 * 1000,
+          // });}
           res.status(200).json({
             access_token: access_token,
             refresh_token: refresh_token,
             data: student_data,
+            device_token: tokenDevice,
             message: "Login successful",
           });
         }  else if(studentInfo && roleGet == "members"){

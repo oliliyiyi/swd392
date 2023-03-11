@@ -39,6 +39,7 @@ exports.handleLogin = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Student = __importStar(require("../../service/student/StudentService"));
 const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL"));
+const redis = __importStar(require("../../configs/rd_config"));
 // const users = [
 //   {
 //     id: 1,
@@ -69,6 +70,16 @@ function handleLogin(req, res) {
         const firebaseToken = req.body.token;
         console.log(req.body.token);
         const device_token = req.body.deviceToken;
+        const Redisclient = redis.client;
+        let cachedProducts;
+        let tokenDevice;
+        if (!cachedProducts) {
+            Redisclient.set("myTokenDevice", JSON.stringify(device_token), "EX", 60);
+        }
+        else {
+            cachedProducts = yield Redisclient.get("myTokenDevice");
+            tokenDevice = JSON.parse(cachedProducts);
+        }
         if (!firebaseToken) {
             return res.status(404).json({ message: "Token not found!" });
         }
@@ -133,17 +144,17 @@ function handleLogin(req, res) {
                     phone: studentInfo.phone,
                     campus: studentInfo.campus_id
                 };
-                if (device_token) {
-                    res.cookie("device_token", device_token, {
-                        httpOnly: true,
-                        secure: true,
-                        maxAge: 24 * 60 * 60 * 1000,
-                    });
-                }
+                // if(device_token){
+                // res.cookie("device_token", device_token, {
+                //   httpOnly: true,
+                //   secure: true,
+                //   maxAge: 24 * 60 * 60 * 1000,
+                // });}
                 res.status(200).json({
                     access_token: access_token,
                     refresh_token: refresh_token,
                     data: student_data,
+                    device_token: tokenDevice,
                     message: "Login successful",
                 });
             }
