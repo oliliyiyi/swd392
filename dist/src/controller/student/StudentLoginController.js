@@ -68,6 +68,7 @@ function handleLogin(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const firebaseToken = req.body.token;
         console.log(req.body.token);
+        const device_token = req.body.deviceToken;
         if (!firebaseToken) {
             return res.status(404).json({ message: "Token not found!" });
         }
@@ -132,6 +133,13 @@ function handleLogin(req, res) {
                     phone: studentInfo.phone,
                     campus: studentInfo.campus_id
                 };
+                if (device_token) {
+                    res.cookie("device_token", device_token, {
+                        httpOnly: true,
+                        secure: true,
+                        maxAge: 24 * 60 * 60 * 1000,
+                    });
+                }
                 res.status(200).json({
                     access_token: access_token,
                     refresh_token: refresh_token,
