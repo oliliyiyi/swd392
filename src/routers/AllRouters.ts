@@ -504,6 +504,8 @@ router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
  *                    type: string
  *                  refresh_token:
  *                    type: string
+ *                  device_token:
+ *                    type: string
  *                  data:
  *                    type: object
  *                    properties:
@@ -521,6 +523,7 @@ router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
  *                        example: "0382212012"
  *                      campus:
  *                        type: string
+ *                      
  */
 router.post("/api/login", StudentLoginController.handleLogin);
 
