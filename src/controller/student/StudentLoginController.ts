@@ -36,13 +36,16 @@ export async function handleLogin(req: any, res: any) {
   const firebaseToken = req.body.token;
   console.log(req.body.token);
   const device_token = req.body.deviceToken;
+  console.log(req.body.deviceToken);
   const Redisclient = redis.client;
-  let cachedProducts ;
+  let cachedProducts = await Redisclient.get("myTokenDevice");
   let tokenDevice;
-  if(!cachedProducts){
+  if(device_token !== "string" || !device_token){
     Redisclient.set("myTokenDevice",JSON.stringify(device_token),"EX",60);
-  }else{
-     cachedProducts = await Redisclient.get("myTokenDevice");
+    cachedProducts = await Redisclient.get("myTokenDevice");
+    tokenDevice = JSON.parse(cachedProducts);
+  }else if(cachedProducts){
+    //  cachedProducts = await Redisclient.get("myTokenDevice");
      tokenDevice = JSON.parse(cachedProducts);
   }
   if (!firebaseToken) {
@@ -133,7 +136,7 @@ export async function handleLogin(req: any, res: any) {
             access_token: access_token,
             refresh_token: refresh_token,
             data: student_data,
-            device_token: tokenDevice,
+            device_tokens: tokenDevice,
             message: "Login successful",
           });
         }  else if(studentInfo && roleGet == "members"){

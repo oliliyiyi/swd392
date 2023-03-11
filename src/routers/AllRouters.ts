@@ -504,7 +504,7 @@ router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
  *                    type: string
  *                  refresh_token:
  *                    type: string
- *                  device_token:
+ *                  device_tokens:
  *                    type: string
  *                  data:
  *                    type: object
