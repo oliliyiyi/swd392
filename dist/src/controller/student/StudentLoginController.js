@@ -75,7 +75,7 @@ function handleLogin(req, res) {
         let cachedProducts = yield Redisclient.get("myTokenDevice");
         let tokenDevice;
         if (device_token !== "string" || !device_token) {
-            Redisclient.set("myTokenDevice", JSON.stringify(device_token), "EX", 60);
+            Redisclient.set("myTokenDevice", JSON.stringify(device_token));
             cachedProducts = yield Redisclient.get("myTokenDevice");
             tokenDevice = JSON.parse(cachedProducts);
         }
