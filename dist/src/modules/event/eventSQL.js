@@ -79,7 +79,7 @@ function getStudentsJoinEvent(event_id) {
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
 function getAllEvents() {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM event tb
 	LEFT JOIN event_organizer tl
