@@ -489,6 +489,8 @@ router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
  *                role:
  *                  type: string  
  *                  example: "admin/members" 
+ *                deviceToken:
+ *                   type: string
  * 
  *      responses:
  *        200:
