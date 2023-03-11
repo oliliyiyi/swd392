@@ -2,8 +2,7 @@ import fs from "fs";
 import path from 'path';
 import * as fbInit from "../configs/fbconfigs";
 export function handlepushNotification(req: any, res: any, next: any) {
- const token_device =  req.cookies.device_token
-    const pushOption = req.body.send_option
+  const pushOption = req.body.send_option
   if(!pushOption || (pushOption !== "topic" && pushOption !== "device")) 
   return res.status(400).json({message:`Please select true option (\"topic\" or \"device\" - one of them)!`})
   if(pushOption === "topic"){
@@ -33,7 +32,7 @@ export function handlepushNotification(req: any, res: any, next: any) {
       });
   }
   else if(pushOption === "device"){
-  const fcmToken = token_device;
+  const fcmToken = req.body.device_token;
   if (!fcmToken) {
     return res.status(404).json({ message: "Token device not found!" });
   }
