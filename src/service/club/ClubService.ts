@@ -22,7 +22,7 @@ export async function getAllClubsStudentJoin(student_id: number){
 
 export async function getClubInfoByClubId(club_id: number){
     const result = await ClubDAL.getClubInfoByClubId(club_id);
-    return result;
+    return result[0];
 }
 
 export async function deleteClubMember(student_id: number, club_id: number){

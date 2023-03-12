@@ -83,7 +83,7 @@ function getClubInfoByClubId(club_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = ClubSQL.getClubInfoByClubId(club_id);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows[0];
+        return rows;
     });
 }
 exports.getClubInfoByClubId = getClubInfoByClubId;

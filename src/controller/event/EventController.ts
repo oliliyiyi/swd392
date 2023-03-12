@@ -119,9 +119,11 @@ export async function admInsertEventOrganizer(req: any, res: any, next: any) {
     await db.query("ROLLBACK");
     if (error.message === "NotClubMember") {
       res.status(400).json({ message: "This student is not a club member" })
-    } else {
-      return next(error);
-    }
+    } 
+    if (error.message === "ClubOrEventNotExisted") {
+      res.status(400).json({ message: "Club or event does not existed" })
+    } 
+      return next(error);   
   }
 }
 
@@ -154,6 +156,9 @@ export async function checkinEvent(req: any, res: any, next: any) {
     res.json();
   } catch (error: any) {
     await db.query("ROLLBACK");
+    if (error.message === "EventNotExisted") {
+      res.status(400).json({ message: "Event does not existed" })
+    }
     return next(error);
   }
 }
@@ -195,6 +200,22 @@ export async function getAllEvents(req: any, res: any, next: any) {
     const response = await EventService.getAllEvents(status);
     res.json(response);
   } catch (error) {
+    return next(error);
+  }
+}
+
+export async function deleteEvent(req: any, res: any, next: any) {
+  try {
+    await db.query("START TRANSACTION");
+    const event_id = Number(req.params.event_id);
+    await EventService.deleteEvent(event_id);
+    await db.query("COMMIT");
+    res.json();
+  } catch (error: any) {
+    await db.query("ROLLBACK");
+    if (error.message === "EventIsNotExisted") {
+      res.status(400).json({ message: "Event is not existed" })
+    }
     return next(error);
   }
 }

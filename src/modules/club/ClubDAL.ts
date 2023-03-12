@@ -43,7 +43,7 @@ export async function getAllClubsStudentJoin(student_id: number) {
 export async function getClubInfoByClubId(club_id: number) {
   const queryString = ClubSQL.getClubInfoByClubId(club_id);
   const rows = await query(queryString.text, queryString.values);
-  return rows[0];
+  return rows;
 }
 
 export async function deleteClubMember(student_id: number, club_id: number) {
