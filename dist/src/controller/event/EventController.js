@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -159,9 +159,10 @@ function admInsertEventOrganizer(req, res, next) {
             if (error.message === "NotClubMember") {
                 res.status(400).json({ message: "This student is not a club member" });
             }
-            else {
-                return next(error);
+            if (error.message === "ClubOrEventNotExisted") {
+                res.status(400).json({ message: "Club or event does not existed" });
             }
+            return next(error);
         }
     });
 }
@@ -200,6 +201,9 @@ function checkinEvent(req, res, next) {
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "EventNotExisted") {
+                res.status(400).json({ message: "Event does not existed" });
+            }
             return next(error);
         }
     });
@@ -255,3 +259,22 @@ function getAllEvents(req, res, next) {
     });
 }
 exports.getAllEvents = getAllEvents;
+function deleteEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const event_id = Number(req.params.event_id);
+            yield EventService.deleteEvent(event_id);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "EventIsNotExisted") {
+                res.status(400).json({ message: "Event is not existed" });
+            }
+            return next(error);
+        }
+    });
+}
+exports.deleteEvent = deleteEvent;

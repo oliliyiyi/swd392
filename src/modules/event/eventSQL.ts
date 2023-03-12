@@ -20,13 +20,14 @@ export function admInsertEvent(
 export function getAllEventsInCampus(campus_id: number){
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
-    FROM (SELECT * FROM clubs WHERE campus_id = ?) tk
+    FROM clubs tk
 	LEFT JOIN event_organizer tl
     ON tk.club_id = tl.club_id
     INNER JOIN event tb
     ON tb.event_id = tl.event_id
     LEFT JOIN student td
-    ON td.student_id = tl.student_id`;
+    ON td.student_id = tl.student_id
+    WHERE tk.campus_id = ? AND tb.active = 1`;
     const values : any = [campus_id];
     const queryObject = {
         text: query,
@@ -87,7 +88,7 @@ export function getStudentsJoinEvent(event_id: number) {
 export function getAllEvents(){
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
-    FROM event tb
+    FROM (SELECT * FROM event WHERE active = 1) tb
 	LEFT JOIN event_organizer tl
     ON tb.event_id = tl.event_id
     LEFT JOIN clubs tk
@@ -104,7 +105,7 @@ export function getAllEvents(){
 
 export function getEventById(event_id: number) {
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
-    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
+    tb.start_date, tb.end_date, tb.active, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE event_id = ?) tb
 	LEFT JOIN event_organizer tl
     ON tb.event_id = tl.event_id
@@ -133,6 +134,16 @@ export function checkinEvent(student_id: number, event_id: number, checkin: stri
 export function checkoutEvent(student_id: number, event_id: number, checkout: string) {
     const query = `UPDATE join_events SET checkout = ? WHERE student_id = ? AND event_id = ?;`;
     const values: any = [checkout, student_id, event_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+  }
+
+  export function deleteEvent(event_id: number) {
+    const query = `UPDATE event SET active = 0 WHERE event_id = ?;`;
+    const values: any = [event_id];
     const queryObject = {
       text: query,
       values,
