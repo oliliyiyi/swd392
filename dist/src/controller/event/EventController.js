@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -171,7 +171,7 @@ function registerEvent(req, res, next) {
         try {
             yield db_config_1.db.query("START TRANSACTION");
             const student_id = req.body.student_id;
-            const event_id = req.body.event_id;
+            const event_id = req.params.event_id;
             const registration_date = req.body.registration_date;
             yield EventService.registerEvent(student_id, event_id, registration_date);
             yield db_config_1.db.query("COMMIT");
@@ -187,6 +187,48 @@ function registerEvent(req, res, next) {
     });
 }
 exports.registerEvent = registerEvent;
+function checkinEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = req.body.student_id;
+            const event_id = req.params.event_id;
+            const checkin = req.body.checkin;
+            yield EventService.checkinEvent(student_id, event_id, checkin);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
+    });
+}
+exports.checkinEvent = checkinEvent;
+function checkoutEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = req.body.student_id;
+            const event_id = req.params.event_id;
+            const checkout = req.body.checkout;
+            yield EventService.checkoutEvent(student_id, event_id, checkout);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "NotCheckin") {
+                res.status(400).json({ message: "Students have not checked in the event" });
+            }
+            if (error.message === "NotRegisteredToParticipate") {
+                res.status(400).json({ message: "Students have not registerd to participate event" });
+            }
+            return next(error);
+        }
+    });
+}
+exports.checkoutEvent = checkoutEvent;
 function getStudentsJoinEvent(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -32,8 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllStudentInfo = exports.getStudentByStudentId = exports.getStudentInfoByEmail = void 0;
+exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.getStudentInfoByEmail = void 0;
 const StudentService = __importStar(require("../../service/student/StudentService"));
+const db_config_1 = require("../../configs/db_config");
 function getStudentInfoByEmail(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -72,3 +73,22 @@ function getAllStudentInfo(req, res, next) {
     });
 }
 exports.getAllStudentInfo = getAllStudentInfo;
+function updateStudentInfo(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = Number(req.params.student_id);
+            const address = req.body.address;
+            const phone = req.body.phone;
+            const birthday = req.body.birthday;
+            const response = yield StudentService.updateStudentInfo(student_id, phone, address, birthday);
+            yield db_config_1.db.query("COMMIT");
+            res.json(response);
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            res.status(400).json({ message: "Action Fail" });
+        }
+    });
+}
+exports.updateStudentInfo = updateStudentInfo;

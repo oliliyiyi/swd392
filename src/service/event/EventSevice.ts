@@ -58,6 +58,8 @@ export async function registerEvent(
       throw new Error("StudentAlreadyJoinEvent");
     }
   });
+
+  const event = await EventDAL.getEventById(event_id);
   const result = await EventDAL.registerEvent(
     student_id,
     event_id,
@@ -65,17 +67,56 @@ export async function registerEvent(
   );
 }
 
-export async function getStudentsJoinEvent(event_id: number){
+export async function checkinEvent(
+  student_id: number,
+  event_id: number,
+  checkin: string
+) {
+  const studentsJoinEvent = await EventDAL.getStudentsJoinEvent(event_id);
+  let checkStudentJoinEvent = false;
+  studentsJoinEvent.forEach((student: any) => {
+    if (student.student_id === student_id) {
+      checkStudentJoinEvent = true;
+    }
+  });
+  if (!checkStudentJoinEvent) {
+    await registerEvent(student_id, event_id, checkin);
+  }
+  return await EventDAL.checkinEvent(student_id, event_id, checkin);
+}
+
+export async function checkoutEvent(
+  student_id: number,
+  event_id: number,
+  checkout: string
+) {
+  const studentsJoinEvent = await EventDAL.getStudentsJoinEvent(event_id);
+  let checkStudentJoinEvent = false;
+  studentsJoinEvent.forEach((student: any) => {
+    if (student.student_id === student_id) {
+      checkStudentJoinEvent = true;
+      if(!student.checkin){
+        throw new Error("NotCheckin")
+      }
+    }
+  });
+  if (!checkStudentJoinEvent) {
+    throw new Error('NotRegisteredToParticipate')
+  }
+  return await EventDAL.checkoutEvent(student_id, event_id, checkout);
+}
+
+export async function getStudentsJoinEvent(event_id: number) {
   const result = await EventDAL.getStudentsJoinEvent(event_id);
   return result;
 }
 
-export async function getAllEvents(status: number){
+export async function getAllEvents(status: number) {
   const result = await EventDAL.getAllEvents(status);
   return result;
 }
 
-export async function getEventById(event_id: number){
+export async function getEventById(event_id: number) {
   const result = await EventDAL.getEventById(event_id);
   return result;
 }

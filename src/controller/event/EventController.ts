@@ -129,7 +129,7 @@ export async function registerEvent(req: any, res: any, next: any) {
   try {
     await db.query("START TRANSACTION");
     const student_id = req.body.student_id;
-    const event_id = req.body.event_id;
+    const event_id = req.params.event_id;
     const registration_date = req.body.registration_date;
     await EventService.registerEvent(student_id, event_id, registration_date);
     await db.query("COMMIT");
@@ -138,6 +138,42 @@ export async function registerEvent(req: any, res: any, next: any) {
     await db.query("ROLLBACK");
     if (error.message === "StudentAlreadyJoinEvent") {
       res.status(400).json({ message: "This student is already join event" })
+    }
+    return next(error);
+  }
+}
+
+export async function checkinEvent(req: any, res: any, next: any) {
+  try {
+    await db.query("START TRANSACTION");
+    const student_id = req.body.student_id;
+    const event_id = req.params.event_id;
+    const checkin = req.body.checkin;
+    await EventService.checkinEvent(student_id, event_id, checkin);
+    await db.query("COMMIT");
+    res.json();
+  } catch (error: any) {
+    await db.query("ROLLBACK");
+    return next(error);
+  }
+}
+
+export async function checkoutEvent(req: any, res: any, next: any) {
+  try {
+    await db.query("START TRANSACTION");
+    const student_id = req.body.student_id;
+    const event_id = req.params.event_id;
+    const checkout = req.body.checkout;
+    await EventService.checkoutEvent(student_id, event_id, checkout);
+    await db.query("COMMIT");
+    res.json();
+  } catch (error: any) {
+    await db.query("ROLLBACK");
+    if (error.message === "NotCheckin") {
+      res.status(400).json({ message: "Students have not checked in the event" })
+    }
+    if (error.message === "NotRegisteredToParticipate") {
+      res.status(400).json({ message: "Students have not registerd to participate event" })
     }
     return next(error);
   }

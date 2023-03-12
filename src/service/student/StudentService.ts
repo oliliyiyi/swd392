@@ -44,3 +44,8 @@ export async function getAllStudentInfo() {
   const result = await StudentDAL.getAllStudentInfo();
   return result;
 }
+
+export async function updateStudentInfo(student_id: number, phone: string, address: string, birthday: string) {
+  const result = await StudentDAL.updateStudentInfo(student_id, phone, address, birthday);
+  return result;
+}

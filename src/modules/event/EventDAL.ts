@@ -67,6 +67,18 @@ export async function getStudentsJoinEvent(event_id: number) {
   return studentsJoinEvent;
 }
 
+export async function checkinEvent(student_id: number, event_id: number, checkin: string) {
+  const queryString = EventSQL.checkinEvent(student_id, event_id, checkin);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
+export async function checkoutEvent(student_id: number, event_id: number, checkout: string) {
+  const queryString = EventSQL.checkoutEvent(student_id, event_id, checkout);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
 export async function getEventById(event_id: number) {
   const queryString = EventSQL.getEventById(event_id);
   const eventById = await query(queryString.text, queryString.values);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -62,7 +62,7 @@ function registerEvent(student_id, event_id, registration_date) {
 exports.registerEvent = registerEvent;
 function getStudentsJoinEvent(event_id) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
-    td.campus_id, tf.name as campus_name, td.email, tl.registration_date 
+    td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.checkin, tl.checkout
     FROM (SELECT * FROM join_events WHERE event_id = ?) tl
     LEFT JOIN student td
     ON tl.student_id = td.student_id
@@ -114,3 +114,23 @@ function getEventById(event_id) {
     return queryObject;
 }
 exports.getEventById = getEventById;
+function checkinEvent(student_id, event_id, checkin) {
+    const query = `UPDATE join_events SET checkin = ? WHERE student_id = ? AND event_id = ?;`;
+    const values = [checkin, student_id, event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.checkinEvent = checkinEvent;
+function checkoutEvent(student_id, event_id, checkout) {
+    const query = `UPDATE join_events SET checkout = ? WHERE student_id = ? AND event_id = ?;`;
+    const values = [checkout, student_id, event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.checkoutEvent = checkoutEvent;
