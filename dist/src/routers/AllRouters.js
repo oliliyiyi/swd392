@@ -110,6 +110,50 @@ router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
 /**
  * @swagger
+ * /api/student/{student_id}:
+ *   put:
+ *     tags:
+ *      - Student
+ *     summary: Update student information
+ *     description: Update the phone, address, and/or birthday information for a student.
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student to update.
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       description: Student information to update.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone:
+ *                 type: string
+ *                 description: The updated phone number for the student.
+ *               address:
+ *                 type: string
+ *                 description: The updated address for the student.
+ *               birthday:
+ *                 type: string
+ *                 format: date
+ *                 description: The updated birthday for the student (in YYYY-MM-DD format).
+ *             example:
+ *               phone: "123-456-7890"
+ *               address: "123 Main St."
+ *               birthday: "2000-01-01"
+ *     responses:
+ *       '200':
+ *         description: Successfully updated student information.
+ *       '404':
+ *         description: Student with the given ID not found.
+ */
+router.put("/api/student/:student_id", StudentController.updateStudentInfo);
+/**
+ * @swagger
  *  /api/students:
  *    get:
  *         tags:
@@ -322,7 +366,7 @@ router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
  *                 type: number
  *               registration_date:
  *                 type: string
- *                 example: yyyy-dd-mm HH-MM-SS
+ *                 example: yyyy-mm-dd HH-MM-SS
  *             required:
  *               - event_id
  *               - registration_date
@@ -334,6 +378,78 @@ router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
  *         description: This student is not a club member
  */
 router.post("/api/event/join", EventController.registerEvent);
+/**
+ * @swagger
+ * /api/event/join/{event_id}/checkin:
+ *   put:
+ *     tags:
+ *      - Event
+ *     summary: Student checkin event
+ *     description: Student checkin to participate event
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to checkin.
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               student_id:
+ *                 type: number
+ *                 description: ID of the student.
+ *               checkin:
+ *                 type: string
+ *                 format: date
+ *                 description: checkin time (in YYYY-MM-DD format).
+ *     responses:
+ *       '200':
+ *         description: Successfully updated student information.
+ *       '400':
+ *         description: Action Fail.
+ */
+router.put("/api/event/join/:event_id/checkin", EventController.checkinEvent);
+/**
+ * @swagger
+ * /api/event/join/{event_id}/checkout:
+ *   put:
+ *     tags:
+ *      - Event
+ *     summary: Student checkout event
+ *     description: Student checkout event
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to checkout.
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               student_id:
+ *                 type: number
+ *                 description: ID of the student.
+ *               checkout:
+ *                 type: string
+ *                 format: date
+ *                 description: checkout time (in YYYY-MM-DD format).
+ *     responses:
+ *       '200':
+ *         description: Successfully updated student information.
+ *       '400':
+ *         description: Action Fail.
+ */
+router.put("/api/event/join/:event_id/checkout", EventController.checkoutEvent);
 /**
  * @swagger
  * /api/event/join/{event_id}:
@@ -445,6 +561,7 @@ router.get("/api/club/member", ClubController.getAllClubMembers);
  *                 type: string
  *               join_date:
  *                 type: string
+ *               example: yyyy-mm-dd HH-MM-SS
  *             required:
  *               - student_id
  *               - club_id

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -70,10 +70,46 @@ function registerEvent(student_id, event_id, registration_date) {
                 throw new Error("StudentAlreadyJoinEvent");
             }
         });
+        const event = yield EventDAL.getEventById(event_id);
         const result = yield EventDAL.registerEvent(student_id, event_id, registration_date);
     });
 }
 exports.registerEvent = registerEvent;
+function checkinEvent(student_id, event_id, checkin) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event_id);
+        let checkStudentJoinEvent = false;
+        studentsJoinEvent.forEach((student) => {
+            if (student.student_id === student_id) {
+                checkStudentJoinEvent = true;
+            }
+        });
+        if (!checkStudentJoinEvent) {
+            yield registerEvent(student_id, event_id, checkin);
+        }
+        return yield EventDAL.checkinEvent(student_id, event_id, checkin);
+    });
+}
+exports.checkinEvent = checkinEvent;
+function checkoutEvent(student_id, event_id, checkout) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event_id);
+        let checkStudentJoinEvent = false;
+        studentsJoinEvent.forEach((student) => {
+            if (student.student_id === student_id) {
+                checkStudentJoinEvent = true;
+                if (!student.checkin) {
+                    throw new Error("NotCheckin");
+                }
+            }
+        });
+        if (!checkStudentJoinEvent) {
+            throw new Error('NotRegisteredToParticipate');
+        }
+        return yield EventDAL.checkoutEvent(student_id, event_id, checkout);
+    });
+}
+exports.checkoutEvent = checkoutEvent;
 function getStudentsJoinEvent(event_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield EventDAL.getStudentsJoinEvent(event_id);

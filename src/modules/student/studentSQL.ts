@@ -72,3 +72,13 @@ export function getStudentByStudentId(studentId: any) {
   };
   return queryObject;
 }
+
+export function updateStudentInfo(student_id: number, phone: string, address: string, birthday: string) {
+  const query = `UPDATE student SET phone = ? , address = ? , birthday = ? WHERE student_id = ? ;`;
+  const values: any = [phone, address, birthday, student_id];
+  const queryObject = {
+    text: query,
+    values,
+  };
+  return queryObject;
+}

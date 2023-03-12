@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getEventById = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
@@ -97,6 +97,22 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function checkinEvent(student_id, event_id, checkin) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.checkinEvent(student_id, event_id, checkin);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.checkinEvent = checkinEvent;
+function checkoutEvent(student_id, event_id, checkout) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.checkoutEvent(student_id, event_id, checkout);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.checkoutEvent = checkoutEvent;
 function getEventById(event_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getEventById(event_id);

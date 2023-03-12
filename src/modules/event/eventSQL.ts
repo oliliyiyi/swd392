@@ -68,7 +68,7 @@ export function registerEvent(student_id: number, event_id: number, registration
 
 export function getStudentsJoinEvent(event_id: number) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
-    td.campus_id, tf.name as campus_name, td.email, tl.registration_date 
+    td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.checkin, tl.checkout
     FROM (SELECT * FROM join_events WHERE event_id = ?) tl
     LEFT JOIN student td
     ON tl.student_id = td.student_id
@@ -119,3 +119,23 @@ export function getEventById(event_id: number) {
     };
     return queryObject;
 }
+
+export function checkinEvent(student_id: number, event_id: number, checkin: string) {
+    const query = `UPDATE join_events SET checkin = ? WHERE student_id = ? AND event_id = ?;`;
+    const values: any = [checkin, student_id, event_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+  }
+
+export function checkoutEvent(student_id: number, event_id: number, checkout: string) {
+    const query = `UPDATE join_events SET checkout = ? WHERE student_id = ? AND event_id = ?;`;
+    const values: any = [checkout, student_id, event_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+  }
