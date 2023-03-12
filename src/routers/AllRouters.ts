@@ -437,7 +437,6 @@ router.put("/api/event/join/:event_id/checkin", EventController.checkinEvent);
  *       '400':
  *         description: Action Fail.
  */
-
 router.put("/api/event/join/:event_id/checkout", EventController.checkoutEvent);
 
 /**
@@ -566,7 +565,40 @@ router.get("/api/club/member", ClubController.getAllClubMembers);
  *       '400':
  *         description: Bad Request
  */
-router.post("/api/club/member", ClubController.insertClubMember)
+router.post("/api/club/member", ClubController.insertClubMember);
+
+/**
+ * @swagger
+ * /api/club/member/{student_id}:
+ *   delete:
+ *     summary: Remove a member from a club
+ *     description: Remove a student with the given student_id from the club with the specified club_id.
+ *     tags:
+ *       - Club
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student to remove from the club
+ *         required: true
+ *         schema:
+ *           type: number
+ *       - name: club_id
+ *         in: body
+ *         description: ID of the club to remove the student from
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             club_id:
+ *               type: number
+ *               description: ID of the club to remove the student from
+ *     responses:
+ *       200:
+ *         description: Successfully removed the student from the club
+ *       400:
+ *         description: Action Fail
+ */
+router.delete("/api/club/member/:student_id", ClubController.deleteClubMember);
 
 /**
  * @swagger

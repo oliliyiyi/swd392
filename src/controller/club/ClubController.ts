@@ -56,3 +56,20 @@ export async function getClubInfoByClubId(req: any, res: any, next: any){
         res.status(400).json({message: "Action Fail"});
       }
 }
+
+export async function deleteClubMember(req: any, res: any, next: any){
+    try {
+        await db.query("START TRANSACTION");
+        const student_id = Number(req.params.student_id);
+        const club_id = req.body.club_id;
+        const response = await ClubService.deleteClubMember(student_id, club_id);
+        await db.query("COMMIT");
+        res.json(response);
+      } catch (error: any) {
+        await db.query("ROLLBACK");
+        if (error.message === "NotBeClubeMember") {
+            res.status(400).json({ message: "Students is not a club's member" })
+          }
+        res.status(400).json({message: "Action Fail"});
+      }
+}
