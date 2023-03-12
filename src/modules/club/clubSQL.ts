@@ -24,7 +24,8 @@ export function getClubMemberInfo(club_id: number, student_id: number) {
 }
 
 export function insertClubMember(student_id: number, club_id: number, role: string, join_date: string) {
-  const query = `INSERT INTO club_member (student_id, club_id, role, join_date) VALUES (?,?,?,?);`;
+  const query = `INSERT INTO club_member (student_id, club_id, role, join_date) VALUES (?,?,?,?)
+  ON DUPLICATE KEY UPDATE active = 1;`;
   const values: any = [student_id, club_id, role, join_date];
     const queryObject = {
       text: query,
@@ -34,9 +35,9 @@ export function insertClubMember(student_id: number, club_id: number, role: stri
 }
 
 export function getAllClubMembers(club_id: number) {
-  const query = `SELECT td.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
+  const query = `SELECT tb.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
   td.address, td.phone, td.email, td.role, tb.join_date 
-  FROM (SELECT * FROM club_member WHERE club_id = ?) tb
+  FROM (SELECT * FROM club_member WHERE club_id = ? AND active = 1) tb
   LEFT JOIN clubs tl
   ON tb.club_id = tl.club_id
   LEFT JOIN student td
@@ -70,6 +71,16 @@ export function getClubInfoByClubId(club_id: number) {
   const query = `SELECT club_id, name as club_name, abbreviation, established_date, img 
   FROM clubs WHERE club_id = ?`;
   const values: any = [club_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+}
+
+export function deleteClubMember(student_id: number, club_id: number) {
+  const query = `UPDATE club_member SET active = 0 WHERE student_id = ? AND club_id = ?;`;
+  const values: any = [student_id, club_id];
     const queryObject = {
       text: query,
       values,

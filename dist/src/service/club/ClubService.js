@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubDAL = __importStar(require("../../modules/club/ClubDAL"));
 function getAllClubsInCampus(campus_id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -69,3 +69,20 @@ function getClubInfoByClubId(club_id) {
     });
 }
 exports.getClubInfoByClubId = getClubInfoByClubId;
+function deleteClubMember(student_id, club_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const clubMems = yield getAllClubMembers(club_id);
+        let checkMem = false;
+        clubMems.forEach((mem) => {
+            if (mem.student_id === student_id) {
+                checkMem = true;
+            }
+        });
+        if (!checkMem) {
+            throw new Error("NotBeClubeMember");
+        }
+        const result = yield ClubDAL.deleteClubMember(student_id, club_id);
+        return result;
+    });
+}
+exports.deleteClubMember = deleteClubMember;

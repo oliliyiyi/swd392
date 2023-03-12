@@ -24,3 +24,18 @@ export async function getClubInfoByClubId(club_id: number){
     const result = await ClubDAL.getClubInfoByClubId(club_id);
     return result;
 }
+
+export async function deleteClubMember(student_id: number, club_id: number){
+    const clubMems = await getAllClubMembers(club_id);
+    let checkMem = false
+    clubMems.forEach((mem: any) => {
+        if(mem.student_id === student_id){
+            checkMem = true;
+        }
+    });
+    if(!checkMem){
+        throw new Error("NotBeClubeMember")
+    }
+    const result = await ClubDAL.deleteClubMember(student_id, club_id);
+    return result;
+}

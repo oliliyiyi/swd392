@@ -45,3 +45,9 @@ export async function getClubInfoByClubId(club_id: number) {
   const rows = await query(queryString.text, queryString.values);
   return rows[0];
 }
+
+export async function deleteClubMember(student_id: number, club_id: number) {
+  const queryString = ClubSQL.deleteClubMember(student_id, club_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}

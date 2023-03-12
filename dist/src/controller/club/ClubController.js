@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubService = __importStar(require("../../service/club/ClubService"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(req, res, next) {
@@ -107,3 +107,23 @@ function getClubInfoByClubId(req, res, next) {
     });
 }
 exports.getClubInfoByClubId = getClubInfoByClubId;
+function deleteClubMember(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = Number(req.params.student_id);
+            const club_id = req.body.club_id;
+            const response = yield ClubService.deleteClubMember(student_id, club_id);
+            yield db_config_1.db.query("COMMIT");
+            res.json(response);
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "NotBeClubeMember") {
+                res.status(400).json({ message: "Students is not a club's member" });
+            }
+            res.status(400).json({ message: "Action Fail" });
+        }
+    });
+}
+exports.deleteClubMember = deleteClubMember;

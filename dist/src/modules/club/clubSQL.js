@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 function getAllClubsInCampus(campus_id) {
     const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, tl.img, COUNT(tb.student_id) as totalMembers FROM 
     (SELECT * FROM clubs WHERE campus_id = ?) tl
@@ -27,7 +27,8 @@ function getClubMemberInfo(club_id, student_id) {
 }
 exports.getClubMemberInfo = getClubMemberInfo;
 function insertClubMember(student_id, club_id, role, join_date) {
-    const query = `INSERT INTO club_member (student_id, club_id, role, join_date) VALUES (?,?,?,?);`;
+    const query = `INSERT INTO club_member (student_id, club_id, role, join_date) VALUES (?,?,?,?)
+  ON DUPLICATE KEY UPDATE active = 1;`;
     const values = [student_id, club_id, role, join_date];
     const queryObject = {
         text: query,
@@ -37,9 +38,9 @@ function insertClubMember(student_id, club_id, role, join_date) {
 }
 exports.insertClubMember = insertClubMember;
 function getAllClubMembers(club_id) {
-    const query = `SELECT td.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
+    const query = `SELECT tb.student_id, td.name as student_name, tf.name as campus_name, tk.name as dpm_name,
   td.address, td.phone, td.email, td.role, tb.join_date 
-  FROM (SELECT * FROM club_member WHERE club_id = ?) tb
+  FROM (SELECT * FROM club_member WHERE club_id = ? AND active = 1) tb
   LEFT JOIN clubs tl
   ON tb.club_id = tl.club_id
   LEFT JOIN student td
@@ -80,3 +81,13 @@ function getClubInfoByClubId(club_id) {
     return queryObject;
 }
 exports.getClubInfoByClubId = getClubInfoByClubId;
+function deleteClubMember(student_id, club_id) {
+    const query = `UPDATE club_member SET active = 0 WHERE student_id = ? AND club_id = ?;`;
+    const values = [student_id, club_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.deleteClubMember = deleteClubMember;
