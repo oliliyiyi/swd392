@@ -83,19 +83,18 @@ function admInsertEvent(req, res, next) {
                 .then((signedUrls) => __awaiter(this, void 0, void 0, function* () {
                 console.log(signedUrls);
                 img = signedUrls[0];
-                fs_1.default.unlink(pathImg, (err) => {
-                    if (err)
-                        throw err;
-                    console.log(`${pathImg} was deleted`);
-                });
+                // fs.unlink(pathImg, (err) => {
+                //   if (err) throw err;
+                //   console.log(`${pathImg} was deleted`);
+                // });
                 yield EventService.admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date);
                 yield db_config_1.db.query("COMMIT");
                 res.json();
-                res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
+                // res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
             }))
                 .catch((error) => {
                 console.error("Error getting image URL:", error);
-                //   //res.status(500).json({ message: "Error get link image from firebase!" });
+                //res.status(500).json({ message: "Error get link image from firebase!" });
             });
         }
         catch (error) {
