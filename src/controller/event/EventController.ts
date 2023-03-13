@@ -66,10 +66,10 @@ export async function admInsertEvent(req: any, res: any, next: any) {
         res.json();
         res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
       })
-      // .catch((error) => {
-      //   console.error("Error getting image URL:", error);
+      .catch((error) => {
+        console.error("Error getting image URL:", error);
       //   //res.status(500).json({ message: "Error get link image from firebase!" });
-      // });
+      });
   } catch (error: any) {
     await db.query("ROLLBACK");
     if (error.message === "NotClubMember") {

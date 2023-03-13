@@ -92,11 +92,11 @@ function admInsertEvent(req, res, next) {
                 yield db_config_1.db.query("COMMIT");
                 res.json();
                 res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
-            }));
-            // .catch((error) => {
-            //   console.error("Error getting image URL:", error);
-            //   //res.status(500).json({ message: "Error get link image from firebase!" });
-            // });
+            }))
+                .catch((error) => {
+                console.error("Error getting image URL:", error);
+                //   //res.status(500).json({ message: "Error get link image from firebase!" });
+            });
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");
