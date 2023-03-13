@@ -65,7 +65,7 @@ exports.getAllClubsStudentJoin = getAllClubsStudentJoin;
 function getClubInfoByClubId(club_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield ClubDAL.getClubInfoByClubId(club_id);
-        return result;
+        return result[0];
     });
 }
 exports.getClubInfoByClubId = getClubInfoByClubId;

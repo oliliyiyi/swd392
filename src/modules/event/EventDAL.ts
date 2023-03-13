@@ -102,3 +102,9 @@ export async function getAllEvents(status: number, is_approved: number) {
   const studentsJoinEvent = await query(queryString.text, queryString.values);
   return studentsJoinEvent;
 }
+
+export async function deleteEvent(event_id: number) {
+  const queryString = EventSQL.deleteEvent(event_id);
+  const eventById = await query(queryString.text, queryString.values);
+  return eventById;
+}

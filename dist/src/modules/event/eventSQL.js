@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -14,14 +14,14 @@ exports.admInsertEvent = admInsertEvent;
 function getAllEventsInCampus(campus_id) {
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
-    FROM (SELECT * FROM clubs WHERE campus_id = ?) tk
+    FROM clubs tk
 	LEFT JOIN event_organizer tl
     ON tk.club_id = tl.club_id
     INNER JOIN event tb
     ON tb.event_id = tl.event_id
     LEFT JOIN student td
     ON td.student_id = tl.student_id
-    WHERE tb.active = 1`;
+    WHERE tk.campus_id = ? AND tb.active = 1`;
     const values = [campus_id];
     const queryObject = {
         text: query,
@@ -82,7 +82,7 @@ exports.getStudentsJoinEvent = getStudentsJoinEvent;
 function getAllEvents() {
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
-    FROM event tb
+    FROM (SELECT * FROM event WHERE active = 1) tb
 	LEFT JOIN event_organizer tl
     ON tb.event_id = tl.event_id
     LEFT JOIN clubs tk
@@ -136,3 +136,13 @@ function checkoutEvent(student_id, event_id, checkout) {
     return queryObject;
 }
 exports.checkoutEvent = checkoutEvent;
+function deleteEvent(event_id) {
+    const query = `UPDATE event SET active = 0 WHERE event_id = ?;`;
+    const values = [event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.deleteEvent = deleteEvent;

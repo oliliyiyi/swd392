@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
@@ -143,3 +143,11 @@ function getAllEvents(status, is_approved) {
     });
 }
 exports.getAllEvents = getAllEvents;
+function deleteEvent(event_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.deleteEvent(event_id);
+        const eventById = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return eventById;
+    });
+}
+exports.deleteEvent = deleteEvent;

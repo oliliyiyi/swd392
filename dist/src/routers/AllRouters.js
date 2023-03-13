@@ -333,6 +333,28 @@ router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
 router.get("/api/event", EventController.getAllEvents);
 /**
  * @swagger
+ * /api/event/{event_id}:
+ *   delete:
+ *     summary: Remove event
+ *     description: Remove a event with the specified event_id.
+ *     tags:
+ *       - Event
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to remove
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Successfully removed the event
+ *       400:
+ *         description: Action Fail
+ */
+router.delete("/api/event/:event_id", EventController.deleteEvent);
+/**
+ * @swagger
  * /api/event/join:
  *   post:
  *     tags:
