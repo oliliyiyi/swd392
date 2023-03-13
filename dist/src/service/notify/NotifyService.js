@@ -32,47 +32,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
-const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
-function updateStudentToken(studentId, refresh_token, device_token) {
+exports.getNotifyById = exports.InsertNotifyById = void 0;
+const NotifyDAL = __importStar(require("../../modules/notify/NotiFyDAL"));
+function InsertNotifyById(deviceToken, title, content, student_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.updateStudentToken(studentId, refresh_token, device_token);
+        const result = NotifyDAL.InsertNotifyById(deviceToken, title, content, student_id);
+        console.log(result);
         return result;
     });
 }
-exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, role, active) {
+exports.InsertNotifyById = InsertNotifyById;
+function getNotifyById(student_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
+        const result = NotifyDAL.getNotifyById(student_id);
         return result;
     });
 }
-exports.createStudent = createStudent;
-function getStudentByStudentId(studentId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudentByStudentId(studentId);
-        return result;
-    });
-}
-exports.getStudentByStudentId = getStudentByStudentId;
-function getStudentInfoByEmail(email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getStudentInfoByEmail(email);
-        return result;
-    });
-}
-exports.getStudentInfoByEmail = getStudentInfoByEmail;
-function getAllStudentInfo() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.getAllStudentInfo();
-        return result;
-    });
-}
-exports.getAllStudentInfo = getAllStudentInfo;
-function updateStudentInfo(student_id, phone, address, birthday) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.updateStudentInfo(student_id, phone, address, birthday);
-        return result;
-    });
-}
-exports.updateStudentInfo = updateStudentInfo;
+exports.getNotifyById = getNotifyById;

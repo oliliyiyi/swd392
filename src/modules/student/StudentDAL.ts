@@ -9,9 +9,11 @@ export async function getStudentInfoByEmail(email: string) {
 
 export async function updateStudentToken(
   studentId: any,
-  refresh_token: string
+  refresh_token: string,
+  device_token: string
+
 ) {
-  const queryString = StudentSQL.updateStudentToken(studentId, refresh_token);
+  const queryString = StudentSQL.updateStudentToken(studentId, refresh_token, device_token);
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }

@@ -24,9 +24,9 @@ export function getAllStudentInfo() {
   return queryObject;
 }
 
-export function updateStudentToken(studentId: any, refresh_token: string) {
-  const query = `UPDATE student SET token = ? WHERE student_id = ?`;
-  const values: any = [refresh_token, studentId];
+export function updateStudentToken(studentId: any, refresh_token: string, device_token: string) {
+  const query = `UPDATE student SET token = ? , SET deviceToken = ? WHERE student_id = ?`;
+  const values: any = [refresh_token, device_token, studentId];
   const queryObject = {
     text: query,
     values,
