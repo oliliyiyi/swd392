@@ -85,6 +85,20 @@ export function getStudentsJoinEvent(event_id: number) {
     return queryObject;
 }
 
+export function getEventsStudentJoin(student_id: number) {
+    const query = `SELECT tb.event_id, tb.name, tb.location, tb.img,
+    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout
+    FROM (SELECT * FROM join_events WHERE student_id = ?) tl
+    INNER JOIN (SELECT * FROM event WHERE active = 1) tb
+    ON tb.event_id = tl.event_id`
+    const values : any = [student_id];
+    const queryObject = {
+        text: query,
+        values
+    };
+    return queryObject;
+}
+
 export function getAllEvents(){
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name

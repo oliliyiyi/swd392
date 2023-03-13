@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -79,6 +79,20 @@ function getStudentsJoinEvent(event_id) {
     return queryObject;
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getEventsStudentJoin(student_id) {
+    const query = `SELECT tb.event_id, tb.name, tb.location, tb.img,
+    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout
+    FROM (SELECT * FROM join_events WHERE student_id = ?) tl
+    INNER JOIN (SELECT * FROM event WHERE active = 1) tb
+    ON tb.event_id = tl.event_id`;
+    const values = [student_id];
+    const queryObject = {
+        text: query,
+        values
+    };
+    return queryObject;
+}
+exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents() {
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name

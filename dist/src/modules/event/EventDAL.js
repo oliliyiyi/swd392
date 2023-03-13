@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
@@ -102,6 +102,14 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getEventsStudentJoin(student_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.getEventsStudentJoin(student_id);
+        const studentsJoinEvent = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return studentsJoinEvent;
+    });
+}
+exports.getEventsStudentJoin = getEventsStudentJoin;
 function checkinEvent(student_id, event_id, checkin) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.checkinEvent(student_id, event_id, checkin);

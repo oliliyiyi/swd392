@@ -31,8 +31,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
+const moment_1 = __importDefault(require("moment"));
 const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
 function updateStudentToken(studentId, refresh_token, device_token) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -51,6 +55,7 @@ exports.createStudent = createStudent;
 function getStudentByStudentId(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.getStudentByStudentId(studentId);
+        result.birthday = (0, moment_1.default)(result.birthday).format('YYYY-MM-DD');
         return result;
     });
 }
