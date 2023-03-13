@@ -31,9 +31,9 @@ export async function getAllEventsInCampus(campus_id: number, status: number, is
     queryString.text = queryString.text + ` AND tb.end_date >= current_timestamp()`;
   }
   if(is_approved === 1){
-    queryString.text += `AND tb.is_approved = 1`;
+    queryString.text += ` AND tb.is_approved = 1`;
   } else {
-    queryString.text += `AND tb.is_approved = 0`;
+    queryString.text += ` AND tb.is_approved = 0`;
   }
   const rows = await query(queryString.text, queryString.values);
   return rows;
@@ -95,9 +95,9 @@ export async function getAllEvents(status: number, is_approved: number) {
     queryString.text += ` AND tb.end_date >= current_timestamp()`;
   }
   if(is_approved === 1){
-    queryString.text += `AND tb.is_approved = 1`;
+    queryString.text += ` AND tb.is_approved = 1`;
   } else {
-    queryString.text += `AND tb.is_approved = 0`;
+    queryString.text += ` AND tb.is_approved = 0`;
   }
   const studentsJoinEvent = await query(queryString.text, queryString.values);
   return studentsJoinEvent;

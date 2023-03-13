@@ -51,10 +51,10 @@ function getAllEventsInCampus(campus_id, status, is_approved) {
             queryString.text = queryString.text + ` AND tb.end_date >= current_timestamp()`;
         }
         if (is_approved === 1) {
-            queryString.text += `AND tb.is_approved = 1`;
+            queryString.text += ` AND tb.is_approved = 1`;
         }
         else {
-            queryString.text += `AND tb.is_approved = 0`;
+            queryString.text += ` AND tb.is_approved = 0`;
         }
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
@@ -133,10 +133,10 @@ function getAllEvents(status, is_approved) {
             queryString.text += ` AND tb.end_date >= current_timestamp()`;
         }
         if (is_approved === 1) {
-            queryString.text += `AND tb.is_approved = 1`;
+            queryString.text += ` AND tb.is_approved = 1`;
         }
         else {
-            queryString.text += `AND tb.is_approved = 0`;
+            queryString.text += ` AND tb.is_approved = 0`;
         }
         const studentsJoinEvent = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return studentsJoinEvent;
