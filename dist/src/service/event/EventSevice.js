@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.admApprovedEvent = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const moment_1 = __importDefault(require("moment"));
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
 function admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date) {
@@ -53,6 +53,13 @@ function getAllEventsInCampus(campus_id, status, is_approved) {
     });
 }
 exports.getAllEventsInCampus = getAllEventsInCampus;
+function admApprovedEvent(event_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield EventDAL.admApprovedEvent(event_id);
+        return result;
+    });
+}
+exports.admApprovedEvent = admApprovedEvent;
 function getEventsByName(name, status) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield EventDAL.getEventsByName(name, status);

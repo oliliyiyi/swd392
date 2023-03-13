@@ -198,6 +198,30 @@ router.post("/api/event/insert",upload.single('file'), EventController.admInsert
 
 /**
  * @swagger
+ * /api/event/{event_id}:
+ *   put:
+ *     tags:
+ *      - Event
+ *     summary: Admin approve event
+ *     description: Admin approve event
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to approve
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: Successfully updated student information.
+ *       '400':
+ *         description: Action Fail.
+ */
+router.put("/api/event/:event_id", EventController.admApprovedEvent);
+
+
+/**
+ * @swagger
  * /api/event/detail/{event_id}:
  *   get:
  *     tags:

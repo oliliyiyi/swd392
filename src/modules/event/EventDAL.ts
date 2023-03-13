@@ -65,6 +65,12 @@ export async function registerEvent(student_id: number, event_id: number, regist
   return rows;
 }
 
+export async function admApprovedEvent(event_id: number) {
+  const queryString = EventSQL.admApprovedEvent(event_id);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
 export async function getStudentsJoinEvent(event_id: number) {
   const queryString = EventSQL.getStudentsJoinEvent(event_id);
   const studentsJoinEvent = await query(queryString.text, queryString.values);

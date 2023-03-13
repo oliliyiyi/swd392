@@ -81,6 +81,19 @@ export async function admInsertEvent(req: any, res: any, next: any) {
   }
 }
 
+export async function admApprovedEvent(req: any, res: any, next: any) {
+  try {
+    await db.query("START TRANSACTION");
+    const event_id = req.params.event_id;
+    await EventService.admApprovedEvent(event_id);
+    await db.query("COMMIT");
+    res.json();
+  } catch (error: any) {
+    await db.query("ROLLBACK");
+    return next(error);
+  }
+}
+
 export async function getAllEventsInCampus(req: any, res: any, next: any) {
   try {
     const campus_id: number = req.params.campus_id as number;
