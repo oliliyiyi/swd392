@@ -32,54 +32,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
-const StudentSQL = __importStar(require("../../modules/student/studentSQL"));
+exports.getNotifyById = exports.InsertNotifyById = void 0;
 const db_config_1 = require("../../configs/db_config");
-function getStudentInfoByEmail(email) {
+const NotifySQL = __importStar(require("../../modules/notify/notifySQL"));
+function InsertNotifyById(deviceToken, title, content, student_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getStudentInfoByEmail(email);
+        const queryString = NotifySQL.InsertNotifyById(deviceToken, title, content, student_id);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows[0];
+        console.log(rows);
+        return;
     });
 }
-exports.getStudentInfoByEmail = getStudentInfoByEmail;
-function updateStudentToken(studentId, refresh_token, device_token) {
+exports.InsertNotifyById = InsertNotifyById;
+function getNotifyById(student_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.updateStudentToken(studentId, refresh_token, device_token);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
-    });
-}
-exports.updateStudentToken = updateStudentToken;
-function createStudent(dpmId, campusId, name, address, phone, email, role, active) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.createStudent(dpmId, campusId, name, address, phone, email, role, active);
+        const queryString = NotifySQL.getNotifyById(student_id);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
 }
-exports.createStudent = createStudent;
-function getStudentByStudentId(studentId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getStudentByStudentId(studentId);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows[0];
-    });
-}
-exports.getStudentByStudentId = getStudentByStudentId;
-function getAllStudentInfo() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.getAllStudentInfo();
-        const rows = yield (0, db_config_1.query)(queryString.text, [queryString.values]);
-        return rows;
-    });
-}
-exports.getAllStudentInfo = getAllStudentInfo;
-function updateStudentInfo(student_id, phone, address, birthday) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.updateStudentInfo(student_id, phone, address, birthday);
-        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        return rows;
-    });
-}
-exports.updateStudentInfo = updateStudentInfo;
+exports.getNotifyById = getNotifyById;

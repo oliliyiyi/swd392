@@ -39,7 +39,6 @@ exports.handleLogin = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Student = __importStar(require("../../service/student/StudentService"));
 const StudentDAL = __importStar(require("../../../src/modules/student/StudentDAL"));
-const redis = __importStar(require("../../configs/rd_config"));
 // const users = [
 //   {
 //     id: 1,
@@ -70,19 +69,18 @@ function handleLogin(req, res) {
         const firebaseToken = req.body.token;
         console.log(req.body.token);
         const device_token = req.body.deviceToken;
-        console.log(req.body.deviceToken);
-        const Redisclient = redis.client;
-        let cachedProducts = yield Redisclient.get("myTokenDevice");
         let tokenDevice;
-        if (device_token !== "string" || !device_token) {
-            Redisclient.set("myTokenDevice", JSON.stringify(device_token));
-            cachedProducts = yield Redisclient.get("myTokenDevice");
-            tokenDevice = JSON.parse(cachedProducts);
-        }
-        else if (cachedProducts) {
-            //  cachedProducts = await Redisclient.get("myTokenDevice");
-            tokenDevice = JSON.parse(cachedProducts);
-        }
+        console.log(req.body.deviceToken);
+        // const Redisclient = redis.client;
+        // let cachedProducts = await Redisclient.get("myTokenDevice");
+        // if(device_token !== "string" || !device_token){
+        //   Redisclient.set("myTokenDevice",JSON.stringify(device_token));
+        //   cachedProducts = await Redisclient.get("myTokenDevice");
+        //   tokenDevice = JSON.parse(cachedProducts);
+        // }else if(cachedProducts){
+        //   //  cachedProducts = await Redisclient.get("myTokenDevice");
+        //    tokenDevice = JSON.parse(cachedProducts);
+        // }
         if (!firebaseToken) {
             return res.status(404).json({ message: "Token not found!" });
         }
@@ -91,6 +89,9 @@ function handleLogin(req, res) {
             return res.status(404).json({ message: "Role not found!" });
         }
         const decodedToken = jsonwebtoken_1.default.decode(firebaseToken);
+        if (decodedToken === null) {
+            return res.status(401).json({ message: "Access token invalid!" });
+        }
         const now = Date.now() / 1000;
         if (decodedToken.exp && decodedToken.exp < now) {
             console.log("Access token has expired");
@@ -98,9 +99,6 @@ function handleLogin(req, res) {
         }
         else {
             console.log("Access token is still valid");
-        }
-        if (decodedToken === null) {
-            return res.status(401).json({ message: "Access token invalid!" });
         }
         // fbInit.firebaseConnect
         //   .auth()
@@ -138,7 +136,14 @@ function handleLogin(req, res) {
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentInfo.student_id, refresh_token);
+                if (device_token !== "string" || !device_token) {
+                    console.log("ko co device token");
+                    tokenDevice = null;
+                }
+                else {
+                    tokenDevice = device_token;
+                }
+                yield Student.updateStudentToken(studentInfo.student_id, refresh_token, tokenDevice);
                 var student_data = {
                     id: studentInfo.student_id,
                     role: studentInfo.role,
@@ -183,7 +188,14 @@ function handleLogin(req, res) {
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentInfo.student_id, refresh_token);
+                if (device_token !== "string" || !device_token) {
+                    console.log("ko co device token");
+                    tokenDevice = null;
+                }
+                else {
+                    tokenDevice = device_token;
+                }
+                yield Student.updateStudentToken(studentInfo.student_id, refresh_token, tokenDevice);
                 var student_data = {
                     id: studentInfo.student_id,
                     role: studentInfo.role,
@@ -227,7 +239,14 @@ function handleLogin(req, res) {
                 }, "refreshtokensecret", {
                     expiresIn: "1d",
                 });
-                yield Student.updateStudentToken(studentCreated.student_id, refresh_token);
+                if (device_token !== "string" || !device_token) {
+                    console.log("ko co device token");
+                    tokenDevice = null;
+                }
+                else {
+                    tokenDevice = device_token;
+                }
+                yield Student.updateStudentToken(studentCreated.student_id, refresh_token, tokenDevice);
                 var student_data = {
                     id: studentCreated.student_id,
                     role: studentCreated.role,
