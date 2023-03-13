@@ -1,3 +1,4 @@
+import  moment  from 'moment';
 import * as EventDAL from "../../modules/event/EventDAL";
 import * as ClubDAL from "../../modules/club/ClubDAL";
 
@@ -101,6 +102,18 @@ export async function checkoutEvent(
 
 export async function getStudentsJoinEvent(event_id: number) {
   const result = await EventDAL.getStudentsJoinEvent(event_id);
+  return result;
+}
+
+export async function getEventsStudentJoin(student_id: number) {
+  const result = await EventDAL.getEventsStudentJoin(student_id);
+  result.forEach((event:any) => {
+    event.start_date =  event.start_date ? moment(event.start_date).format('YYYY-MM-DD HH:mm:ss') : null;
+    event.end_date =  event.end_date ? moment(event.end_date).format('YYYY-MM-DD HH:mm:ss') : null;
+    event.registration_date = event.registration_date ? moment(event.registration_date).format('YYYY-MM-DD HH:mm:ss')  : null;
+    event.checkin = event.checkin ? moment(event.checkin).format('YYYY-MM-DD HH:mm:ss') : null;
+    event.checkout = event.checkout ? moment(event.checkout).format('YYYY-MM-DD HH:mm:ss') : null;
+  })
   return result;
 }
 

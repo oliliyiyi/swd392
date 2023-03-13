@@ -31,8 +31,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+const moment_1 = __importDefault(require("moment"));
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
 function admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -116,6 +120,20 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
+function getEventsStudentJoin(student_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield EventDAL.getEventsStudentJoin(student_id);
+        result.forEach((event) => {
+            event.start_date = event.start_date ? (0, moment_1.default)(event.start_date).format('YYYY-MM-DD HH:mm:ss') : null;
+            event.end_date = event.end_date ? (0, moment_1.default)(event.end_date).format('YYYY-MM-DD HH:mm:ss') : null;
+            event.registration_date = event.registration_date ? (0, moment_1.default)(event.registration_date).format('YYYY-MM-DD HH:mm:ss') : null;
+            event.checkin = event.checkin ? (0, moment_1.default)(event.checkin).format('YYYY-MM-DD HH:mm:ss') : null;
+            event.checkout = event.checkout ? (0, moment_1.default)(event.checkout).format('YYYY-MM-DD HH:mm:ss') : null;
+        });
+        return result;
+    });
+}
+exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents(status, is_approved) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield EventDAL.getAllEvents(status, is_approved);

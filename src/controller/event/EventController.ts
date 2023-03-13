@@ -181,6 +181,16 @@ export async function getStudentsJoinEvent(req: any, res: any, next: any) {
   }
 }
 
+export async function getEventsStudentJoin(req: any, res: any, next: any) {
+  try {
+    const student_id: number = req.params.student_id as number;
+    const response = await EventService.getEventsStudentJoin(student_id);
+    res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 export async function getAllEvents(req: any, res: any, next: any) {
   try {
     const status: number = Number(req.query.status || 0);

@@ -482,6 +482,28 @@ router.put("/api/event/join/:event_id/checkout", EventController.checkoutEvent);
 router.get("/api/event/join/:event_id", EventController.getStudentsJoinEvent);
 /**
  * @swagger
+ * /api/event/join/student/{student_id}:
+ *   get:
+ *     tags:
+ *      - Event
+ *     summary: Get events that student join
+ *     description: Get all events that student join by student_id
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student to get event join
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/event/join/student/:student_id", EventController.getEventsStudentJoin);
+/**
+ * @swagger
  * /api/club/campus/{campus_id}:
  *   get:
  *     tags:

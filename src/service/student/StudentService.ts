@@ -1,3 +1,4 @@
+import moment from "moment";
 import * as StudentDAL from "../../modules/student/StudentDAL";
 export async function updateStudentToken(
   studentId: any,
@@ -32,6 +33,7 @@ export async function createStudent(
 
 export async function getStudentByStudentId(studentId: any) {
   const result = await StudentDAL.getStudentByStudentId(studentId);
+  result.birthday = moment(result.birthday).format('YYYY-MM-DD');
   return result;
 }
 
