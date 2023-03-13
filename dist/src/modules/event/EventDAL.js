@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.checkoutEvent = exports.checkinEvent = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
@@ -94,6 +94,14 @@ function registerEvent(student_id, event_id, registration_date) {
     });
 }
 exports.registerEvent = registerEvent;
+function admApprovedEvent(event_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.admApprovedEvent(event_id);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.admApprovedEvent = admApprovedEvent;
 function getStudentsJoinEvent(event_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getStudentsJoinEvent(event_id);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -61,6 +61,16 @@ function registerEvent(student_id, event_id, registration_date) {
     return queryObject;
 }
 exports.registerEvent = registerEvent;
+function admApprovedEvent(event_id) {
+    const query = `UPDATE event SET is_approved = 1 WHERE event_id = ?;`;
+    const values = [event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.admApprovedEvent = admApprovedEvent;
 function getStudentsJoinEvent(event_id) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
     td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.checkin, tl.checkout

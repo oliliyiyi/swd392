@@ -67,6 +67,17 @@ export function registerEvent(student_id: number, event_id: number, registration
     return queryObject;
 }
 
+
+export function admApprovedEvent(event_id: number) {
+    const query = `UPDATE event SET is_approved = 1 WHERE event_id = ?;`;
+    const values: any = [event_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+  }
+
 export function getStudentsJoinEvent(event_id: number) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
     td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.checkin, tl.checkout
@@ -156,7 +167,7 @@ export function checkoutEvent(student_id: number, event_id: number, checkout: st
     return queryObject;
   }
 
-  export function deleteEvent(event_id: number) {
+export function deleteEvent(event_id: number) {
     const query = `UPDATE event SET active = 0 WHERE event_id = ?;`;
     const values: any = [event_id];
     const queryObject = {

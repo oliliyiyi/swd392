@@ -37,6 +37,11 @@ export async function getAllEventsInCampus(campus_id: number, status: number, is
   return result;
 }
 
+export async function admApprovedEvent(event_id: number) {
+  const result = await EventDAL.admApprovedEvent(event_id);
+  return result;
+}
+
 export async function getEventsByName(name: string, status: number) {
   const result = await EventDAL.getEventsByName(name, status);
   return result;
