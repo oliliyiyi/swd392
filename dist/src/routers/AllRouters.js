@@ -184,6 +184,10 @@ router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
  *             properties:
  *               name:
  *                 type: string
+ *               club_id:
+ *                 type: number
+ *               student_id:
+ *                 type: number
  *               email:
  *                 type: string
  *               location:
@@ -202,6 +206,8 @@ router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
  *                 type: string
  *             required:
  *               - name
+ *               - club_id
+ *               - student_id
  *               - email
  *               - point
  *     responses:
@@ -282,6 +288,12 @@ router.get("/api/event/search", EventController.getEventsByName);
  *         required: true
  *         schema:
  *           type: number
+ *       - name: is_approved
+ *         in: query
+ *         description: 1 for avent is already approved, 0 for avent is not already approved,
+ *         required: true
+ *         schema:
+ *           type: number
  *     responses:
  *       200:
  *         description: Returns the events for the specified campus
@@ -303,6 +315,12 @@ router.get("/api/event/:campus_id", EventController.getAllEventsInCampus);
  *       - name: status
  *         in: query
  *         description: 1 for active, 0 for all
+ *         required: true
+ *         schema:
+ *           type: number
+ *       - name: is_approved
+ *         in: query
+ *         description: 1 for avent is already approved, 0 for avent is not already approved,
  *         required: true
  *         schema:
  *           type: number
@@ -335,38 +353,6 @@ router.get("/api/event", EventController.getAllEvents);
  *         description: Action Fail
  */
 router.delete("/api/event/:event_id", EventController.deleteEvent);
-/**
- * @swagger
- * /api/event/organizer:
- *   post:
- *     tags:
- *      - Event
- *     summary: Set organizer for event
- *     description: Set organizer for event
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               event_id:
- *                 type: number
- *               club_id:
- *                 type: number
- *               student_id:
- *                 type: number
- *             required:
- *               - event_id
- *               - club_id
- *               - student_id
- *     responses:
- *       '200':
- *         description: OK
- *       '400':
- *         description: This student is not a club member
- */
-router.post("/api/event/organizer", EventController.admInsertEventOrganizer);
 /**
  * @swagger
  * /api/event/join:

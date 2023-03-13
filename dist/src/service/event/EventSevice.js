@@ -32,19 +32,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
-const ClubDAL = __importStar(require("../../modules/club/ClubDAL"));
-function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
+function admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
-        return result;
+        const event = yield EventDAL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
+        yield EventDAL.admInsertEventOrganizer(event === null || event === void 0 ? void 0 : event.insertId, club_id, student_id);
+        return;
     });
 }
 exports.admInsertEvent = admInsertEvent;
-function getAllEventsInCampus(campus_id, status) {
+function getAllEventsInCampus(campus_id, status, is_approved) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.getAllEventsInCampus(campus_id, status);
+        const result = yield EventDAL.getAllEventsInCampus(campus_id, status, is_approved);
         return result;
     });
 }
@@ -56,28 +56,6 @@ function getEventsByName(name, status) {
     });
 }
 exports.getEventsByName = getEventsByName;
-function admInsertEventOrganizer(event_id, club_id, student_id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const event = yield EventDAL.getEventById(event_id);
-        const club = yield ClubDAL.getClubInfoByClubId(club_id);
-        if (event.length > 0 &&
-            Number(event[0].active) === 1 &&
-            club.length > 0 &&
-            Number(club[0].active) === 1) {
-            const memsClub = yield ClubDAL.getAllClubMembers(club_id);
-            const mem = memsClub.find((mem) => (mem.student_id = student_id));
-            if (!mem) {
-                throw new Error("NotClubMember");
-            }
-            yield EventDAL.admInsertEventOrganizer(event_id, club_id, student_id);
-        }
-        else {
-            throw new Error("ClubOrEventNotExisted");
-        }
-        return;
-    });
-}
-exports.admInsertEventOrganizer = admInsertEventOrganizer;
 function registerEvent(student_id, event_id, registration_date) {
     return __awaiter(this, void 0, void 0, function* () {
         const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event_id);
@@ -138,9 +116,9 @@ function getStudentsJoinEvent(event_id) {
     });
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
-function getAllEvents(status) {
+function getAllEvents(status, is_approved) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield EventDAL.getAllEvents(status);
+        const result = yield EventDAL.getAllEvents(status, is_approved);
         return result;
     });
 }

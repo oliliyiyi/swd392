@@ -22,14 +22,18 @@ export async function admInsertEvent(
     end_date
   );
   const rows = await query(queryString.text, queryString.values);
-  console.log(rows);
-  return;
+  return rows;
 }
 
-export async function getAllEventsInCampus(campus_id: number, status: number) {
+export async function getAllEventsInCampus(campus_id: number, status: number, is_approved: number) {
   const queryString = EventSQL.getAllEventsInCampus(campus_id);
   if(status === 1){
-    queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+    queryString.text = queryString.text + ` AND tb.end_date >= current_timestamp()`;
+  }
+  if(is_approved === 1){
+    queryString.text += `AND tb.is_approved = 1`;
+  } else {
+    queryString.text += `AND tb.is_approved = 0`;
   }
   const rows = await query(queryString.text, queryString.values);
   return rows;
@@ -85,10 +89,15 @@ export async function getEventById(event_id: number) {
   return eventById;
 }
 
-export async function getAllEvents(status: number) {
+export async function getAllEvents(status: number, is_approved: number) {
   const queryString = EventSQL.getAllEvents();
   if(status === 1){
-    queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+    queryString.text += ` AND tb.end_date >= current_timestamp()`;
+  }
+  if(is_approved === 1){
+    queryString.text += `AND tb.is_approved = 1`;
+  } else {
+    queryString.text += `AND tb.is_approved = 0`;
   }
   const studentsJoinEvent = await query(queryString.text, queryString.values);
   return studentsJoinEvent;

@@ -40,16 +40,21 @@ function admInsertEvent(name, email, location, point, img, description, start_da
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
-        console.log(rows);
-        return;
+        return rows;
     });
 }
 exports.admInsertEvent = admInsertEvent;
-function getAllEventsInCampus(campus_id, status) {
+function getAllEventsInCampus(campus_id, status, is_approved) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getAllEventsInCampus(campus_id);
         if (status === 1) {
-            queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+            queryString.text = queryString.text + ` AND tb.end_date >= current_timestamp()`;
+        }
+        if (is_approved === 1) {
+            queryString.text += `AND tb.is_approved = 1`;
+        }
+        else {
+            queryString.text += `AND tb.is_approved = 0`;
         }
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
@@ -121,11 +126,17 @@ function getEventById(event_id) {
     });
 }
 exports.getEventById = getEventById;
-function getAllEvents(status) {
+function getAllEvents(status, is_approved) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.getAllEvents();
         if (status === 1) {
-            queryString.text = queryString.text + ` WHERE tb.end_date >= current_timestamp()`;
+            queryString.text += ` AND tb.end_date >= current_timestamp()`;
+        }
+        if (is_approved === 1) {
+            queryString.text += `AND tb.is_approved = 1`;
+        }
+        else {
+            queryString.text += `AND tb.is_approved = 0`;
         }
         const studentsJoinEvent = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return studentsJoinEvent;
