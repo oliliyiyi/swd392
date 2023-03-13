@@ -265,6 +265,7 @@ export async function handleLogin(req: any, res: any) {
             email: studentCreated.email,
             phone: studentCreated.phone,
             campus: studentCreated.campus_id
+            
           };
           res.status(200).json({
             access_token: access_token,
