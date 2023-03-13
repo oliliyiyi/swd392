@@ -26,7 +26,8 @@ export function getAllEventsInCampus(campus_id: number){
     INNER JOIN event tb
     ON tb.event_id = tl.event_id
     LEFT JOIN student td
-    ON td.student_id = tl.student_id`;
+    ON td.student_id = tl.student_id
+    WHERE tb.active = 1`;
     const values : any = [campus_id];
     const queryObject = {
         text: query,
@@ -93,7 +94,8 @@ export function getAllEvents(){
     LEFT JOIN clubs tk
     ON tk.club_id = tl.club_id
     LEFT JOIN student td
-    ON td.student_id = tl.student_id`
+    ON td.student_id = tl.student_id
+    WHERE tb.active = 1`
     const values : any = [];
     const queryObject = {
         text: query,
@@ -104,7 +106,7 @@ export function getAllEvents(){
 
 export function getEventById(event_id: number) {
     const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
-    tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
+    tb.start_date, tb.end_date, tb.active, tb.is_approved, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE event_id = ?) tb
 	LEFT JOIN event_organizer tl
     ON tb.event_id = tl.event_id

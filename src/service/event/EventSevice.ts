@@ -4,6 +4,8 @@ import * as ClubDAL from "../../modules/club/ClubDAL";
 export async function admInsertEvent(
   name: string,
   email: string,
+  club_id: number,
+  student_id: number,
   location: string,
   point: number,
   img: string,
@@ -11,7 +13,7 @@ export async function admInsertEvent(
   start_date: string,
   end_date: string
 ) {
-  const result = await EventDAL.admInsertEvent(
+  const event = await EventDAL.admInsertEvent(
     name,
     email,
     location,
@@ -21,29 +23,21 @@ export async function admInsertEvent(
     start_date,
     end_date
   );
-  return result;
+  await EventDAL.admInsertEventOrganizer(
+    event?.insertId,
+    club_id,
+    student_id
+  );
+  return;
 }
 
-export async function getAllEventsInCampus(campus_id: number, status: number) {
-  const result = await EventDAL.getAllEventsInCampus(campus_id, status);
+export async function getAllEventsInCampus(campus_id: number, status: number, is_approved: number) {
+  const result = await EventDAL.getAllEventsInCampus(campus_id, status, is_approved);
   return result;
 }
 
 export async function getEventsByName(name: string, status: number) {
   const result = await EventDAL.getEventsByName(name, status);
-  return result;
-}
-
-export async function admInsertEventOrganizer(
-  event_id: number,
-  club_id: number,
-  student_id: number
-) {
-  const result = await EventDAL.admInsertEventOrganizer(
-    event_id,
-    club_id,
-    student_id
-  );
   return result;
 }
 
@@ -111,8 +105,8 @@ export async function getStudentsJoinEvent(event_id: number) {
   return result;
 }
 
-export async function getAllEvents(status: number) {
-  const result = await EventDAL.getAllEvents(status);
+export async function getAllEvents(status: number, is_approved: number) {
+  const result = await EventDAL.getAllEvents(status, is_approved);
   return result;
 }
 

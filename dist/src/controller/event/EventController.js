@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.getAllEvents = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -45,6 +45,8 @@ function admInsertEvent(req, res, next) {
         try {
             const name = req.body.name;
             const email = req.body.email;
+            const club_id = Number(req.body.club_id);
+            const student_id = Number(req.body.student_id);
             const location = req.body.location;
             const point = req.body.point;
             const fileGet = req.file;
@@ -81,22 +83,29 @@ function admInsertEvent(req, res, next) {
                 .then((signedUrls) => __awaiter(this, void 0, void 0, function* () {
                 console.log(signedUrls);
                 img = signedUrls[0];
-                // fs.unlink(pathImg, (err) => {
-                //   if (err) throw err;
-                //   console.log(`${pathImg} was deleted`);
-                // });
-                yield EventService.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
+                fs_1.default.unlink(pathImg, (err) => {
+                    if (err)
+                        throw err;
+                    console.log(`${pathImg} was deleted`);
+                });
+                yield EventService.admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date);
                 yield db_config_1.db.query("COMMIT");
                 res.json();
-                //res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
-            }))
-                .catch((error) => {
-                console.error("Error getting image URL:", error);
-                //res.status(500).json({ message: "Error get link image from firebase!" });
-            });
+                res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
+            }));
+            // .catch((error) => {
+            //   console.error("Error getting image URL:", error);
+            //   //res.status(500).json({ message: "Error get link image from firebase!" });
+            // });
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "NotClubMember") {
+                res.status(400).json({ message: "This student is not a club member" });
+            }
+            else {
+                return next(error);
+            }
             return next(error);
         }
     });
@@ -107,7 +116,8 @@ function getAllEventsInCampus(req, res, next) {
         try {
             const campus_id = req.params.campus_id;
             const status = Number(req.query.status || 0);
-            const response = yield EventService.getAllEventsInCampus(campus_id, status);
+            const is_approved = Number(req.query.is_approved || 0);
+            const response = yield EventService.getAllEventsInCampus(campus_id, status, is_approved);
             res.json(response);
         }
         catch (error) {
@@ -143,29 +153,6 @@ function getEventById(req, res, next) {
     });
 }
 exports.getEventById = getEventById;
-function admInsertEventOrganizer(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield db_config_1.db.query("START TRANSACTION");
-            const event_id = req.body.event_id;
-            const club_id = req.body.club_id;
-            const student_id = req.body.student_id;
-            yield EventService.admInsertEventOrganizer(event_id, club_id, student_id);
-            yield db_config_1.db.query("COMMIT");
-            res.json();
-        }
-        catch (error) {
-            yield db_config_1.db.query("ROLLBACK");
-            if (error.message === "NotClubMember") {
-                res.status(400).json({ message: "This student is not a club member" });
-            }
-            else {
-                return next(error);
-            }
-        }
-    });
-}
-exports.admInsertEventOrganizer = admInsertEventOrganizer;
 function registerEvent(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -246,7 +233,8 @@ function getAllEvents(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const status = Number(req.query.status || 0);
-            const response = yield EventService.getAllEvents(status);
+            const is_approved = Number(req.query.is_approved || 0);
+            const response = yield EventService.getAllEvents(status, is_approved);
             res.json(response);
         }
         catch (error) {

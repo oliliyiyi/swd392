@@ -8,6 +8,8 @@ export async function admInsertEvent(req: any, res: any, next: any) {
   try {
     const name = req.body.name;
     const email = req.body.email;
+    const club_id = Number(req.body.club_id);
+    const student_id = Number(req.body.student_id);
     const location = req.body.location;
     const point = req.body.point;
     const fileGet = req.file;
@@ -44,13 +46,15 @@ export async function admInsertEvent(req: any, res: any, next: any) {
       .then(async (signedUrls) => {
         console.log(signedUrls);
         img = signedUrls[0];
-        // fs.unlink(pathImg, (err) => {
-        //   if (err) throw err;
-        //   console.log(`${pathImg} was deleted`);
-        // });
+        fs.unlink(pathImg, (err) => {
+          if (err) throw err;
+          console.log(`${pathImg} was deleted`);
+        });
         await EventService.admInsertEvent(
           name,
           email,
+          club_id,
+          student_id,
           location,
           point,
           img,
@@ -60,16 +64,19 @@ export async function admInsertEvent(req: any, res: any, next: any) {
         );
         await db.query("COMMIT");
         res.json();
-        //res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
+        res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
       })
-      .catch((error) => {
-        console.error("Error getting image URL:", error);
-        //res.status(500).json({ message: "Error get link image from firebase!" });
-      });
-   
-
-  } catch (error) {
+      // .catch((error) => {
+      //   console.error("Error getting image URL:", error);
+      //   //res.status(500).json({ message: "Error get link image from firebase!" });
+      // });
+  } catch (error: any) {
     await db.query("ROLLBACK");
+    if (error.message === "NotClubMember") {
+      res.status(400).json({ message: "This student is not a club member" })
+    } else {
+      return next(error);
+    }
     return next(error);
   }
 }
@@ -78,7 +85,8 @@ export async function getAllEventsInCampus(req: any, res: any, next: any) {
   try {
     const campus_id: number = req.params.campus_id as number;
     const status = Number(req.query.status || 0);
-    const response = await EventService.getAllEventsInCampus(campus_id, status);
+    const is_approved = Number(req.query.is_approved || 0);
+    const response = await EventService.getAllEventsInCampus(campus_id, status, is_approved);
     res.json(response);
   } catch (error) {
     return next(error);
@@ -103,25 +111,6 @@ export async function getEventById(req: any, res: any, next: any) {
     res.json(response);
   } catch (error) {
     return next(error);
-  }
-}
-
-export async function admInsertEventOrganizer(req: any, res: any, next: any) {
-  try {
-    await db.query("START TRANSACTION");
-    const event_id = req.body.event_id;
-    const club_id = req.body.club_id;
-    const student_id = req.body.student_id;
-    await EventService.admInsertEventOrganizer(event_id, club_id, student_id);
-    await db.query("COMMIT");
-    res.json();
-  } catch (error: any) {
-    await db.query("ROLLBACK");
-    if (error.message === "NotClubMember") {
-      res.status(400).json({ message: "This student is not a club member" })
-    } else {
-      return next(error);
-    }
   }
 }
 
@@ -192,7 +181,8 @@ export async function getStudentsJoinEvent(req: any, res: any, next: any) {
 export async function getAllEvents(req: any, res: any, next: any) {
   try {
     const status: number = Number(req.query.status || 0);
-    const response = await EventService.getAllEvents(status);
+    const is_approved: number = Number(req.query.is_approved || 0); 
+    const response = await EventService.getAllEvents(status, is_approved);
     res.json(response);
   } catch (error) {
     return next(error);
