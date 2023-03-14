@@ -61,7 +61,7 @@ export async function deleteClubMember(req: any, res: any, next: any){
     try {
         await db.query("START TRANSACTION");
         const student_id = Number(req.params.student_id);
-        const club_id = req.body.club_id;
+        const club_id = req.query.club_id;
         const response = await ClubService.deleteClubMember(student_id, club_id);
         await db.query("COMMIT");
         res.json(response);

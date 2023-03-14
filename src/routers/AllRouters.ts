@@ -636,7 +636,7 @@ router.post("/api/club/member", ClubController.insertClubMember);
  *         schema:
  *           type: number
  *       - name: club_id
- *         in: body
+ *         in: query
  *         description: ID of the club to remove the student from
  *         required: true
  *         schema:
