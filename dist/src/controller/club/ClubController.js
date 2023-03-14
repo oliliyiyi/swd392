@@ -112,7 +112,7 @@ function deleteClubMember(req, res, next) {
         try {
             yield db_config_1.db.query("START TRANSACTION");
             const student_id = Number(req.params.student_id);
-            const club_id = req.body.club_id;
+            const club_id = req.query.club_id;
             const response = yield ClubService.deleteClubMember(student_id, club_id);
             yield db_config_1.db.query("COMMIT");
             res.json(response);

@@ -173,7 +173,7 @@ function registerEvent(req, res, next) {
         try {
             yield db_config_1.db.query("START TRANSACTION");
             const student_id = req.body.student_id;
-            const event_id = req.params.event_id;
+            const event_id = req.body.event_id;
             const registration_date = req.body.registration_date;
             yield EventService.registerEvent(student_id, event_id, registration_date);
             yield db_config_1.db.query("COMMIT");
