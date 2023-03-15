@@ -14,7 +14,7 @@ export function InsertNotifyById(
 }
 
 export function getNotifyById(student_id: number) {
-    const query = `SELECT st.student_id, st.name as student_name, st.address, st.phone, st.role, st.email, st.birthday, cp.campus_id, cp.name as campus_name
+    const query = `SELECT nt.title, nt.content
     FROM student st
     inner JOIN notify nt
     ON st.student_id = nt.student_id

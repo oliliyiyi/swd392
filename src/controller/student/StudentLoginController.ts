@@ -4,33 +4,7 @@ import jwt from "jsonwebtoken";
 import * as Student from "../../service/student/StudentService";
 import * as StudentDAL from "../../../src/modules/student/StudentDAL";
 import * as redis from '../../configs/rd_config';
-// const users = [
-//   {
-//     id: 1,
-//     username: "Henry",
-//   },
-//   {
-//     id: 2,
-//     username: "Jim",
-//   },
-// ];
 
-// export async function loginAcountStudent(req: any, res: any, next: any) {
-//   try {
-//     const account = req.body.account;
-//     const password = req.body.password;
-//     const accountStudent = StudentService.getInfoStudentLogin;
-//     if (!accountStudent) return res.sendStatus(401);
-
-//     //create JWT
-//     const accessToken = jwt.sign(accountStudent, "mysecret", {
-//         expiresIn: '20m'
-//     });
-//     res.json({ accessToken });
-//   } catch (error) {
-//     return next(error);
-//   }
-// }
 
 export async function handleLogin(req: any, res: any) {
   const firebaseToken = req.body.token;
@@ -116,11 +90,12 @@ export async function handleLogin(req: any, res: any) {
               expiresIn: "1d",
             }
           );
-          if(device_token !== "string" || !device_token){
+          if(device_token === "string" || !device_token){
             console.log("ko co device token")
             tokenDevice = null;
           }else{
             tokenDevice = device_token;
+            console.log("co device token")
           }
           await Student.updateStudentToken(
             studentInfo.student_id,
@@ -177,11 +152,12 @@ export async function handleLogin(req: any, res: any) {
               expiresIn: "1d",
             }
           );
-          if(device_token !== "string" || !device_token){
+          if(device_token === "string" || !device_token){
             console.log("ko co device token")
             tokenDevice = null;
           }else{
             tokenDevice = device_token;
+            console.log("co device token")
           }
           await Student.updateStudentToken(
             studentInfo.student_id,
@@ -248,11 +224,12 @@ export async function handleLogin(req: any, res: any) {
               expiresIn: "1d",
             }
           );
-          if(device_token !== "string" || !device_token){
+          if(device_token === "string" || !device_token){
             console.log("ko co device token")
             tokenDevice = null;
           }else{
             tokenDevice = device_token;
+            console.log("co device token")
           }
           await Student.updateStudentToken(
             studentCreated.student_id,
