@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from 'path';
 import * as fbInit from "../configs/fbconfigs";
-export function handlepushNotification(req: any, res: any, next: any) {
+import * as StudentService from "../service/student/StudentService"
+import * as NotiFyService from "../service/notify/NotifyService"
+export async function handlepushNotification(req: any, res: any, next: any) {
   const pushOption = req.body.send_option
   if(!pushOption || (pushOption !== "topic" && pushOption !== "device")) 
   return res.status(400).json({message:`Please select true option (\"topic\" or \"device\" - one of them)!`})
@@ -32,7 +34,12 @@ export function handlepushNotification(req: any, res: any, next: any) {
       });
   }
   else if(pushOption === "device"){
-  const fcmToken = req.body.device_token;
+  const studentInfo = await StudentService.getStudentByStudentId(7);
+  var student_data = {
+    id: studentInfo.student_id,
+    token: studentInfo.deviceToken
+  };
+  const fcmToken = student_data.token;
   if (!fcmToken) {
     return res.status(404).json({ message: "Token device not found!" });
   }
@@ -47,6 +54,7 @@ export function handlepushNotification(req: any, res: any, next: any) {
       },
       token: fcmToken,    
     };
+    NotiFyService.InsertNotifyById(student_data.token,title,content,student_data.id);
     fbInit.firebaseConnect
       .messaging()
       .send(message)
