@@ -21,3 +21,4 @@ export async function getNotifyById(student_id: number) {
     const result = NotifyDAL.getNotifyById(student_id);
     return result;
   }
+

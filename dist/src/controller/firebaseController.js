@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,69 +38,79 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePostFile = exports.handlepushNotification = void 0;
 const fs_1 = __importDefault(require("fs"));
 const fbInit = __importStar(require("../configs/fbconfigs"));
+const StudentService = __importStar(require("../service/student/StudentService"));
+const NotiFyService = __importStar(require("../service/notify/NotifyService"));
 function handlepushNotification(req, res, next) {
-    const pushOption = req.body.send_option;
-    if (!pushOption || (pushOption !== "topic" && pushOption !== "device"))
-        return res.status(400).json({ message: `Please select true option (\"topic\" or \"device\" - one of them)!` });
-    if (pushOption === "topic") {
-        const topic = req.body.topic;
-        const title = req.body.title;
-        const content = req.body.content;
-        if (!topic)
-            return res.status(400).json({ message: "Please input topic name!" });
-        if (!title)
-            return res.status(400).json({ message: "Please input title name!" });
-        if (!content)
-            return res.status(400).json({ message: "Please input content!" });
-        const message = {
-            notification: {
-                title: title,
-                body: content,
-            },
-            topic: topic
-        };
-        fbInit.firebaseConnect
-            .messaging()
-            .send(message)
-            .then((response) => {
-            console.log("Successfully sent message with topic:", response);
-            res.status(200).json({ message: "Successfully sent message", data: response });
-        })
-            .catch((error) => {
-            console.error("Error sending message with topic:", error);
-            res.status(500).json({ message: `Error sending message (${error})` });
-        });
-    }
-    else if (pushOption === "device") {
-        const fcmToken = req.body.device_token;
-        if (!fcmToken) {
-            return res.status(404).json({ message: "Token device not found!" });
+    return __awaiter(this, void 0, void 0, function* () {
+        const pushOption = req.body.send_option;
+        if (!pushOption || (pushOption !== "topic" && pushOption !== "device"))
+            return res.status(400).json({ message: `Please select true option (\"topic\" or \"device\" - one of them)!` });
+        if (pushOption === "topic") {
+            const topic = req.body.topic;
+            const title = req.body.title;
+            const content = req.body.content;
+            if (!topic)
+                return res.status(400).json({ message: "Please input topic name!" });
+            if (!title)
+                return res.status(400).json({ message: "Please input title name!" });
+            if (!content)
+                return res.status(400).json({ message: "Please input content!" });
+            const message = {
+                notification: {
+                    title: title,
+                    body: content,
+                },
+                topic: topic
+            };
+            fbInit.firebaseConnect
+                .messaging()
+                .send(message)
+                .then((response) => {
+                console.log("Successfully sent message with topic:", response);
+                res.status(200).json({ message: "Successfully sent message", data: response });
+            })
+                .catch((error) => {
+                console.error("Error sending message with topic:", error);
+                res.status(500).json({ message: `Error sending message (${error})` });
+            });
         }
-        const title = req.body.title;
-        if (!title)
-            return res.status(400).json({ message: "Please input title name!" });
-        const content = req.body.content;
-        if (!content)
-            return res.status(400).json({ message: "Please input content!" });
-        const message = {
-            notification: {
-                title: title,
-                body: content,
-            },
-            token: fcmToken,
-        };
-        fbInit.firebaseConnect
-            .messaging()
-            .send(message)
-            .then((response) => {
-            console.log("Successfully sent message with particular device:", response);
-            res.status(200).json({ message: "Successfully sent message with particular device", data: response });
-        })
-            .catch((error) => {
-            console.error("Error sending message with particular device:", error);
-            res.status(500).json({ message: `Error sending message with particular device (${error})` });
-        });
-    }
+        else if (pushOption === "device") {
+            const studentInfo = yield StudentService.getStudentByStudentId(7);
+            var student_data = {
+                id: studentInfo.student_id,
+                token: studentInfo.deviceToken
+            };
+            const fcmToken = student_data.token;
+            if (!fcmToken) {
+                return res.status(404).json({ message: "Token device not found!" });
+            }
+            const title = req.body.title;
+            if (!title)
+                return res.status(400).json({ message: "Please input title name!" });
+            const content = req.body.content;
+            if (!content)
+                return res.status(400).json({ message: "Please input content!" });
+            const message = {
+                notification: {
+                    title: title,
+                    body: content,
+                },
+                token: fcmToken,
+            };
+            NotiFyService.InsertNotifyById(student_data.token, title, content, student_data.id);
+            fbInit.firebaseConnect
+                .messaging()
+                .send(message)
+                .then((response) => {
+                console.log("Successfully sent message with particular device:", response);
+                res.status(200).json({ message: "Successfully sent message with particular device", data: response });
+            })
+                .catch((error) => {
+                console.error("Error sending message with particular device:", error);
+                res.status(500).json({ message: `Error sending message with particular device (${error})` });
+            });
+        }
+    });
 }
 exports.handlepushNotification = handlepushNotification;
 function handlePostFile(req, res) {

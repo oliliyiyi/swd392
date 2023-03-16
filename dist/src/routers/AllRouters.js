@@ -33,6 +33,7 @@ const StudentController = __importStar(require("../controller/student/StudentCon
 const EventController = __importStar(require("../controller/event/EventController"));
 const ClubController = __importStar(require("../controller/club/ClubController"));
 const FirebaseController = __importStar(require("../controller/firebaseController"));
+const NotifyController = __importStar(require("../controller/notify/NotifyController"));
 const Auth_1 = require("../middleware/Auth");
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
@@ -737,6 +738,28 @@ router.get("/api/club/detail/:club_id", ClubController.getClubInfoByClubId);
 router.post("/api/login", StudentLoginController.handleLogin);
 /**
  * @swagger
+ * /api/notifications/student/{student_id}:
+ *   get:
+ *     tags:
+ *      - Notification Service
+ *     summary: Get notify that student haved
+ *     description: Get notify that student haved
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/notifications/student/:student_id", NotifyController.getStudentByStudentId);
+/**
+ * @swagger
  * /notifications:
  *    post:
  *      tags:
@@ -752,8 +775,6 @@ router.post("/api/login", StudentLoginController.handleLogin);
  *                send_option:
  *                  type: string
  *                  example: "topic/device"
- *                device_token:
- *                  type: string
  *                topic:
  *                  type: string
  *                  example: "my-topic"
