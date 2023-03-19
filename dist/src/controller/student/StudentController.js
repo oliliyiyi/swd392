@@ -31,10 +31,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.getStudentInfoByEmail = void 0;
 const StudentService = __importStar(require("../../service/student/StudentService"));
 const db_config_1 = require("../../configs/db_config");
+const fbInit = __importStar(require("../../configs/fbconfigs"));
+const fs_1 = __importDefault(require("fs"));
 function getStudentInfoByEmail(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -78,12 +83,44 @@ function updateStudentInfo(req, res, next) {
         try {
             yield db_config_1.db.query("START TRANSACTION");
             const student_id = Number(req.params.student_id);
+            const fileGet = req.file;
             const address = req.body.address;
             const phone = req.body.phone;
             const birthday = req.body.birthday;
-            const response = yield StudentService.updateStudentInfo(student_id, phone, address, birthday);
-            yield db_config_1.db.query("COMMIT");
-            res.json(response);
+            let img = "";
+            if (!fileGet)
+                return res.status(404).json({ message: "File not found" });
+            let pathSave = "./src/image/" + fileGet.originalname;
+            console.log(pathSave);
+            const bucket = fbInit.firebaseConnect.storage().bucket();
+            const file = bucket.file(fileGet.originalname);
+            const stream = file.createWriteStream({
+                resumable: false,
+            });
+            console.log("file ok");
+            var pathImg = "./src/image/" + fileGet.originalname;
+            fs_1.default.createReadStream(pathImg)
+                .pipe(stream)
+                .on("error", (error) => {
+                console.error("Error uploading image:", error);
+                return res.status(500).json({ message: "Upload file to firebase error!" });
+            })
+                .on("finish", () => {
+                console.log("Successfully uploaded image.");
+            });
+            file
+                .getSignedUrl({
+                action: "read",
+                expires: "01-01-2030",
+            }).then((signedUrls) => __awaiter(this, void 0, void 0, function* () {
+                console.log(signedUrls);
+                img = signedUrls[0];
+                const response = yield StudentService.updateStudentInfo(student_id, img, phone, address, birthday);
+                yield db_config_1.db.query("COMMIT");
+                res.json(response);
+            })).catch((error) => {
+                console.error("Error getting image URL:", error);
+            });
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");

@@ -46,10 +46,6 @@ export async function admInsertEvent(req: any, res: any, next: any) {
       .then(async (signedUrls) => {
         console.log(signedUrls);
         img = signedUrls[0];
-        // fs.unlink(pathImg, (err) => {
-        //   if (err) throw err;
-        //   console.log(`${pathImg} was deleted`);
-        // });
         await EventService.admInsertEvent(
           name,
           email,

@@ -128,10 +128,14 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *       description: Student information to update.
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The file to upload.
  *               phone:
  *                 type: string
  *                 description: The updated phone number for the student.
@@ -152,7 +156,7 @@ router.get("/api/student/:student_id", StudentController.getStudentByStudentId);
  *       '404':
  *         description: Student with the given ID not found.
  */
-router.put("/api/student/:student_id", StudentController.updateStudentInfo);
+router.put("/api/student/:student_id", upload.single('file'), StudentController.updateStudentInfo);
 /**
  * @swagger
  *  /api/students:

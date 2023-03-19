@@ -75,9 +75,9 @@ function getAllStudentInfo() {
     });
 }
 exports.getAllStudentInfo = getAllStudentInfo;
-function updateStudentInfo(student_id, phone, address, birthday) {
+function updateStudentInfo(student_id, img, phone, address, birthday) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = StudentSQL.updateStudentInfo(student_id, phone, address, birthday);
+        const queryString = StudentSQL.updateStudentInfo(student_id, img, phone, address, birthday);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
