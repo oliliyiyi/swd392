@@ -67,9 +67,9 @@ function getStudentByStudentId(studentId) {
     return queryObject;
 }
 exports.getStudentByStudentId = getStudentByStudentId;
-function updateStudentInfo(student_id, phone, address, birthday) {
-    const query = `UPDATE student SET phone = ? , address = ? , birthday = ? WHERE student_id = ? ;`;
-    const values = [phone, address, birthday, student_id];
+function updateStudentInfo(student_id, img, phone, address, birthday) {
+    const query = `UPDATE student SET student_img = ?, phone = ? , address = ? , birthday = ? WHERE student_id = ? ;`;
+    const values = [img, phone, address, birthday, student_id];
     const queryObject = {
         text: query,
         values,

@@ -74,9 +74,9 @@ function getAllStudentInfo() {
     });
 }
 exports.getAllStudentInfo = getAllStudentInfo;
-function updateStudentInfo(student_id, phone, address, birthday) {
+function updateStudentInfo(student_id, img, phone, address, birthday) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield StudentDAL.updateStudentInfo(student_id, phone, address, birthday);
+        const result = yield StudentDAL.updateStudentInfo(student_id, img, phone, address, birthday);
         return result;
     });
 }

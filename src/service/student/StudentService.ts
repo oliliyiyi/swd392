@@ -48,7 +48,7 @@ export async function getAllStudentInfo() {
   return result;
 }
 
-export async function updateStudentInfo(student_id: number, phone: string, address: string, birthday: string) {
-  const result = await StudentDAL.updateStudentInfo(student_id, phone, address, birthday);
+export async function updateStudentInfo(student_id: number, img:string, phone: string, address: string, birthday: string) {
+  const result = await StudentDAL.updateStudentInfo(student_id, img, phone, address, birthday);
   return result;
 }

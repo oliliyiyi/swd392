@@ -83,10 +83,6 @@ function admInsertEvent(req, res, next) {
                 .then((signedUrls) => __awaiter(this, void 0, void 0, function* () {
                 console.log(signedUrls);
                 img = signedUrls[0];
-                // fs.unlink(pathImg, (err) => {
-                //   if (err) throw err;
-                //   console.log(`${pathImg} was deleted`);
-                // });
                 yield EventService.admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date);
                 yield db_config_1.db.query("COMMIT");
                 res.json();
