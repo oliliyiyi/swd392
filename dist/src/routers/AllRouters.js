@@ -34,6 +34,7 @@ const EventController = __importStar(require("../controller/event/EventControlle
 const ClubController = __importStar(require("../controller/club/ClubController"));
 const FirebaseController = __importStar(require("../controller/firebaseController"));
 const NotifyController = __importStar(require("../controller/notify/NotifyController"));
+const QrCodeController = __importStar(require("../controller/qrCode/QrCodeController"));
 const Auth_1 = require("../middleware/Auth");
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
@@ -806,7 +807,7 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  * @swagger
  * /images:
  *   post:
- *     summary: Save files
+ *     summary: Save file
  *     tags: [Services]
  *     requestBody:
  *       content:
@@ -842,3 +843,36 @@ router.post('/notifications', FirebaseController.handlepushNotification);
  *         description: Internal server error
  */
 router.post('/images', upload.single('file'), FirebaseController.handlePostFile);
+/**
+ * @swagger
+ * /imagesQrCode/event/{eventId}:
+ *   get:
+ *     summary: Save QrCode information
+ *     tags: [Services]
+ *     parameters:
+ *       - name: eventId
+ *         in: path
+ *         description: ID of the event
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: string
+ *                   example: "https://storage.googleapis.com/wallet-fpt.appspot.com/avatar.png?GoogleAccessId=firebase-adminsdk..."
+ *                 message:
+ *                   type: string
+ *                   example: "Successfully uploaded image"
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/imagesQrCode/event/:eventId', QrCodeController.getEventIdByQrCode);

@@ -28,6 +28,7 @@
     "@types/multer": "^1.4.7",
     "@types/mysql": "^2.15.21",
     "@types/node": "^18.13.0",
+    "@types/qrcode": "^1.5.0",
     "async-redis": "^2.0.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
@@ -43,6 +44,7 @@
     "mysql2": "^3.1.2",
     "node-fetch": "^3.3.0",
     "pg-pool": "^3.5.2",
+    "qrcode": "^1.5.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.0",
     "typescript": "^4.9.5"
