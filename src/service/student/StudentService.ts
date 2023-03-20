@@ -65,3 +65,10 @@ export async function getStudentPoint(student_id: number) {
     return{student_id, 'point': 0, 'semester' : date.semester};
   }
 }
+
+export async function getTopStudentsPointInCampus(campus_id: number) {
+  const now = new Date();
+  const date = await commonFunction.getStartAndEndDates(now);
+  const result = await StudentDAL.getTopStudentsPointInCampus(campus_id, date.start_date, date.end_date);
+  return {result, 'semester': date.semester};
+}

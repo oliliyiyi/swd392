@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentPoint = exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
+exports.getTopStudentsPointInCampus = exports.getStudentPoint = exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
 const moment_1 = __importDefault(require("moment"));
 const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
 const commonFunction = __importStar(require("../../modules/commonFunction"));
@@ -97,3 +97,12 @@ function getStudentPoint(student_id) {
     });
 }
 exports.getStudentPoint = getStudentPoint;
+function getTopStudentsPointInCampus(campus_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const now = new Date();
+        const date = yield commonFunction.getStartAndEndDates(now);
+        const result = yield StudentDAL.getTopStudentsPointInCampus(campus_id, date.start_date, date.end_date);
+        return { result, 'semester': date.semester };
+    });
+}
+exports.getTopStudentsPointInCampus = getTopStudentsPointInCampus;

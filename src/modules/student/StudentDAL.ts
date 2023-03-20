@@ -65,3 +65,9 @@ export async function getStudentPoint(student_id: number, start_date: string, en
   const rows = await query(queryString.text, queryString.values);
   return rows[0];
 }
+
+export async function getTopStudentsPointInCampus(campus_id: number, start_date: string, end_date: string) {
+  const queryString = StudentSQL.getTopStudentsPointInCampus(campus_id, start_date, end_date);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}

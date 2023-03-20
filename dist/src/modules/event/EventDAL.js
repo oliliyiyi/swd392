@@ -69,6 +69,7 @@ function getEventsByName(name, status) {
             queryString.text = queryString.text + ` AND end_date >= current_timestamp()`;
         }
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        rows.sort((a, b) => b.start_date.getTime() - a.start_date.getTime());
         return rows;
     });
 }
