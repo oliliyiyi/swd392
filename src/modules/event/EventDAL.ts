@@ -36,6 +36,7 @@ export async function getAllEventsInCampus(campus_id: number, status: number, is
     queryString.text += ` AND tb.is_approved = 0`;
   }
   const rows = await query(queryString.text, queryString.values);
+  rows.sort((a: any, b: any) => b.start_date.getTime() - a.start_date.getTime());
   return rows;
 }
 
@@ -117,8 +118,9 @@ export async function getAllEvents(status: number, is_approved: number) {
   } else {
     queryString.text += ` AND tb.is_approved = 0`;
   }
-  const studentsJoinEvent = await query(queryString.text, queryString.values);
-  return studentsJoinEvent;
+  const event = await query(queryString.text, queryString.values);
+  event.sort((a: any, b: any) => b.start_date.getTime() - a.start_date.getTime());
+  return event;
 }
 
 export async function deleteEvent(event_id: number) {
