@@ -6,8 +6,10 @@ import { Readable } from 'stream';
 export async function getEventIdByQrCode(req: any, res: any, next: any) {
     try {
         const eventId = req.params.eventId as number;
+        const status = req.query.status;
         console.log(req.params.eventId);
-        const qrcodeData = { event_id: eventId };
+        const qrcodeData = { event_id: eventId, 
+        status: status};
         let img = '';
         let qrCodeDataUrl = await QRCode.toDataURL(JSON.stringify(qrcodeData));
         console.log(qrCodeDataUrl);

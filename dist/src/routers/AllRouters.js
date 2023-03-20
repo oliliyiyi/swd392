@@ -845,7 +845,7 @@ router.post('/notifications', FirebaseController.handlepushNotification);
 router.post('/images', upload.single('file'), FirebaseController.handlePostFile);
 /**
  * @swagger
- * /imagesQrCode/event/{eventId}:
+ * /imagesQrCodeCheckin/event/{eventId}:
  *   get:
  *     summary: Save QrCode information
  *     tags: [Services]
@@ -853,6 +853,12 @@ router.post('/images', upload.single('file'), FirebaseController.handlePostFile)
  *       - name: eventId
  *         in: path
  *         description: ID of the event
+ *         required: true
+ *         schema:
+ *           type: number
+ *       - name: status
+ *         in: query
+ *         description: 1 for checkout, 0 for checkin
  *         required: true
  *         schema:
  *           type: number
@@ -875,4 +881,4 @@ router.post('/images', upload.single('file'), FirebaseController.handlePostFile)
  *       500:
  *         description: Internal server error
  */
-router.get('/imagesQrCode/event/:eventId', QrCodeController.getEventIdByQrCode);
+router.get('/imagesQrCodeCheckin/event/:eventId', QrCodeController.getEventIdByQrCode);

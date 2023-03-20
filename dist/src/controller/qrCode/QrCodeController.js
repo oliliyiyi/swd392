@@ -40,8 +40,10 @@ function getEventIdByQrCode(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const eventId = req.params.eventId;
+            const status = req.query.status;
             console.log(req.params.eventId);
-            const qrcodeData = { event_id: eventId };
+            const qrcodeData = { event_id: eventId,
+                status: status };
             let img = '';
             let qrCodeDataUrl = yield QRCode.toDataURL(JSON.stringify(qrcodeData));
             console.log(qrCodeDataUrl);
