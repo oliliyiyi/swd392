@@ -32,7 +32,7 @@ function getAllEventsInCampus(campus_id) {
 exports.getAllEventsInCampus = getAllEventsInCampus;
 function getEventsByName(name) {
     const query = `SELECT event_id, name, email, location, point, img, description, start_date, end_date
-    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1`;
+    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1 ORDER BY tb.start_date DESC`;
     const values = [name];
     const queryObject = {
         text: query,
@@ -94,7 +94,8 @@ function getEventsStudentJoin(student_id) {
     tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout
     FROM (SELECT * FROM join_events WHERE student_id = ?) tl
     INNER JOIN (SELECT * FROM event WHERE active = 1) tb
-    ON tb.event_id = tl.event_id`;
+    ON tb.event_id = tl.event_id
+    ORDER BY tb.start_date DESC`;
     const values = [student_id];
     const queryObject = {
         text: query,
@@ -113,7 +114,8 @@ function getAllEvents() {
     ON tk.club_id = tl.club_id
     LEFT JOIN student td
     ON td.student_id = tl.student_id
-    WHERE tb.active = 1`;
+    WHERE tb.active = 1
+    `;
     const values = [];
     const queryObject = {
         text: query,
