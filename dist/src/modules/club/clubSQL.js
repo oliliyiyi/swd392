@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getTopClubsWithTheMostEvents = exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 function getAllClubsInCampus(campus_id) {
     const query = `SELECT tl.club_id, tl.campus_id, tl.name, tl.abbreviation, tl.established_date, tl.img, COUNT(tb.student_id) as totalMembers FROM 
     (SELECT * FROM clubs WHERE campus_id = ?) tl
@@ -91,3 +91,22 @@ function deleteClubMember(student_id, club_id) {
     return queryObject;
 }
 exports.deleteClubMember = deleteClubMember;
+function getTopClubsWithTheMostEvents(campus_id, start_date, end_date) {
+    const query = `SELECT tb.club_id, tb.name as club_name, tb.abbreviation as abv, tb.img, COUNT(td.event_id) as totalEvent
+  FROM (SELECT * FROM clubs WHERE campus_id = ?) tb
+  INNER JOIN event_organizer tl
+  ON tb.club_id = tl.club_id
+  LEFT JOIN event td
+  ON tl.event_id = td.event_id
+  WHERE td.is_approved = 1 AND td.start_date >= ? AND td.start_date <= ?
+  GROUP BY tb.club_id, club_name, abv, tb.img
+  ORDER BY totalEvent DESC
+  LIMIT 5`;
+    const values = [campus_id, start_date, end_date];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getTopClubsWithTheMostEvents = getTopClubsWithTheMostEvents;

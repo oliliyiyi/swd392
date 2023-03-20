@@ -51,3 +51,9 @@ export async function deleteClubMember(student_id: number, club_id: number) {
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
+
+export async function getTopClubsWithTheMostEvents(campus_id: number, start_date: string, end_date: string) {
+  const queryString = ClubSQL.getTopClubsWithTheMostEvents(campus_id, start_date, end_date);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}

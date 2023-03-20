@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.getTopClubsWithTheMostEvents = exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubService = __importStar(require("../../service/club/ClubService"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(req, res, next) {
@@ -127,3 +127,16 @@ function deleteClubMember(req, res, next) {
     });
 }
 exports.deleteClubMember = deleteClubMember;
+function getTopClubsWithTheMostEvents(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const campus_id = Number(req.query.campus_id);
+            const response = yield ClubService.getTopClubsWithTheMostEvents(campus_id);
+            res.json(response);
+        }
+        catch (error) {
+            res.status(400).json({ message: "Action Fail" });
+        }
+    });
+}
+exports.getTopClubsWithTheMostEvents = getTopClubsWithTheMostEvents;

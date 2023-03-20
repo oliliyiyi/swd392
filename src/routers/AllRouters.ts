@@ -63,8 +63,6 @@ router.get("/api/campus", isAuth, CampusController.getAllListCampus);
  */
 router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 
-
-
 /**
  * @swagger
  * /api/student/point:
@@ -272,7 +270,6 @@ router.post("/api/event/insert",upload.single('file'), EventController.admInsert
  *         description: Action Fail.
  */
 router.put("/api/event/:event_id", EventController.admApprovedEvent);
-
 
 /**
  * @swagger
@@ -637,6 +634,29 @@ router.get("/api/club/student/:student_id", ClubController.getAllClubsStudentJoi
  *         description: Bad Request
  */
 router.get("/api/club/member", ClubController.getAllClubMembers);
+
+/**
+ * @swagger
+ * /api/club/topEvent:
+ *   get:
+ *     tags:
+ *      - Club
+ *     summary: Get Top 5 club that have the most total event in semester
+ *     description: Get Top 5 club that have the most total event in semester
+ *     parameters:
+ *       - name: campus_id
+ *         in: query
+ *         description: ID of the campus 
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/club/topEvent", ClubController.getTopClubsWithTheMostEvents);
 
 /**
  * @swagger
