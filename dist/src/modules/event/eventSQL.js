@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.insertPointForStudent = exports.getEventPoint = exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
     const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
     const values = [name, email, location, point, img, description, start_date, end_date];
@@ -12,7 +12,7 @@ function admInsertEvent(name, email, location, point, img, description, start_da
 }
 exports.admInsertEvent = admInsertEvent;
 function getAllEventsInCampus(campus_id) {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM clubs tk
 	LEFT JOIN event_organizer tl
@@ -104,7 +104,7 @@ function getEventsStudentJoin(student_id) {
 }
 exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents() {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, tb.point, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE active = 1) tb
 	LEFT JOIN event_organizer tl
@@ -123,7 +123,7 @@ function getAllEvents() {
 }
 exports.getAllEvents = getAllEvents;
 function getEventById(event_id) {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
     tb.start_date, tb.end_date, tb.active, tb.is_approved, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE event_id = ?) tb
 	LEFT JOIN event_organizer tl
@@ -170,3 +170,23 @@ function deleteEvent(event_id) {
     return queryObject;
 }
 exports.deleteEvent = deleteEvent;
+function getEventPoint(event_id) {
+    const query = `SELECT point FROM event WHERE event_id = ?`;
+    const values = [event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getEventPoint = getEventPoint;
+function insertPointForStudent(student_id, event_id, point) {
+    const query = `INSERT INTO point(student_id, event_id, point) VALUES (?,?,?)`;
+    const values = [student_id, event_id, point];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.insertPointForStudent = insertPointForStudent;

@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.getStudentInfoByEmail = void 0;
+exports.getStudentPoint = exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.getStudentInfoByEmail = void 0;
 const StudentService = __importStar(require("../../service/student/StudentService"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -129,3 +129,16 @@ function updateStudentInfo(req, res, next) {
     });
 }
 exports.updateStudentInfo = updateStudentInfo;
+function getStudentPoint(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const student_id = Number(req.params.student_id);
+            const response = yield StudentService.getStudentPoint(student_id);
+            return res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getStudentPoint = getStudentPoint;

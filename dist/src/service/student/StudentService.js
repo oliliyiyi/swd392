@@ -35,9 +35,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
+exports.getStudentPoint = exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentInfoByEmail = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = void 0;
 const moment_1 = __importDefault(require("moment"));
 const StudentDAL = __importStar(require("../../modules/student/StudentDAL"));
+const commonFunction = __importStar(require("../../modules/commonFunction"));
 function updateStudentToken(studentId, refresh_token, device_token) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.updateStudentToken(studentId, refresh_token, device_token);
@@ -81,3 +82,18 @@ function updateStudentInfo(student_id, img, phone, address, birthday) {
     });
 }
 exports.updateStudentInfo = updateStudentInfo;
+function getStudentPoint(student_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const now = new Date();
+        const date = yield commonFunction.getStartAndEndDates(now);
+        let result = yield StudentDAL.getStudentPoint(student_id, date.start_date, date.end_date);
+        if (result) {
+            result['semester'] = date.semester;
+            return result;
+        }
+        else {
+            return { student_id, 'point': 0, 'semester': date.semester };
+        }
+    });
+}
+exports.getStudentPoint = getStudentPoint;

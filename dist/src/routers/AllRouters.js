@@ -175,6 +175,28 @@ router.put("/api/student/:student_id", upload.single('file'), StudentController.
 router.get("/api/students", Auth_1.isAuth, StudentController.getAllStudentInfo);
 /**
  * @swagger
+ * /api/student/{student_id}/point:
+ *   get:
+ *     tags:
+ *      - Student
+ *     summary: Get student point by student_id
+ *     description: Get student point in semester by student_id
+ *     parameters:
+ *       - name: student_id
+ *         in: path
+ *         description: ID of the student
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Returns point of student
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/api/student/:student_id/point", StudentController.getStudentPoint);
+/**
+ * @swagger
  * /api/event/insert:
  *   post:
  *     tags:

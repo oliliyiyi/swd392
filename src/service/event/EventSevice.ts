@@ -102,7 +102,9 @@ export async function checkoutEvent(
   if (!checkStudentJoinEvent) {
     throw new Error("NotRegisteredToParticipate");
   }
-  return await EventDAL.checkoutEvent(student_id, event_id, checkout);
+  await EventDAL.checkoutEvent(student_id, event_id, checkout);
+  await EventDAL.insertPointForStudent(student_id, event_id);
+  return ;
 }
 
 export async function getStudentsJoinEvent(event_id: number) {

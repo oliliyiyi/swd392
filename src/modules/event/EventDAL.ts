@@ -95,6 +95,12 @@ export async function checkoutEvent(student_id: number, event_id: number, checko
   return rows;
 }
 
+export async function insertPointForStudent(student_id: number, event_id: number) {
+  const pointString = EventSQL.getEventPoint(event_id);
+  const point = await query(pointString.text, pointString.values);
+  const queryString = EventSQL.insertPointForStudent(student_id, event_id, point[0]);
+  return await query(queryString.text, queryString.values);
+}
 export async function getEventById(event_id: number) {
   const queryString = EventSQL.getEventById(event_id);
   const eventById = await query(queryString.text, queryString.values);

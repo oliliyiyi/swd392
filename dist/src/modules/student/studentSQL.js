@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getAllStudentInfo = exports.getStudentInfoByEmail = void 0;
+exports.getStudentPoint = exports.updateStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getAllStudentInfo = exports.getStudentInfoByEmail = void 0;
 function getStudentInfoByEmail(email) {
     const query = `SELECT st.student_id, st.name as student_name, st.address, st.phone, st.role, st.email, st.birthday, cp.campus_id, cp.name as campus_name
   FROM student st
@@ -77,3 +77,14 @@ function updateStudentInfo(student_id, img, phone, address, birthday) {
     return queryObject;
 }
 exports.updateStudentInfo = updateStudentInfo;
+function getStudentPoint(student_id, start_date, end_date) {
+    const query = `SELECT student_id, SUM(point_num) as point FROM point WHERE student_id = ? AND created_at >= ? 
+  AND created_at <= ? AND active = 1 GROUP BY student_id`;
+    const values = [student_id, start_date, end_date];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getStudentPoint = getStudentPoint;
