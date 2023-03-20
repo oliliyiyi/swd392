@@ -73,3 +73,14 @@ export async function deleteClubMember(req: any, res: any, next: any){
         res.status(400).json({message: "Action Fail"});
       }
 }
+
+export async function getTopClubsWithTheMostEvents(req: any, res: any, next: any){
+    try {
+        const campus_id = Number(req.query.campus_id);
+        const response = await ClubService.getTopClubsWithTheMostEvents(campus_id);
+        res.json(response);
+    } catch (error: any) {
+        res.status(400).json({message: "Action Fail"});
+      }
+}
+

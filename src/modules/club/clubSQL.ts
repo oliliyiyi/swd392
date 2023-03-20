@@ -87,3 +87,22 @@ export function deleteClubMember(student_id: number, club_id: number) {
     };
     return queryObject;
 }
+
+export function getTopClubsWithTheMostEvents(campus_id: number, start_date: string, end_date: string) {
+  const query = `SELECT tb.club_id, tb.name as club_name, tb.abbreviation as abv, tb.img, COUNT(td.event_id) as totalEvent
+  FROM (SELECT * FROM clubs WHERE campus_id = ?) tb
+  INNER JOIN event_organizer tl
+  ON tb.club_id = tl.club_id
+  LEFT JOIN event td
+  ON tl.event_id = td.event_id
+  WHERE td.is_approved = 1 AND td.start_date >= ? AND td.start_date <= ?
+  GROUP BY tb.club_id, club_name, abv, tb.img
+  ORDER BY totalEvent DESC
+  LIMIT 5`;
+  const values: any = [campus_id, start_date, end_date];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject;
+}

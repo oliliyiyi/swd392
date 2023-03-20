@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
+exports.getTopClubsWithTheMostEvents = exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getClubMemberInfo = exports.getAllClubsInCampus = void 0;
 const ClubSQL = __importStar(require("../../modules/club/clubSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getAllClubsInCampus(campus_id) {
@@ -95,3 +95,11 @@ function deleteClubMember(student_id, club_id) {
     });
 }
 exports.deleteClubMember = deleteClubMember;
+function getTopClubsWithTheMostEvents(campus_id, start_date, end_date) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = ClubSQL.getTopClubsWithTheMostEvents(campus_id, start_date, end_date);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.getTopClubsWithTheMostEvents = getTopClubsWithTheMostEvents;

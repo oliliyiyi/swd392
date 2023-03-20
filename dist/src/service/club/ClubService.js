@@ -32,8 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
+exports.getTopClubsWithTheMostEvents = exports.deleteClubMember = exports.getClubInfoByClubId = exports.getAllClubsStudentJoin = exports.getAllClubMembers = exports.insertClubMember = exports.getAllClubsInCampus = void 0;
 const ClubDAL = __importStar(require("../../modules/club/ClubDAL"));
+const commonFunction = __importStar(require("../../modules/commonFunction"));
 function getAllClubsInCampus(campus_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield ClubDAL.getAllClubsInCampus(campus_id);
@@ -86,3 +87,12 @@ function deleteClubMember(student_id, club_id) {
     });
 }
 exports.deleteClubMember = deleteClubMember;
+function getTopClubsWithTheMostEvents(campus_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const now = new Date();
+        const date = yield commonFunction.getStartAndEndDates(now);
+        const result = yield ClubDAL.getTopClubsWithTheMostEvents(campus_id, date.start_date, date.end_date);
+        return result;
+    });
+}
+exports.getTopClubsWithTheMostEvents = getTopClubsWithTheMostEvents;

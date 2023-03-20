@@ -1,5 +1,5 @@
 import * as ClubDAL from '../../modules/club/ClubDAL';
-
+import * as commonFunction from '../../modules/commonFunction';
 export async function getAllClubsInCampus(campus_id: number){
     const result = await ClubDAL.getAllClubsInCampus(campus_id);
     return result;
@@ -37,5 +37,12 @@ export async function deleteClubMember(student_id: number, club_id: number){
         throw new Error("NotBeClubeMember")
     }
     const result = await ClubDAL.deleteClubMember(student_id, club_id);
+    return result;
+}
+
+export async function getTopClubsWithTheMostEvents(campus_id: number){
+    const now = new Date();
+    const date = await commonFunction.getStartAndEndDates(now);
+    const result = await ClubDAL.getTopClubsWithTheMostEvents(campus_id, date.start_date, date.end_date);
     return result;
 }
