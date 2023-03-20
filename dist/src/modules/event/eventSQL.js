@@ -32,7 +32,7 @@ function getAllEventsInCampus(campus_id) {
 exports.getAllEventsInCampus = getAllEventsInCampus;
 function getEventsByName(name) {
     const query = `SELECT event_id, name, email, location, point, img, description, start_date, end_date
-    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1 ORDER BY tb.start_date DESC`;
+    FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1`;
     const values = [name];
     const queryObject = {
         text: query,

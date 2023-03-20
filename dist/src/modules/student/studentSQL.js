@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentPoint = exports.updateStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getAllStudentInfo = exports.getStudentInfoByEmail = void 0;
+exports.getTopStudentsPointInCampus = exports.getStudentPoint = exports.updateStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getAllStudentInfo = exports.getStudentInfoByEmail = void 0;
 function getStudentInfoByEmail(email) {
     const query = `SELECT st.student_id, st.name as student_name, st.address, st.phone, st.role, st.email, st.birthday, cp.campus_id, cp.name as campus_name
   FROM student st
@@ -78,7 +78,7 @@ function updateStudentInfo(student_id, img, phone, address, birthday) {
 }
 exports.updateStudentInfo = updateStudentInfo;
 function getStudentPoint(student_id, start_date, end_date) {
-    const query = `SELECT student_id, SUM(point_num) as point FROM point WHERE student_id = ? AND created_at >= ? 
+    const query = `SELECT student_id, SUM(point_num) as point, COUNT(point_num) as totalEvent FROM point WHERE student_id = ? AND created_at >= ? 
   AND created_at <= ? AND active = 1 GROUP BY student_id`;
     const values = [student_id, start_date, end_date];
     const queryObject = {
@@ -88,3 +88,23 @@ function getStudentPoint(student_id, start_date, end_date) {
     return queryObject;
 }
 exports.getStudentPoint = getStudentPoint;
+function getTopStudentsPointInCampus(campus_id, start_date, end_date) {
+    const query = `SELECT tl.student_id, tl.name as student_name, td.name as campus_name, SUM(tb.point_num) as point,
+  COUNT(tb.point_num) as totalEvent
+  FROM (SELECT * FROM student where campus_id = ?) tl
+  INNER JOIN point tb
+  ON tl.student_id = tb.student_id
+  LEFT JOIN campus td
+  ON tl.campus_id = td.campus_id
+  WHERE tb.created_at >= ? AND tb.created_at <= ? AND tb.active = 1 
+  GROUP BY tl.student_id, student_name, campus_name
+  ORDER BY point DESC
+  LIMIT 10`;
+    const values = [campus_id, start_date, end_date];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.getTopStudentsPointInCampus = getTopStudentsPointInCampus;

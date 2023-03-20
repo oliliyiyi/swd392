@@ -46,6 +46,7 @@ export async function getEventsByName(name: string, status: number) {
     queryString.text = queryString.text + ` AND end_date >= current_timestamp()`;
   }
   const rows = await query(queryString.text, queryString.values);
+  rows.sort((a: any, b: any) => b.start_date.getTime() - a.start_date.getTime());
   return rows;
 }
 

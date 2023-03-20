@@ -90,3 +90,13 @@ export async function getStudentPoint(req: any, res: any, next: any) {
     return next(error);
   }
 }
+
+export async function getTopStudentsPointInCampus(req: any, res: any, next: any) {
+  try {
+    const campus_id = Number(req.query.campus_id);
+    const response = await StudentService.getTopStudentsPointInCampus(campus_id);
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+}

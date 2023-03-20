@@ -63,6 +63,31 @@ router.get("/api/campus", isAuth, CampusController.getAllListCampus);
  */
 router.get("/api/student/info", StudentController.getStudentInfoByEmail);
 
+
+
+/**
+ * @swagger
+ * /api/student/point:
+ *   get:
+ *     tags:
+ *      - Student
+ *     summary: Get top 10 student maxpoint in campus
+ *     description: Get top 10 student maxpoint in campus
+ *     parameters:
+ *       - name: campus_id
+ *         in: query
+ *         description: The campus_id to get top 10 student maxpoint 
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: OK
+ *       '400':
+ *         description: Bad Request
+ */
+router.get("/api/student/point", StudentController.getTopStudentsPointInCampus);
+
 /**
  * @swagger
  * /api/student/{student_id}:

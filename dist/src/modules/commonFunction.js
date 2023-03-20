@@ -17,7 +17,7 @@ function getStartAndEndDates(date) {
         if (month >= 0 && month <= 3) {
             startMonth = 0; // January
             endMonth = 3; // April
-            semester = `Sping` + date.getFullYear();
+            semester = `Spring` + date.getFullYear();
         }
         else if (month >= 4 && month <= 7) {
             startMonth = 4; // May
