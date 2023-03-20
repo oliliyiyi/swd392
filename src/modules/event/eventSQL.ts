@@ -18,7 +18,7 @@ export function admInsertEvent(
 }
 
 export function getAllEventsInCampus(campus_id: number){
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM clubs tk
 	LEFT JOIN event_organizer tl
@@ -111,7 +111,7 @@ export function getEventsStudentJoin(student_id: number) {
 }
 
 export function getAllEvents(){
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, tb.point, 
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE active = 1) tb
 	LEFT JOIN event_organizer tl
@@ -130,7 +130,7 @@ export function getAllEvents(){
 }
 
 export function getEventById(event_id: number) {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
     tb.start_date, tb.end_date, tb.active, tb.is_approved, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE event_id = ?) tb
 	LEFT JOIN event_organizer tl
@@ -176,3 +176,23 @@ export function deleteEvent(event_id: number) {
     };
     return queryObject;
   }
+
+export function getEventPoint(event_id: number) {
+    const query = `SELECT point FROM event WHERE event_id = ?`;
+    const values: any = [event_id];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject; 
+}
+
+export function insertPointForStudent(student_id: number, event_id: number, point: number) {
+    const query = `INSERT INTO point(student_id, event_id, point) VALUES (?,?,?)`
+    const values: any = [student_id, event_id, point];
+    const queryObject = {
+      text: query,
+      values,
+    };
+    return queryObject; 
+}

@@ -81,3 +81,12 @@ export async function updateStudentInfo(req: any, res: any, next: any) {
   }
 }
 
+export async function getStudentPoint(req: any, res: any, next: any) {
+  try {
+    const student_id = Number(req.params.student_id);
+    const response = await StudentService.getStudentPoint(student_id);
+    return res.json(response);
+  } catch (error) {
+    return next(error);
+  }
+}

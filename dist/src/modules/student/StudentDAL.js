@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
+exports.getStudentPoint = exports.updateStudentInfo = exports.getAllStudentInfo = exports.getStudentByStudentId = exports.createStudent = exports.updateStudentToken = exports.getStudentInfoByEmail = void 0;
 const StudentSQL = __importStar(require("../../modules/student/studentSQL"));
 const db_config_1 = require("../../configs/db_config");
 function getStudentInfoByEmail(email) {
@@ -83,3 +83,11 @@ function updateStudentInfo(student_id, img, phone, address, birthday) {
     });
 }
 exports.updateStudentInfo = updateStudentInfo;
+function getStudentPoint(student_id, start_date, end_date) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = StudentSQL.getStudentPoint(student_id, start_date, end_date);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows[0];
+    });
+}
+exports.getStudentPoint = getStudentPoint;

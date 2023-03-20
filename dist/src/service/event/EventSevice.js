@@ -116,7 +116,9 @@ function checkoutEvent(student_id, event_id, checkout) {
         if (!checkStudentJoinEvent) {
             throw new Error("NotRegisteredToParticipate");
         }
-        return yield EventDAL.checkoutEvent(student_id, event_id, checkout);
+        yield EventDAL.checkoutEvent(student_id, event_id, checkout);
+        yield EventDAL.insertPointForStudent(student_id, event_id);
+        return;
     });
 }
 exports.checkoutEvent = checkoutEvent;

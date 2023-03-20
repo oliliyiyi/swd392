@@ -82,3 +82,14 @@ export function updateStudentInfo(student_id: number, img:string, phone: string,
   };
   return queryObject;
 }
+
+export function getStudentPoint(student_id: number, start_date: string, end_date: string) {
+  const query = `SELECT student_id, SUM(point_num) as point FROM point WHERE student_id = ? AND created_at >= ? 
+  AND created_at <= ? AND active = 1 GROUP BY student_id`;
+  const values: any = [student_id, start_date, end_date];
+  const queryObject = {
+    text: query,
+    values,
+  };
+  return queryObject;
+}

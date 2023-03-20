@@ -59,3 +59,9 @@ export async function updateStudentInfo(student_id: number, img:string, phone: s
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
+
+export async function getStudentPoint(student_id: number, start_date: string, end_date: string) {
+  const queryString = StudentSQL.getStudentPoint(student_id, start_date, end_date);
+  const rows = await query(queryString.text, queryString.values);
+  return rows[0];
+}
