@@ -183,7 +183,7 @@ function getEventPoint(event_id) {
 }
 exports.getEventPoint = getEventPoint;
 function insertPointForStudent(student_id, event_id, point) {
-    const query = `INSERT INTO point(student_id, event_id, point) VALUES (?,?,?)`;
+    const query = `INSERT INTO point(student_id, event_id, point_num) VALUES (?,?,?)`;
     const values = [student_id, event_id, point];
     const queryObject = {
         text: query,

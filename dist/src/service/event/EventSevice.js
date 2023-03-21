@@ -111,6 +111,9 @@ function checkoutEvent(student_id, event_id, checkout) {
                 if (!student.checkin) {
                     throw new Error("NotCheckin");
                 }
+                if (student.checkout) {
+                    throw new Error("AlreadyCheckout");
+                }
             }
         });
         if (!checkStudentJoinEvent) {

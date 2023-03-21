@@ -97,6 +97,9 @@ export async function checkoutEvent(
       if (!student.checkin) {
         throw new Error("NotCheckin");
       }
+      if(student.checkout) {
+        throw new Error("AlreadyCheckout");
+      }
     }
   });
   if (!checkStudentJoinEvent) {
