@@ -59,7 +59,7 @@ function getAllClubMembers(club_id) {
 exports.getAllClubMembers = getAllClubMembers;
 function getAllClubsStudentJoin(student_id) {
     const query = `SELECT  tl.club_id, tl.name as club_name, tl.abbreviation, tl.established_date, tl.img 
-  FROM (SELECT * FROM club_member WHERE student_id = ?) tb
+  FROM (SELECT * FROM club_member WHERE student_id = ? AND active = 1) tb
   LEFT JOIN clubs tl
   ON tb.club_id = tl.club_id`;
     const values = [student_id];

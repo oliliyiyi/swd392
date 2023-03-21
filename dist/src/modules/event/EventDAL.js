@@ -140,7 +140,7 @@ function insertPointForStudent(student_id, event_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const pointString = EventSQL.getEventPoint(event_id);
         const point = yield (0, db_config_1.query)(pointString.text, pointString.values);
-        const queryString = EventSQL.insertPointForStudent(student_id, event_id, point[0]);
+        const queryString = EventSQL.insertPointForStudent(student_id, event_id, point[0].point);
         return yield (0, db_config_1.query)(queryString.text, queryString.values);
     });
 }
