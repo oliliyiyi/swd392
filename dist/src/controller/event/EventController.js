@@ -225,6 +225,9 @@ function checkoutEvent(req, res, next) {
             if (error.message === "NotRegisteredToParticipate") {
                 res.status(400).json({ message: "Students have not registerd to participate event" });
             }
+            if (error.message === "AlreadyCheckout") {
+                res.status(400).json({ message: "Students Already Checkout" });
+            }
             return next(error);
         }
     });
