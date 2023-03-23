@@ -49,7 +49,7 @@ function getEventIdByQrCode(req, res, next) {
             console.log(qrCodeDataUrl);
             const buffer = Buffer.from(qrCodeDataUrl.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             const bucket = fbInit.firebaseConnect.storage().bucket();
-            const file = bucket.file(`qr-codes/${eventId}-qr-code.png`);
+            const file = bucket.file(`qr-codes/${eventId}-${status}-qr-code.png`);
             const stream = file.createWriteStream({
                 resumable: false,
             });
