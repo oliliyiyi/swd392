@@ -56,6 +56,15 @@ exports.createStudent = createStudent;
 function getStudentByStudentId(studentId) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield StudentDAL.getStudentByStudentId(studentId);
+        const now = new Date();
+        const date = yield commonFunction.getStartAndEndDates(now);
+        let pointStudent = yield StudentDAL.getStudentPoint(studentId, date.start_date, date.end_date);
+        if (pointStudent) {
+            result['point'] = pointStudent.point;
+        }
+        else {
+            result['point'] = 0;
+        }
         result.birthday = (0, moment_1.default)(result.birthday).format('YYYY-MM-DD');
         return result;
     });

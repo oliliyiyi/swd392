@@ -35,6 +35,14 @@ export async function createStudent(
 
 export async function getStudentByStudentId(studentId: any) {
   const result = await StudentDAL.getStudentByStudentId(studentId);
+  const now = new Date();
+  const date = await commonFunction.getStartAndEndDates(now);
+  let pointStudent = await StudentDAL.getStudentPoint(studentId, date.start_date, date.end_date);
+  if(pointStudent){
+    result['point'] = pointStudent.point;
+  } else {
+    result['point'] = 0
+  }
   result.birthday = moment(result.birthday).format('YYYY-MM-DD');
   return result;
 }
