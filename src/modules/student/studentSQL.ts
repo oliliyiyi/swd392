@@ -13,8 +13,10 @@ export function getStudentInfoByEmail(email: string) {
 }
 
 export function getAllStudentInfo() {
-  const query = `SELECT st.student_id, st.name, st.address, st.phone, st.role, st.email, st.birthday
+  const query = `SELECT st.student_id, st.name as student_name, td.campus_id, td.name as campus_name, st.address, st.phone, st.role, st.email, st.birthday
   FROM student st
+  LEFT JOIN campus td
+  ON st.campus_id = td.campus_id
   Where st.active = 1`;
   const values: any = [];
   const queryObject = {

@@ -60,10 +60,10 @@ function getStudentByStudentId(studentId) {
         const date = yield commonFunction.getStartAndEndDates(now);
         let pointStudent = yield StudentDAL.getStudentPoint(studentId, date.start_date, date.end_date);
         if (pointStudent) {
-            result['point'] = { 'point_num': pointStudent.point, 'semester': date.semester };
+            result['point'] = pointStudent.point;
         }
         else {
-            result['point'] = { 'point_num': 0, 'semester': date.semester };
+            result['point'] = 0;
         }
         result.birthday = (0, moment_1.default)(result.birthday).format('YYYY-MM-DD');
         return result;
