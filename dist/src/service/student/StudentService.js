@@ -63,7 +63,7 @@ function getStudentByStudentId(studentId) {
             result['point'] = pointStudent.point;
         }
         else {
-            result['point'] = 0;
+            result['point'] = '0';
         }
         result.birthday = (0, moment_1.default)(result.birthday).format('YYYY-MM-DD');
         return result;
