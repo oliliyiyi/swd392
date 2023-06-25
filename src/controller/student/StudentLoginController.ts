@@ -3,7 +3,6 @@ import * as fbInit from "../../../src/configs/fbconfigs";
 import jwt from "jsonwebtoken";
 import * as Student from "../../service/student/StudentService";
 import * as StudentDAL from "../../../src/modules/student/StudentDAL";
-import * as redis from '../../configs/rd_config';
 
 
 export async function handleLogin(req: any, res: any) {

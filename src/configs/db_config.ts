@@ -4,9 +4,9 @@ dotenv.config();
 
 export const db = mysql.createPool({
   host: "us-cdbr-east-06.cleardb.net",
-  user: "bd11f6f55a584d",
-  password: "f125189f",
-  database: "heroku_a1e82bf2ce3982a",
+  user: "b7cb6abdc6e09c",
+  password: "c1ca7b98",
+  database: "heroku_dc76636fca04c0f",
   port: 3306,
 });
 

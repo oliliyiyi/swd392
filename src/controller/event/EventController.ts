@@ -205,6 +205,7 @@ export async function getEventsStudentJoin(req: any, res: any, next: any) {
 
 export async function getAllEvents(req: any, res: any, next: any) {
   try {
+    console.log('ahihi');
     const status: number = Number(req.query.status || 0);
     const is_approved: number = Number(req.query.is_approved || 0); 
     const response = await EventService.getAllEvents(status, is_approved);
