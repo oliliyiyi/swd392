@@ -262,6 +262,7 @@ exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log('ahihi');
             const status = Number(req.query.status || 0);
             const is_approved = Number(req.query.is_approved || 0);
             const response = yield EventService.getAllEvents(status, is_approved);
