@@ -47,11 +47,10 @@ const options = {
 const swaggerDoc = swaggerJSDoc(options);
 app.use(express_1.default.json());
 app.use(bodyParser.json());
-const allowedOrigins = ['http://localhost:3000', 'https://f-clubs-event-management.vercel.app'];
 const corsOptions = {
-    origin: allowedOrigins,
+    origin: ['http://localhost:3000', 'https://f-clubs-event-management.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'authorization']
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'authorization'],
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(AllRouters_1.router, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
