@@ -189,8 +189,8 @@ function handleLogin(req, res) {
                 });
             }
             else {
-                const dpmId = 1;
-                const campusId = 1;
+                const dpmId = 4;
+                const campusId = 4;
                 const active = 1;
                 const address = "abc";
                 const phone = "123456789";
