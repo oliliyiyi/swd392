@@ -65,7 +65,7 @@ function getStudentByStudentId(studentId) {
         else {
             result['point'] = '0';
         }
-        result.birthday = (0, moment_1.default)(result.birthday).format('YYYY-MM-DD');
+        result.birthday = result.birthday ? (0, moment_1.default)(result.birthday).format('YYYY-MM-DD') : null;
         return result;
     });
 }
