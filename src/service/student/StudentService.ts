@@ -43,7 +43,7 @@ export async function getStudentByStudentId(studentId: any) {
   } else {
     result['point'] = '0';
   }
-  result.birthday = moment(result.birthday).format('YYYY-MM-DD');
+  result.birthday = result.birthday ? moment(result.birthday).format('YYYY-MM-DD'): null;
   return result;
 }
 
