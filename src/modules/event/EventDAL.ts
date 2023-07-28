@@ -6,6 +6,7 @@ export async function admInsertEvent(
   email: string,
   location: string,
   point: number,
+  price: number,
   img: string,
   description: string,
   start_date: string,
@@ -16,6 +17,7 @@ export async function admInsertEvent(
     email,
     location,
     point,
+    price,
     img,
     description,
     start_date,
@@ -87,6 +89,12 @@ export async function getEventsStudentJoin(student_id: number) {
 
 export async function checkinEvent(student_id: number, event_id: number, checkin: string) {
   const queryString = EventSQL.checkinEvent(student_id, event_id, checkin);
+  const rows = await query(queryString.text, queryString.values);
+  return rows;
+}
+
+export async function payEvent(student_id: number, event_id: number, payment: number) {
+  const queryString = EventSQL.payEvent(student_id, event_id, payment);
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }

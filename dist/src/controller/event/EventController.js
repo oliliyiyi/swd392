@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admApprovedEvent = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.payEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventById = exports.getEventsByName = exports.getAllEventsInCampus = exports.admApprovedEvent = exports.admInsertEvent = void 0;
 const EventService = __importStar(require("../../service/event/EventSevice"));
 const db_config_1 = require("../../configs/db_config");
 const fbInit = __importStar(require("../../configs/fbconfigs"));
@@ -49,6 +49,7 @@ function admInsertEvent(req, res, next) {
             const student_id = Number(req.body.student_id);
             const location = req.body.location;
             const point = req.body.point;
+            const price = req.body.price;
             const fileGet = req.file;
             let img = "";
             const description = req.body.description;
@@ -83,7 +84,7 @@ function admInsertEvent(req, res, next) {
                 .then((signedUrls) => __awaiter(this, void 0, void 0, function* () {
                 console.log(signedUrls);
                 img = signedUrls[0];
-                yield EventService.admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date);
+                yield EventService.admInsertEvent(name, email, club_id, student_id, location, point, price, img, description, start_date, end_date);
                 yield db_config_1.db.query("COMMIT");
                 res.json();
                 // res.status(200).json({ data: signedUrls[0], message: "Successfully uploaded image" });
@@ -154,6 +155,7 @@ exports.getEventsByName = getEventsByName;
 function getEventById(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(req.params.event_id);
             const id = req.params.event_id;
             const response = yield EventService.getEventById(id);
             res.json(response);
@@ -233,6 +235,27 @@ function checkoutEvent(req, res, next) {
     });
 }
 exports.checkoutEvent = checkoutEvent;
+function payEvent(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query("START TRANSACTION");
+            const student_id = req.body.student_id;
+            const event_id = req.params.event_id;
+            const payment = req.body.payment;
+            yield EventService.payEvent(student_id, event_id, payment);
+            yield db_config_1.db.query("COMMIT");
+            res.json();
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            if (error.message === "EventNotExisted") {
+                res.status(400).json({ message: "Event does not existed" });
+            }
+            return next(error);
+        }
+    });
+}
+exports.payEvent = payEvent;
 function getStudentsJoinEvent(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -262,7 +285,6 @@ exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log('ahihi');
             const status = Number(req.query.status || 0);
             const is_approved = Number(req.query.is_approved || 0);
             const response = yield EventService.getAllEvents(status, is_approved);

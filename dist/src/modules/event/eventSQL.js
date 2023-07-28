@@ -1,18 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertPointForStudent = exports.getEventPoint = exports.deleteEvent = exports.checkoutEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
-function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
-    const query = `INSERT INTO event (name, email, location, point, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?);`;
-    const values = [name, email, location, point, img, description, start_date, end_date];
+exports.insertPointForStudent = exports.getEventPoint = exports.deleteEvent = exports.checkoutEvent = exports.payEvent = exports.checkinEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+function admInsertEvent(name, email, location, point, price, img, description, start_date, end_date) {
+    const query = `INSERT INTO event (name, email, location, point, price, img, description, start_date, end_date) VALUES(?,?,?,?,?,?,?,?,?);`;
+    const values = [
+        name,
+        email,
+        location,
+        point,
+        price,
+        img,
+        description,
+        start_date,
+        end_date,
+    ];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.admInsertEvent = admInsertEvent;
 function getAllEventsInCampus(campus_id) {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point, tb.price,
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM clubs tk
 	LEFT JOIN event_organizer tl
@@ -25,18 +35,18 @@ function getAllEventsInCampus(campus_id) {
     const values = [campus_id];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.getAllEventsInCampus = getAllEventsInCampus;
 function getEventsByName(name) {
-    const query = `SELECT event_id, name, email, location, point, img, description, start_date, end_date
+    const query = `SELECT event_id, name, email, location, point, price, img, description, start_date, end_date
     FROM event WHERE name LIKE CONCAT('%', ?, '%') AND active = 1`;
     const values = [name];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
@@ -46,17 +56,17 @@ function admInsertEventOrganizer(event_id, club_id, student_id) {
     const values = [event_id, club_id, student_id];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.admInsertEventOrganizer = admInsertEventOrganizer;
 function registerEvent(student_id, event_id, registration_date) {
-    const query = `INSERT INTO join_events (student_id, event_id, registration_date) VALUES (?,?,?);`;
+    const query = `INSERT INTO join_events (student_id, event_id, registration_date, payment) VALUES (?,?,?,0);`;
     const values = [student_id, event_id, registration_date];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
@@ -73,7 +83,7 @@ function admApprovedEvent(event_id) {
 exports.admApprovedEvent = admApprovedEvent;
 function getStudentsJoinEvent(event_id) {
     const query = `SELECT tl.student_id, td.name as student_name, td.dpm_id, tk.name as dpm_name, 
-    td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.checkin, tl.checkout
+    td.campus_id, tf.name as campus_name, td.email, tl.registration_date , tl.payment, tl.checkin, tl.checkout
     FROM (SELECT * FROM join_events WHERE event_id = ?) tl
     LEFT JOIN student td
     ON tl.student_id = td.student_id
@@ -84,14 +94,14 @@ function getStudentsJoinEvent(event_id) {
     const values = [event_id];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.getStudentsJoinEvent = getStudentsJoinEvent;
 function getEventsStudentJoin(student_id) {
-    const query = `SELECT tb.event_id, tb.name, tb.location, tb.img,
-    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout
+    const query = `SELECT tb.event_id, tb.name, tb.location, tb.img, tb.price,
+    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout, tl.payment
     FROM (SELECT * FROM join_events WHERE student_id = ?) tl
     INNER JOIN (SELECT * FROM event WHERE active = 1) tb
     ON tb.event_id = tl.event_id
@@ -99,13 +109,13 @@ function getEventsStudentJoin(student_id) {
     const values = [student_id];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.getEventsStudentJoin = getEventsStudentJoin;
 function getAllEvents() {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, tb.point, 
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location,tb.point ,tb.img, tb.description, tb.point, tb.price,
     tb.start_date, tb.end_date, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE active = 1) tb
 	LEFT JOIN event_organizer tl
@@ -119,13 +129,13 @@ function getAllEvents() {
     const values = [];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
 exports.getAllEvents = getAllEvents;
 function getEventById(event_id) {
-    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point,
+    const query = `SELECT tb.event_id, tb.name as event_name, tb.email, tb.location, tb.img, tb.description, tb.point, tb.price,
     tb.start_date, tb.end_date, tb.active, tb.is_approved, tk.club_id, tk.name as club_name, td.student_id, td.name as student_name
     FROM (SELECT * FROM event WHERE event_id = ?) tb
 	LEFT JOIN event_organizer tl
@@ -137,7 +147,7 @@ function getEventById(event_id) {
     const values = [event_id];
     const queryObject = {
         text: query,
-        values
+        values,
     };
     return queryObject;
 }
@@ -152,6 +162,16 @@ function checkinEvent(student_id, event_id, checkin) {
     return queryObject;
 }
 exports.checkinEvent = checkinEvent;
+function payEvent(student_id, event_id, payment) {
+    const query = `UPDATE join_events SET payment = ? WHERE student_id = ? AND event_id = ?;`;
+    const values = [payment, student_id, event_id];
+    const queryObject = {
+        text: query,
+        values,
+    };
+    return queryObject;
+}
+exports.payEvent = payEvent;
 function checkoutEvent(student_id, event_id, checkout) {
     const query = `UPDATE join_events SET checkout = ? WHERE student_id = ? AND event_id = ?;`;
     const values = [checkout, student_id, event_id];
