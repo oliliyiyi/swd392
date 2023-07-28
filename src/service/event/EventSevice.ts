@@ -9,6 +9,7 @@ export async function admInsertEvent(
   student_id: number,
   location: string,
   point: number,
+  price: number,
   img: string,
   description: string,
   start_date: string,
@@ -19,6 +20,7 @@ export async function admInsertEvent(
     email,
     location,
     point,
+    price,
     img,
     description,
     start_date,
@@ -59,6 +61,18 @@ export async function registerEvent(
     }
   });
   return await EventDAL.registerEvent(student_id, event_id, registration_date);
+}
+
+export async function payEvent(
+  student_id: number,
+  event_id: number,
+  payment: number
+) {
+  const event = await EventDAL.getEventById(event_id);
+  if (event.length <= 0 && event[0].active !== 1) {
+    throw new Error("EventNotExisted")
+  }
+  return await EventDAL.payEvent(student_id, event_id, payment);
 }
 
 export async function checkinEvent(

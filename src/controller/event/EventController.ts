@@ -12,6 +12,7 @@ export async function admInsertEvent(req: any, res: any, next: any) {
     const student_id = Number(req.body.student_id);
     const location = req.body.location;
     const point = req.body.point;
+    const price = req.body.price;
     const fileGet = req.file;
     let img:any = "";
     const description = req.body.description;
@@ -53,6 +54,7 @@ export async function admInsertEvent(req: any, res: any, next: any) {
           student_id,
           location,
           point,
+          price,
           img,
           description,
           start_date,
@@ -115,6 +117,7 @@ export async function getEventsByName(req: any, res: any, next: any) {
 
 export async function getEventById(req: any, res: any, next: any) {
   try {
+    console.log(req.params.event_id)
     const id = req.params.event_id;
     const response = await EventService.getEventById(id);
     res.json(response);
@@ -183,6 +186,24 @@ export async function checkoutEvent(req: any, res: any, next: any) {
   }
 }
 
+export async function payEvent(req: any, res: any, next: any) {
+  try {
+    await db.query("START TRANSACTION");
+    const student_id = req.body.student_id;
+    const event_id = req.params.event_id;
+    const payment = req.body.payment;
+    await EventService.payEvent(student_id, event_id, payment);
+    await db.query("COMMIT");
+    res.json();
+  } catch (error: any) {
+    await db.query("ROLLBACK");
+    if (error.message === "EventNotExisted") {
+      res.status(400).json({ message: "Event does not existed" })
+    }
+    return next(error);
+  }
+}
+
 export async function getStudentsJoinEvent(req: any, res: any, next: any) {
   try {
     const event_id = req.params.event_id as number;
@@ -205,7 +226,6 @@ export async function getEventsStudentJoin(req: any, res: any, next: any) {
 
 export async function getAllEvents(req: any, res: any, next: any) {
   try {
-    console.log('ahihi');
     const status: number = Number(req.query.status || 0);
     const is_approved: number = Number(req.query.is_approved || 0); 
     const response = await EventService.getAllEvents(status, is_approved);

@@ -224,6 +224,8 @@ router.get("/api/student/:student_id/point", StudentController.getStudentPoint)
  *                 type: string
  *               point:
  *                 type: number
+ *               price:
+ *                 type: number
  *               description:
  *                  type: string
  *               file:
@@ -240,6 +242,7 @@ router.get("/api/student/:student_id/point", StudentController.getStudentPoint)
  *               - student_id
  *               - email
  *               - point
+ *               - price
  *     responses:
  *       '200':
  *         description: OK
@@ -519,6 +522,41 @@ router.put("/api/event/join/:event_id/checkin", EventController.checkinEvent);
  *         description: Action Fail.
  */
 router.put("/api/event/join/:event_id/checkout", EventController.checkoutEvent);
+
+/**
+ * @swagger
+ * /api/event/join/{event_id}/payment:
+ *   put:
+ *     tags:
+ *      - Event
+ *     summary: Student pay event
+ *     description: Student pay event
+ *     parameters:
+ *       - name: event_id
+ *         in: path
+ *         description: ID of the event to payment.
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               student_id:
+ *                 type: number
+ *                 description: ID of the student.
+ *               payment:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: Successfully updated student information.
+ *       '400':
+ *         description: Action Fail.
+ */
+router.put("/api/event/join/:event_id/payment", EventController.payEvent);
 
 /**
  * @swagger

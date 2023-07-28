@@ -32,13 +32,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.insertPointForStudent = exports.checkoutEvent = exports.checkinEvent = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getAllEvents = exports.getEventById = exports.insertPointForStudent = exports.checkoutEvent = exports.payEvent = exports.checkinEvent = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.admApprovedEvent = exports.registerEvent = exports.admInsertEventOrganizer = exports.getEventsByName = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const EventSQL = __importStar(require("../../modules/event/eventSQL"));
 const db_config_1 = require("../../configs/db_config");
 const ClubDAL = __importStar(require("../club/ClubDAL"));
-function admInsertEvent(name, email, location, point, img, description, start_date, end_date) {
+function admInsertEvent(name, email, location, point, price, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
+        const queryString = EventSQL.admInsertEvent(name, email, location, point, price, img, description, start_date, end_date);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
@@ -128,6 +128,14 @@ function checkinEvent(student_id, event_id, checkin) {
     });
 }
 exports.checkinEvent = checkinEvent;
+function payEvent(student_id, event_id, payment) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryString = EventSQL.payEvent(student_id, event_id, payment);
+        const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
+        return rows;
+    });
+}
+exports.payEvent = payEvent;
 function checkoutEvent(student_id, event_id, checkout) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryString = EventSQL.checkoutEvent(student_id, event_id, checkout);

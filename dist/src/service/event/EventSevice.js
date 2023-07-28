@@ -35,12 +35,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.registerEvent = exports.getEventsByName = exports.admApprovedEvent = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
+exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.payEvent = exports.registerEvent = exports.getEventsByName = exports.admApprovedEvent = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const moment_1 = __importDefault(require("moment"));
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
-function admInsertEvent(name, email, club_id, student_id, location, point, img, description, start_date, end_date) {
+function admInsertEvent(name, email, club_id, student_id, location, point, price, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const event = yield EventDAL.admInsertEvent(name, email, location, point, img, description, start_date, end_date);
+        const event = yield EventDAL.admInsertEvent(name, email, location, point, price, img, description, start_date, end_date);
         yield EventDAL.admInsertEventOrganizer(event === null || event === void 0 ? void 0 : event.insertId, club_id, student_id);
         return;
     });
@@ -79,6 +79,16 @@ function registerEvent(student_id, event_id, registration_date) {
     });
 }
 exports.registerEvent = registerEvent;
+function payEvent(student_id, event_id, payment) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const event = yield EventDAL.getEventById(event_id);
+        if (event.length <= 0 && event[0].active !== 1) {
+            throw new Error("EventNotExisted");
+        }
+        return yield EventDAL.payEvent(student_id, event_id, payment);
+    });
+}
+exports.payEvent = payEvent;
 function checkinEvent(student_id, event_id, checkin) {
     return __awaiter(this, void 0, void 0, function* () {
         const event = yield EventDAL.getEventById(event_id);
