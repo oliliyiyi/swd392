@@ -93,8 +93,8 @@ export async function checkinEvent(student_id: number, event_id: number, checkin
   return rows;
 }
 
-export async function payEvent(student_id: number, event_id: number, payment: number) {
-  const queryString = EventSQL.payEvent(student_id, event_id, payment);
+export async function payEvent(student_id: number, event_id: number, payment: number, qrCode: string) {
+  const queryString = EventSQL.payEvent(student_id, event_id, payment, qrCode);
   const rows = await query(queryString.text, queryString.values);
   return rows;
 }
