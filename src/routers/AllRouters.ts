@@ -431,7 +431,11 @@ router.delete("/api/event/:event_id", EventController.deleteEvent);
  *             type: object
  *             properties:
  *               event_id:
- *                 type: number
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *                 description: An array of event IDs
+ *                 example: [1, 2, 3]  
  *               student_id:
  *                 type: number
  *               registration_date:

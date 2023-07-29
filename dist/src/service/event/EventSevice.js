@@ -70,13 +70,16 @@ function getEventsByName(name, status) {
 exports.getEventsByName = getEventsByName;
 function registerEvent(student_id, event_id, registration_date) {
     return __awaiter(this, void 0, void 0, function* () {
-        const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event_id);
-        studentsJoinEvent.forEach((student) => {
-            if (student.student_id === student_id) {
-                throw new Error("StudentAlreadyJoinEvent");
-            }
-        });
-        return yield EventDAL.registerEvent(student_id, event_id, registration_date);
+        for (const event of event_id) {
+            const studentsJoinEvent = yield EventDAL.getStudentsJoinEvent(event);
+            studentsJoinEvent.forEach((student) => {
+                if (student.student_id === student_id) {
+                    throw new Error("StudentAlreadyJoinEvent");
+                }
+            });
+            yield EventDAL.registerEvent(student_id, event, registration_date);
+        }
+        return;
     });
 }
 exports.registerEvent = registerEvent;
@@ -108,9 +111,6 @@ function checkinEvent(student_id, event_id, checkin) {
                     checkStudentJoinEvent = true;
                 }
             });
-            if (!checkStudentJoinEvent) {
-                yield registerEvent(student_id, event_id, checkin);
-            }
         }
         else {
             throw new Error("EventNotExisted");

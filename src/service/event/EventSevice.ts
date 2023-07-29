@@ -56,16 +56,19 @@ export async function getEventsByName(name: string, status: number) {
 
 export async function registerEvent(
   student_id: number,
-  event_id: number,
+  event_id: number[],
   registration_date: string
 ) {
-  const studentsJoinEvent = await EventDAL.getStudentsJoinEvent(event_id);
-  studentsJoinEvent.forEach((student: any) => {
-    if (student.student_id === student_id) {
-      throw new Error("StudentAlreadyJoinEvent");
-    }
-  });
-  return await EventDAL.registerEvent(student_id, event_id, registration_date);
+  for (const event of event_id) {
+    const studentsJoinEvent = await EventDAL.getStudentsJoinEvent(event);
+    studentsJoinEvent.forEach((student: any) => {
+      if (student.student_id === student_id) {
+        throw new Error("StudentAlreadyJoinEvent");
+      }
+    });
+    await EventDAL.registerEvent(student_id, event, registration_date);
+  }
+  return;
 }
 
 export async function payEvent(
@@ -101,9 +104,6 @@ export async function checkinEvent(
         checkStudentJoinEvent = true;
       }
     });
-    if (!checkStudentJoinEvent) {
-      await registerEvent(student_id, event_id, checkin);
-    }
   } else {
     throw new Error("EventNotExisted");
   }
