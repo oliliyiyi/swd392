@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEvent = exports.getEventById = exports.getAllEvents = exports.getEventsStudentJoin = exports.getStudentsJoinEvent = exports.checkoutEvent = exports.checkinEvent = exports.payEvent = exports.registerEvent = exports.getEventsByName = exports.admApprovedEvent = exports.getAllEventsInCampus = exports.admInsertEvent = void 0;
 const moment_1 = __importDefault(require("moment"));
 const EventDAL = __importStar(require("../../modules/event/EventDAL"));
+const qr = require("qr-image");
 function admInsertEvent(name, email, club_id, student_id, location, point, price, img, description, start_date, end_date) {
     return __awaiter(this, void 0, void 0, function* () {
         const event = yield EventDAL.admInsertEvent(name, email, location, point, price, img, description, start_date, end_date);
@@ -85,7 +86,14 @@ function payEvent(student_id, event_id, payment) {
         if (event.length <= 0 && event[0].active !== 1) {
             throw new Error("EventNotExisted");
         }
-        return yield EventDAL.payEvent(student_id, event_id, payment);
+        let qrCode = "";
+        if (payment === 1) {
+            const qrData = `event_id:${event_id},student_id:${student_id}`;
+            const qrImage = qr.imageSync(qrData, { type: "png" }); // Tạo mã QR dạng hình ảnh PNG
+            qrCode = qrImage.toString("base64");
+            console.log(qrCode);
+        }
+        return yield EventDAL.payEvent(student_id, event_id, payment, qrCode);
     });
 }
 exports.payEvent = payEvent;
@@ -146,11 +154,21 @@ function getEventsStudentJoin(student_id) {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield EventDAL.getEventsStudentJoin(student_id);
         result.forEach((event) => {
-            event.start_date = event.start_date ? (0, moment_1.default)(event.start_date).format('YYYY-MM-DD HH:mm:ss') : null;
-            event.end_date = event.end_date ? (0, moment_1.default)(event.end_date).format('YYYY-MM-DD HH:mm:ss') : null;
-            event.registration_date = event.registration_date ? (0, moment_1.default)(event.registration_date).format('YYYY-MM-DD HH:mm:ss') : null;
-            event.checkin = event.checkin ? (0, moment_1.default)(event.checkin).format('YYYY-MM-DD HH:mm:ss') : null;
-            event.checkout = event.checkout ? (0, moment_1.default)(event.checkout).format('YYYY-MM-DD HH:mm:ss') : null;
+            event.start_date = event.start_date
+                ? (0, moment_1.default)(event.start_date).format("YYYY-MM-DD HH:mm:ss")
+                : null;
+            event.end_date = event.end_date
+                ? (0, moment_1.default)(event.end_date).format("YYYY-MM-DD HH:mm:ss")
+                : null;
+            event.registration_date = event.registration_date
+                ? (0, moment_1.default)(event.registration_date).format("YYYY-MM-DD HH:mm:ss")
+                : null;
+            event.checkin = event.checkin
+                ? (0, moment_1.default)(event.checkin).format("YYYY-MM-DD HH:mm:ss")
+                : null;
+            event.checkout = event.checkout
+                ? (0, moment_1.default)(event.checkout).format("YYYY-MM-DD HH:mm:ss")
+                : null;
         });
         return result;
     });

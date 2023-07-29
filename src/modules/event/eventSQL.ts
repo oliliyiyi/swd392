@@ -116,7 +116,7 @@ export function getStudentsJoinEvent(event_id: number) {
 
 export function getEventsStudentJoin(student_id: number) {
   const query = `SELECT tb.event_id, tb.name, tb.location, tb.img, tb.price,
-    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout, tl.payment
+    tb.description, tb.start_date, tb.end_date, tl.registration_date , tl.checkin, tl.checkout, tl.payment, tl.qrcode
     FROM (SELECT * FROM join_events WHERE student_id = ?) tl
     INNER JOIN (SELECT * FROM event WHERE active = 1) tb
     ON tb.event_id = tl.event_id
@@ -184,10 +184,11 @@ export function checkinEvent(
 export function payEvent(
   student_id: number,
   event_id: number,
-  payment: number
+  payment: number,
+  qrCode: string
 ) {
-  const query = `UPDATE join_events SET payment = ? WHERE student_id = ? AND event_id = ?;`;
-  const values: any = [payment, student_id, event_id];
+  const query = `UPDATE join_events SET payment = ? , qrcode = ? WHERE student_id = ? AND event_id = ?;`;
+  const values: any = [payment, qrCode, student_id, event_id];
   const queryObject = {
     text: query,
     values,

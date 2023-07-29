@@ -1,6 +1,7 @@
-import  moment  from 'moment';
+import moment from "moment";
 import * as EventDAL from "../../modules/event/EventDAL";
 import * as ClubDAL from "../../modules/club/ClubDAL";
+const qr = require("qr-image");
 
 export async function admInsertEvent(
   name: string,
@@ -26,16 +27,20 @@ export async function admInsertEvent(
     start_date,
     end_date
   );
-  await EventDAL.admInsertEventOrganizer(
-    event?.insertId,
-    club_id,
-    student_id
-  );
+  await EventDAL.admInsertEventOrganizer(event?.insertId, club_id, student_id);
   return;
 }
 
-export async function getAllEventsInCampus(campus_id: number, status: number, is_approved: number) {
-  const result = await EventDAL.getAllEventsInCampus(campus_id, status, is_approved);
+export async function getAllEventsInCampus(
+  campus_id: number,
+  status: number,
+  is_approved: number
+) {
+  const result = await EventDAL.getAllEventsInCampus(
+    campus_id,
+    status,
+    is_approved
+  );
   return result;
 }
 
@@ -70,9 +75,16 @@ export async function payEvent(
 ) {
   const event = await EventDAL.getEventById(event_id);
   if (event.length <= 0 && event[0].active !== 1) {
-    throw new Error("EventNotExisted")
+    throw new Error("EventNotExisted");
   }
-  return await EventDAL.payEvent(student_id, event_id, payment);
+  let qrCode = "";
+  if (payment === 1) {
+    const qrData = `event_id:${event_id},student_id:${student_id}`;
+    const qrImage = qr.imageSync(qrData, { type: "png" }); // Tạo mã QR dạng hình ảnh PNG
+    qrCode = qrImage.toString("base64");
+    console.log(qrCode);
+  }
+  return await EventDAL.payEvent(student_id, event_id, payment, qrCode);
 }
 
 export async function checkinEvent(
@@ -93,7 +105,7 @@ export async function checkinEvent(
       await registerEvent(student_id, event_id, checkin);
     }
   } else {
-    throw new Error("EventNotExisted")
+    throw new Error("EventNotExisted");
   }
   return await EventDAL.checkinEvent(student_id, event_id, checkin);
 }
@@ -111,7 +123,7 @@ export async function checkoutEvent(
       if (!student.checkin) {
         throw new Error("NotCheckin");
       }
-      if(student.checkout) {
+      if (student.checkout) {
         throw new Error("AlreadyCheckout");
       }
     }
@@ -121,7 +133,7 @@ export async function checkoutEvent(
   }
   await EventDAL.checkoutEvent(student_id, event_id, checkout);
   await EventDAL.insertPointForStudent(student_id, event_id);
-  return ;
+  return;
 }
 
 export async function getStudentsJoinEvent(event_id: number) {
@@ -131,13 +143,23 @@ export async function getStudentsJoinEvent(event_id: number) {
 
 export async function getEventsStudentJoin(student_id: number) {
   const result = await EventDAL.getEventsStudentJoin(student_id);
-  result.forEach((event:any) => {
-    event.start_date =  event.start_date ? moment(event.start_date).format('YYYY-MM-DD HH:mm:ss') : null;
-    event.end_date =  event.end_date ? moment(event.end_date).format('YYYY-MM-DD HH:mm:ss') : null;
-    event.registration_date = event.registration_date ? moment(event.registration_date).format('YYYY-MM-DD HH:mm:ss')  : null;
-    event.checkin = event.checkin ? moment(event.checkin).format('YYYY-MM-DD HH:mm:ss') : null;
-    event.checkout = event.checkout ? moment(event.checkout).format('YYYY-MM-DD HH:mm:ss') : null;
-  })
+  result.forEach((event: any) => {
+    event.start_date = event.start_date
+      ? moment(event.start_date).format("YYYY-MM-DD HH:mm:ss")
+      : null;
+    event.end_date = event.end_date
+      ? moment(event.end_date).format("YYYY-MM-DD HH:mm:ss")
+      : null;
+    event.registration_date = event.registration_date
+      ? moment(event.registration_date).format("YYYY-MM-DD HH:mm:ss")
+      : null;
+    event.checkin = event.checkin
+      ? moment(event.checkin).format("YYYY-MM-DD HH:mm:ss")
+      : null;
+    event.checkout = event.checkout
+      ? moment(event.checkout).format("YYYY-MM-DD HH:mm:ss")
+      : null;
+  });
   return result;
 }
 

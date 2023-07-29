@@ -128,9 +128,9 @@ function checkinEvent(student_id, event_id, checkin) {
     });
 }
 exports.checkinEvent = checkinEvent;
-function payEvent(student_id, event_id, payment) {
+function payEvent(student_id, event_id, payment, qrCode) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryString = EventSQL.payEvent(student_id, event_id, payment);
+        const queryString = EventSQL.payEvent(student_id, event_id, payment, qrCode);
         const rows = yield (0, db_config_1.query)(queryString.text, queryString.values);
         return rows;
     });
