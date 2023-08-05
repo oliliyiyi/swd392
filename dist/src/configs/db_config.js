@@ -41,9 +41,9 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 exports.db = promise_1.default.createPool({
     host: "us-cdbr-east-06.cleardb.net",
-    user: "b7cb6abdc6e09c",
-    password: "c1ca7b98",
-    database: "heroku_dc76636fca04c0f",
+    user: "b0e959f9765358",
+    password: "e9dd12b4",
+    database: "heroku_84fc975b77735c1",
     port: 3306,
 });
 function query(sql, values) {
