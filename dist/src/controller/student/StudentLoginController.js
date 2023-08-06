@@ -83,7 +83,7 @@ function handleLogin(req, res) {
         let email = decodedToken.email;
         let arr = email.split("@");
         let domain = arr.pop();
-        if (domain !== "fpt.edu.vn")
+        if (domain !== "fpt.edu.vn" && domain !== "gmail.com")
             return res
                 .status(403)
                 .json({ message: "Email is not acceptable in system!" });
